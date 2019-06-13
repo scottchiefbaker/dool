@@ -1,6 +1,10 @@
-= DSTAT
+# Dool
 
-image:https://travis-ci.org/rear/rear.svg?branch=master["Build Status", link="https://travis-ci.org/dagwieers/dstat"]
+Dool is a Python3 compatible clone of [Dstat](https://github.com/dagwieers/dstat).
+
+---
+
+### Original Dstat README
 
 Dstat is a versatile replacement for vmstat, iostat, mpstat, netstat and ifstat. Dstat overcomes some of their limitations and while also adding extra features, more counters and flexibility. Dstat is handy for monitoring systems during performance tuning tests, benchmarks or troubleshooting.
 
