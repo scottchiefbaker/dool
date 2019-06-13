@@ -200,8 +200,9 @@ class Options:
             sys.exit(1)
 
         if not self.plugins:
-            print('You did not select any stats, using -cdngy by default.')
-            self.plugins = [ 'cpu', 'disk', 'net', 'page', 'sys' ]
+            self.plugins = [ 'cpu', 'disk', 'net', 'time', 'load' ]
+            print("Using default plugins: " + ", ".join(self.plugins) + "")
+            self.bits = 1
 
         try:
             if len(args) > 0: self.delay = int(args[0])
