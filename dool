@@ -1732,26 +1732,25 @@ color = {
     'white': '\033[38;5;15m',
 
     'red'    : '\033[38;5;9m',
-    'darkred': '\033[38;5;52m',
+    'darkred': '\033[38;5;88m',
 
     'darkblue': '\033[38;5;39m',
     'blue'    : '\033[38;5;51m',
 
     'green'    : '\033[38;5;83m',
-    'darkgreen': '\033[38;5;22m',
+    'darkgreen': '\033[38;5;28m',
 
     'yellow'    : '\033[38;5;227m',
-    'darkyellow': '\033[38;5;166m',
+    'darkyellow': '\033[38;5;208m',
 
     'gray'    : '\033[0;37m',
-    'darkgray': '\033[1;30m',
-    'darkgray': '\033[38;5;236m',
+    'darkgray': '\033[38;5;239m',
 
+    'magenta'    : '\033[1;35m',
     'darkmagenta': '\033[0;35m',
-    'darkcyan'   : '\033[0;36m',
 
-    'magenta': '\033[1;35m',
-    'cyan'   : '\033[1;36m',
+    'cyan'     : '\033[1;36m',
+    'darkcyan' : '\033[0;36m',
 
     'blackbg'  : '\033[40m',
     'redbg'    : '\033[41m',
