@@ -2699,7 +2699,7 @@ def perform(update):
 
         starttime = time.time()
 
-        loop = (update - 1 + op.delay) / op.delay
+        loop = int((update - 1 + op.delay) / op.delay)
         step = ((update - 1) % op.delay) + 1
 
         ### Get current time (may be different from schedule) for debugging
@@ -2717,7 +2717,7 @@ def perform(update):
             return 0
 
         ### Initialise certain variables
-        if loop < 1:
+        if loop == 0:
             elapsed = ticks()
             rows, cols = 0, 0
             vislist = []
