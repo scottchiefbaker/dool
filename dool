@@ -1724,27 +1724,36 @@ class dool_zones(dstat):
                 self.val[zone+'_high'] = int(l[1])
                 found_high = 1
 
-
 ### END STATS DEFINITIONS ###
 
+def fcolor(num):
+   ret = "\033[38;5;" + str(num) + "m"
+
+   return ret
+
+def bgcolor(num):
+   ret = "\033[48;5;" + str(num) + "m"
+
+   return ret
+
 color = {
-    'black': '\033[0;30m',
-    'white': '\033[38;5;15m',
+    'black': fcolor(0),
+    'white': fcolor(15),
 
-    'red'    : '\033[38;5;9m',
-    'darkred': '\033[38;5;88m',
+    'red'    : fcolor(9),
+    'darkred': fcolor(88),
 
-    'darkblue': '\033[38;5;39m',
-    'blue'    : '\033[38;5;51m',
+    'blue'    : fcolor(51),
+    'darkblue': fcolor(39),
 
-    'green'    : '\033[38;5;83m',
-    'darkgreen': '\033[38;5;28m',
+    'green'    : fcolor(83),
+    'darkgreen': fcolor(28),
 
-    'yellow'    : '\033[38;5;227m',
-    'darkyellow': '\033[38;5;208m',
+    'yellow'    : fcolor(227),
+    'darkyellow': fcolor(208),
 
-    'gray'    : '\033[0;37m',
-    'darkgray': '\033[38;5;239m',
+    'gray'    : fcolor(7),
+    'darkgray': fcolor(239),
 
     'magenta'    : '\033[1;35m',
     'darkmagenta': '\033[0;35m',
