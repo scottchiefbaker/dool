@@ -41,10 +41,10 @@ if sys.version_info < (2, 2):
     sys.exit('error: Python 2.2 or later required')
 
 pluginpath = [
-    os.path.expanduser('~/.dstat/'),                                # home + /.dstat/
-    os.path.abspath(os.path.dirname(sys.argv[0])) + '/plugins/',    # binary path + /plugins/
-    '/usr/share/dstat/',
-    '/usr/local/share/dstat/',
+    os.path.expanduser('~/.dool/'),                              # home + /.dool/
+    os.path.abspath(os.path.dirname(sys.argv[0])) + '/plugins/', # binary path + /plugins/
+    '/usr/share/dool/',
+    '/usr/local/share/dool/',
 ]
 
 class Options:
@@ -96,7 +96,7 @@ class Options:
                  'list', 'mods', 'modules', 'nocolor', 'noheaders', 'noupdate',
                  'output=', 'pidfile=', 'profile', 'version', 'vmstat'] + allplugins)
         except getopt.error as exc:
-            print('dstat: %s, try dstat -h for a list of all the options' % exc)
+            print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
 
         for opt, arg in opts:
@@ -192,11 +192,11 @@ class Options:
             elif opt.startswith('--'):
                 self.plugins.append(opt[2:])
             else:
-                print('dstat: option %s unknown to getopt, try dstat -h for a list of all the options' % opt)
+                print('dool: option %s unknown to getopt, try dool -h for a list of all the options' % opt)
                 sys.exit(1)
 
         if self.float and self.integer:
-            print('dstat: option --float and --integer are mutual exclusive, you can only force one')
+            print('dool: option --float and --integer are mutual exclusive, you can only force one')
             sys.exit(1)
 
         if not self.plugins:
@@ -208,20 +208,21 @@ class Options:
             if len(args) > 0: self.delay = int(args[0])
             if len(args) > 1: self.count = int(args[1])
         except:
-            print('dstat: incorrect argument, try dstat -h for the correct syntax')
+            print('dool: incorrect argument, try dool -h for the correct syntax')
             sys.exit(1)
 
         if self.delay <= 0:
-            print('dstat: delay must be an integer, greater than zero')
+            print('dool: delay must be an integer, greater than zero')
             sys.exit(1)
 
         if self.debug:
             print('Plugins: %s' % self.plugins)
 
     def version(self):
-        print('Dstat %s' % VERSION)
-        print('Written by Dag Wieers <dag@wieers.com>')
-        print('Homepage at http://dag.wieers.com/home-made/dstat/')
+        print('Dool %s' % VERSION)
+        print('Written by Scott Baker <scott@perturb.org>')
+        print('Forked from Dstat written by Dag Wieers <dag@wieers.com>')
+        print('Homepage at https://github.com/scottchiefbaker/dool/')
         print()
         print('Platform %s/%s' % (os.name, sys.platform))
         print('Kernel %s' % os.uname()[2])
@@ -245,12 +246,12 @@ class Options:
         showplugins()
 
     def usage(self):
-        print('Usage: dstat [-afv] [options..] [delay [count]]')
+        print('Usage: dool [-afv] [options..] [delay [count]]')
 
     def help(self):
         print('''Versatile tool for generating system resource statistics)
 
-Dstat options:
+Dool options:
   -c, --cpu                enable cpu stats
      -C 0,3,total             include cpu0, cpu3 and total
   -d, --disk               enable disk stats
@@ -300,7 +301,7 @@ Dstat options:
   --noheaders              disable repetitive headers
   --noupdate               disable intermediate updates
   --output file            write CSV output to file
-  --profile                show profiling statistics when exiting dstat
+  --profile                show profiling statistics when exiting dool
 
 delay is the delay in seconds between each update (default: 1)
 count is the number of updates to display before exiting (default: unlimited)
@@ -562,7 +563,7 @@ class dstat:
             return char['sep']
         return ''
 
-class dstat_aio(dstat):
+class dool_aio(dstat):
     def __init__(self):
         self.name = 'async'
         self.nick = ('#aio',)
@@ -576,7 +577,7 @@ class dstat_aio(dstat):
             if len(l) < 1: continue
             self.val['aio'] = int(l[0])
 
-class dstat_cpu(dstat):
+class dool_cpu(dstat):
     def __init__(self):
         self.nick = ( 'usr', 'sys', 'idl', 'wai', 'stl' )
         self.type = 'p'
@@ -639,7 +640,7 @@ class dstat_cpu(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_cpu_use(dstat_cpu):
+class dool_cpu_use(dool_cpu):
     def __init__(self):
         self.name = 'per cpu usage'
         self.type = 'p'
@@ -667,7 +668,7 @@ class dstat_cpu_use(dstat_cpu):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_cpu_adv(dstat_cpu):
+class dool_cpu_adv(dool_cpu):
     def __init__(self):
         self.nick = ( 'usr', 'sys', 'idl', 'wai', 'hiq', 'siq', 'stl' )
         self.type = 'p'
@@ -694,7 +695,7 @@ class dstat_cpu_adv(dstat_cpu):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_cpu24(dstat):
+class dool_cpu24(dstat):
     def __init__(self):
         self.nick = ( 'usr', 'sys', 'idl')
         self.type = 'p'
@@ -752,7 +753,7 @@ class dstat_cpu24(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_disk(dstat):
+class dool_disk(dstat):
     def __init__(self):
         self.nick = ('read', 'writ')
         self.type = 'b'
@@ -784,12 +785,12 @@ class dstat_disk(dstat):
                     if target[0] != '/':
                         target = os.path.join(os.path.dirname(disk), target)
                         target = os.path.normpath(target)
-                    print('dstat: symlink %s -> %s' % (disk, target))
+                    print('dool: symlink %s -> %s' % (disk, target))
                     disk = target
                 # trim leading /dev/
                 return disk[5:]
             else:
-                print('dstat: %s does not exist' % disk)
+                print('dool: %s does not exist' % disk)
         else:
             return disk
 
@@ -838,7 +839,7 @@ class dstat_disk(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_disk24(dstat):
+class dool_disk24(dstat):
     def __init__(self):
         self.nick = ('read', 'writ')
         self.type = 'b'
@@ -871,12 +872,12 @@ class dstat_disk24(dstat):
                     if target[0] != '/':
                         target = os.path.join(os.path.dirname(disk), target)
                         target = os.path.normpath(target)
-                    print('dstat: symlink %s -> %s' % (disk, target))
+                    print('dool: symlink %s -> %s' % (disk, target))
                     disk = target
                 # trim leading /dev/
                 return disk[5:]
             else:
-                print('dstat: %s does not exist' % disk)
+                print('dool: %s does not exist' % disk)
         else:
             return disk
 
@@ -923,7 +924,7 @@ class dstat_disk24(dstat):
             self.set1.update(self.set2)
 
 ### FIXME: Needs rework, does anyone care ?
-class dstat_disk24_old(dstat):
+class dool_disk24_old(dstat):
     def __init__(self):
         self.nick = ('read', 'writ')
         self.type = 'b'
@@ -1001,7 +1002,7 @@ class dstat_disk24_old(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_epoch(dstat):
+class dool_epoch(dstat):
     def __init__(self):
         self.name = 'epoch'
         self.vars = ('epoch',)
@@ -1015,7 +1016,7 @@ class dstat_epoch(dstat):
 #        self.val['epoch'] = time.time()
         self.val['epoch'] = starttime
 
-class dstat_fs(dstat):
+class dool_fs(dstat):
     def __init__(self):
         self.name = 'filesystem'
         self.vars = ('files', 'inodes')
@@ -1033,7 +1034,7 @@ class dstat_fs(dstat):
             if len(l) < 2: continue
             self.val['inodes'] = int(l[0]) - int(l[1])
 
-class dstat_int(dstat):
+class dool_int(dstat):
     def __init__(self):
         self.name = 'interrupts'
         self.type = 'd'
@@ -1101,7 +1102,7 @@ class dstat_int(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_int24(dstat):
+class dool_int24(dstat):
     def __init__(self):
         self.name = 'interrupts'
         self.type = 'd'
@@ -1173,7 +1174,7 @@ class dstat_int24(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_io(dstat):
+class dool_io(dstat):
     def __init__(self):
         self.nick = ('read', 'writ')
         self.type = 'f'
@@ -1240,7 +1241,7 @@ class dstat_io(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_ipc(dstat):
+class dool_ipc(dstat):
     def __init__(self):
         self.name = 'sysv ipc'
         self.vars = ('msg', 'sem', 'shm')
@@ -1252,7 +1253,7 @@ class dstat_ipc(dstat):
         for name in self.vars:
             self.val[name] = len(dopen('/proc/sysvipc/'+name).readlines()) - 1
 
-class dstat_load(dstat):
+class dool_load(dstat):
     def __init__(self):
         self.name = 'load avg'
         self.nick = ('1m', '5m', '15m')
@@ -1269,7 +1270,7 @@ class dstat_load(dstat):
             self.val['load5'] = float(l[1])
             self.val['load15'] = float(l[2])
 
-class dstat_lock(dstat):
+class dool_lock(dstat):
     def __init__(self):
         self.name = 'file locks'
         self.nick = ('pos', 'lck', 'rea', 'wri')
@@ -1288,7 +1289,7 @@ class dstat_lock(dstat):
             if l[3] == 'READ': self.val['read'] += 1
             elif l[3] == 'WRITE': self.val['write'] += 1
 
-class dstat_mem(dstat):
+class dool_mem(dstat):
     def __init__(self):
         self.name = 'memory usage'
         self.nick = ('used', 'free', 'buff', 'cach')
@@ -1308,7 +1309,7 @@ class dstat_mem(dstat):
 
         self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
 
-class dstat_mem_adv(dstat_mem):
+class dool_mem_adv(dool_mem):
     """
     Advanced memory usage
 
@@ -1321,7 +1322,7 @@ class dstat_mem_adv(dstat_mem):
         self.vars = ('MemTotal', 'MemUsed', 'MemFree', 'Buffers', 'Cached', 'Dirty', 'Shmem', 'SReclaimable')
         self.open('/proc/meminfo')
 
-class dstat_net(dstat):
+class dool_net(dstat):
     def __init__(self):
         self.nick = ('recv', 'send')
         self.type = 'b'
@@ -1381,7 +1382,7 @@ class dstat_net(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_page(dstat):
+class dool_page(dstat):
     def __init__(self):
         self.name = 'paging'
         self.nick = ('in', 'out')
@@ -1402,7 +1403,7 @@ class dstat_page(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_page24(dstat):
+class dool_page24(dstat):
     def __init__(self):
         self.name = 'paging'
         self.nick = ('in', 'out')
@@ -1425,7 +1426,7 @@ class dstat_page24(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_proc(dstat):
+class dool_proc(dstat):
     def __init__(self):
         self.name = 'procs'
         self.nick = ('run', 'blk', 'new')
@@ -1456,7 +1457,7 @@ class dstat_proc(dstat):
             for name in ('procs_running', 'procs_blocked'):
                 self.set2[name] = 0
 
-class dstat_raw(dstat):
+class dool_raw(dstat):
     def __init__(self):
         self.name = 'raw'
         self.nick = ('raw',)
@@ -1474,7 +1475,7 @@ class dstat_raw(dstat):
         ### Cannot use len() on generator
 #        self.val['sockets'] = len(self.readlines()) - 1
 
-class dstat_socket(dstat):
+class dool_socket(dstat):
     def __init__(self):
         self.name = 'sockets'
         self.type = 'd'
@@ -1491,7 +1492,7 @@ class dstat_socket(dstat):
 
         self.val['other'] = self.val['sockets:'] - self.val['TCP:'] - self.val['UDP:'] - self.val['RAW:'] - self.val['FRAG:']
 
-class dstat_swap(dstat):
+class dool_swap(dstat):
     def __init__(self):
         self.name = 'swap'
         self.nick = ('used', 'free')
@@ -1542,7 +1543,7 @@ class dstat_swap(dstat):
             self.val[name] = ( int(l[3]) * 1024.0, (int(l[2]) - int(l[3])) * 1024.0 )
             self.val['total'] = ( self.val['total'][0] + self.val[name][0], self.val['total'][1] + self.val[name][1])
 
-class dstat_swap_old(dstat):
+class dool_swap_old(dstat):
     def __init__(self):
         self.name = 'swap'
         self.nick = ('used', 'free')
@@ -1559,7 +1560,7 @@ class dstat_swap_old(dstat):
 
         self.val['SwapUsed'] = self.val['SwapTotal'] - self.val['SwapFree']
 
-class dstat_sys(dstat):
+class dool_sys(dstat):
     def __init__(self):
         self.name = 'system'
         self.nick = ('int', 'csw')
@@ -1582,7 +1583,7 @@ class dstat_sys(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_tcp(dstat):
+class dool_tcp(dstat):
     def __init__(self):
         self.name = 'tcp sockets'
         self.nick = ('lis', 'act', 'syn', 'tim', 'clo')
@@ -1605,7 +1606,7 @@ class dstat_tcp(dstat):
             elif l[3] in ('06',): self.val['wait'] += 1
             elif l[3] in ('04', '05', '07', '08', '0B',): self.val['close'] += 1
 
-class dstat_time(dstat):
+class dool_time(dstat):
     def __init__(self):
         self.name = 'system'
         #self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%d-%m %H:%M:%S'
@@ -1625,7 +1626,7 @@ class dstat_time(dstat):
         else:
             self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime))
 
-class dstat_udp(dstat):
+class dool_udp(dstat):
     def __init__(self):
         self.name = 'udp'
         self.nick = ('lis', 'act')
@@ -1641,7 +1642,7 @@ class dstat_udp(dstat):
             if l[3] == '07': self.val['listen'] += 1
             elif l[3] == '01': self.val['established'] += 1
 
-class dstat_unix(dstat):
+class dool_unix(dstat):
     def __init__(self):
         self.name = 'unix sockets'
         self.nick = ('dgm', 'str', 'lis', 'act')
@@ -1660,7 +1661,7 @@ class dstat_unix(dstat):
                 if l[5] == '01': self.val['listen'] += 1
                 elif l[5] == '03': self.val['established'] += 1
 
-class dstat_vm(dstat):
+class dool_vm(dstat):
     def __init__(self):
         self.name = 'virtual memory'
         self.nick = ('majpf', 'minpf', 'alloc', 'free')
@@ -1687,7 +1688,7 @@ class dstat_vm(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dstat_vm_adv(dstat_vm):
+class dool_vm_adv(dool_vm):
     def __init__(self):
         self.name = 'advanced virtual memory'
         self.nick = ('steal', 'scanK', 'scanD', 'pgoru', 'astll')
@@ -1697,7 +1698,7 @@ class dstat_vm_adv(dstat_vm):
         self.scale = 1000
         self.open('/proc/vmstat')
 
-class dstat_zones(dstat):
+class dool_zones(dstat):
     def __init__(self):
         self.name = 'zones memory'
 #        self.nick = ('dmaF', 'dmaH', 'd32F', 'd32H', 'movaF', 'movaH')
@@ -2148,7 +2149,7 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
     elif ctype in ('t',):
         ret, c = tchg(var, width), ctext
     else:
-        raise Exception('Type %s not known to dstat.' % ctype)
+        raise Exception('Type %s not known to dool.' % ctype)
 
     ### Set the counter color
     if ret == '0':
@@ -2447,13 +2448,13 @@ def dev(maj, min):
 
 def listplugins():
     plugins = []
-    remod = re.compile('dstat_(.+)$')
+    remod = re.compile('dool_(.+)$')
     for filename in globals():
-        if filename.startswith('dstat_'):
+        if filename.startswith('dool_'):
             plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
-    remod = re.compile('.+/dstat_(.+).py$')
+    remod = re.compile('.+/dool_(.+).py$')
     for path in pluginpath:
-        for filename in glob.glob(path + '/dstat_*.py'):
+        for filename in glob.glob(path + '/dool_*.py'):
             plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
     plugins.sort()
     return plugins
@@ -2461,10 +2462,10 @@ def listplugins():
 def showplugins():
     rows, cols = gettermsize()
     print('internal:\n\t', end='')
-    remod = re.compile('^dstat_(.+)$')
+    remod = re.compile('^dool_(.+)$')
     plugins = []
     for filename in globals():
-        if filename.startswith('dstat_'):
+        if filename.startswith('dool_'):
             plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
     plugins.sort()
     cols2 = cols - 8
@@ -2476,10 +2477,10 @@ def showplugins():
         if mod != plugins[-1]:
             print(mod, end=',')
     print(mod)
-    remod = re.compile('.+/dstat_(.+).py$')
+    remod = re.compile('.+/dool_(.+).py$')
     for path in pluginpath:
         plugins = []
-        for filename in glob.glob(path + '/dstat_*.py'):
+        for filename in glob.glob(path + '/dool_*.py'):
             plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
         if not plugins: continue
         plugins.sort()
@@ -2619,7 +2620,7 @@ def main():
         else: mods = ( plugin, )
 
         for mod in mods:
-            pluginfile = 'dstat_' + mod.replace('-', '_')
+            pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
                     import imp
@@ -2823,7 +2824,7 @@ def perform(update):
 if __name__ == '__main__':
     try:
         initterm()
-        op = Options(os.getenv('DSTAT_OPTS','').split() + sys.argv[1:])
+        op = Options(os.getenv('DOOL_OPTS','').split() + sys.argv[1:])
         theme = set_theme()
         if op.profile:
             import profile
