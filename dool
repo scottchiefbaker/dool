@@ -1728,7 +1728,7 @@ class dstat_zones(dstat):
 
 color = {
     'black': '\033[0;30m',
-    'white': '\033[1;37m',
+    'white': '\033[38;5;15m',
 
     'red'    : '\033[38;5;9m',
     'darkred': '\033[38;5;52m',
