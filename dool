@@ -1608,7 +1608,8 @@ class dstat_tcp(dstat):
 class dstat_time(dstat):
     def __init__(self):
         self.name = 'system'
-        self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%d-%m %H:%M:%S'
+        #self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%d-%m %H:%M:%S'
+        self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%b-%d %H:%M:%S'
         self.type = 's'
         if op.debug:
             self.width = len(time.strftime(self.timefmt, time.localtime())) + 4
