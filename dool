@@ -1728,37 +1728,44 @@ class dstat_zones(dstat):
 
 color = {
     'black': '\033[0;30m',
-    'darkred': '\033[0;31m',
-    'darkgreen': '\033[0;32m',
-    'darkyellow': '\033[0;33m',
-    'darkblue': '\033[0;34m',
-    'darkmagenta': '\033[0;35m',
-    'darkcyan': '\033[0;36m',
-    'gray': '\033[0;37m',
-
-    'darkgray': '\033[1;30m',
-    'red': '\033[1;31m',
-    'green': '\033[1;32m',
-    'yellow': '\033[1;33m',
-    'blue': '\033[1;34m',
-    'magenta': '\033[1;35m',
-    'cyan': '\033[1;36m',
     'white': '\033[1;37m',
 
-    'blackbg': '\033[40m',
-    'redbg': '\033[41m',
-    'greenbg': '\033[42m',
-    'yellowbg': '\033[43m',
-    'bluebg': '\033[44m',
+    'red'    : '\033[38;5;9m',
+    'darkred': '\033[38;5;52m',
+
+    'darkblue': '\033[38;5;39m',
+    'blue'    : '\033[38;5;51m',
+
+    'green'    : '\033[38;5;82m',
+    'darkgreen': '\033[38;5;28m',
+
+    'yellow'    : '\033[38;5;227m',
+    'darkyellow': '\033[38;5;166m',
+
+    'gray'    : '\033[0;37m',
+    'darkgray': '\033[1;30m',
+    'darkgray': '\033[38;5;236m',
+
+    'darkmagenta': '\033[0;35m',
+    'darkcyan'   : '\033[0;36m',
+
+    'magenta': '\033[1;35m',
+    'cyan'   : '\033[1;36m',
+
+    'blackbg'  : '\033[40m',
+    'redbg'    : '\033[41m',
+    'greenbg'  : '\033[42m',
+    'yellowbg' : '\033[43m',
+    'bluebg'   : '\033[44m',
     'magentabg': '\033[45m',
-    'cyanbg': '\033[46m',
-    'whitebg': '\033[47m',
+    'cyanbg'   : '\033[46m',
+    'whitebg'  : '\033[47m',
 }
 
 ansi = {
-    'reset': '\033[0;0m',
-    'bold': '\033[1m',
-    'reverse': '\033[2m',
+    'reset'    : '\033[0;0m',
+    'bold'     : '\033[1m',
+    'reverse'  : '\033[2m',
     'underline': '\033[4m',
 
     'clear': '\033[2J',
@@ -1771,10 +1778,10 @@ ansi = {
     'linewrap': '\033[7h',
     'nolinewrap': '\033[7l',
 
-    'up': '\033[1A',
-    'down': '\033[1B',
+    'up'   : '\033[1A',
+    'down' : '\033[1B',
     'right': '\033[1C',
-    'left': '\033[1D',
+    'left' : '\033[1D',
 
     'default': '\033[0;0m',
 }
@@ -1827,7 +1834,7 @@ def set_theme():
             'done_hi': color['gray'],
             'text_lo': color['gray'],
             'text_hi': color['darkgray'],
-            'unit_lo': color['darkgray'],
+            'unit_lo': color['gray'],
             'unit_hi': color['darkgray'],
             'colors_lo': (color['red'], color['yellow'], color['green'], color['blue'],
                           color['cyan'], color['white'], color['darkred'], color['darkgreen']),
