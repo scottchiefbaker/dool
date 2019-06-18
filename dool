@@ -1750,7 +1750,7 @@ color = {
     'darkgreen': fcolor(28),
 
     'yellow'    : fcolor(227),
-    'darkyellow': fcolor(208),
+    'darkyellow': fcolor(214),
 
     'gray'    : fcolor(7),
     'darkgray': fcolor(239),
