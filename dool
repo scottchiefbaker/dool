@@ -442,17 +442,35 @@ class dstat:
 
     def subtitle(self):
         ret = ''
+
+        # It's a string
         if isinstance(self.name, six.string_types):
             for i, nick in enumerate(self.nick):
-                ret = ret + theme['subtitle'] + nick[0:self.width].center(self.width) + theme['default']
-                if i + 1 != len(self.nick): ret = ret + char['space']
+                ret += theme['subtitle'] + nick[0:self.width].center(self.width)
+
+                # If it's not the last one add a space between each item
+                if i + 1 != len(self.nick):
+                    ret += ansi['reset'] + char['space'] + ansi['reset']
+                else:
+                    ret += ansi['reset']
+
             return ret
+        # It's a 'list'
         else:
             for i, name in enumerate(self.name):
                 for j, nick in enumerate(self.nick):
-                    ret = ret + theme['subtitle'] + nick[0:self.width].center(self.width) + theme['default']
-                    if j + 1 != len(self.nick): ret = ret + char['space']
-                if i + 1 != len(self.name): ret = ret + theme['frame'] + char['colon']
+                    ret += theme['subtitle'] + nick[0:self.width].center(self.width)
+
+                    # If it's not the last one
+                    if j + 1 != len(self.nick):
+                        ret = ret + ansi['reset'] + char['space'] + ansi['reset']
+
+                # If it's not the last one
+                if i + 1 != len(self.name):
+                    ret += theme['frame'] + char['colon'] + ansi['reset']
+                else:
+                    ret += ansi['reset']
+
             return ret
 
     def csvtitle(self):
