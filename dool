@@ -50,7 +50,7 @@ pluginpath = [
 class Options:
     def __init__(self, args):
         self.args = args
-        self.bits = False
+        self.bits = True
         self.blackonwhite = False
         self.count = -1
         self.cpulist = None
@@ -202,7 +202,6 @@ class Options:
         if not self.plugins:
             self.plugins = [ 'cpu', 'disk', 'net', 'load', 'time' ]
             print("Using default plugins: " + ", ".join(self.plugins) + "")
-            self.bits = 1
 
         try:
             if len(args) > 0: self.delay = int(args[0])
