@@ -527,27 +527,34 @@ class dstat:
         line = ''
         if hasattr(self, 'output'):
             return cprint(self.output, self.type, self.width, self.scale)
+
         for i, name in enumerate(self.vars):
             if i < len(self.types):
                 ctype = self.types[i]
             else:
                 ctype = self.type
+
             if i < len(self.scales):
                 scale = self.scales[i]
             else:
                 scale = self.scale
+
             if isinstance(self.val[name], Sequence) and not isinstance(self.val[name], six.string_types):
                 line = line + cprintlist(self.val[name], ctype, self.width, scale)
-                sep = theme['frame'] + char['colon']
+                sep  = theme['frame'] + char['colon']
+
                 if i + 1 != len(self.vars):
                     line = line + sep
             else:
                 ### Make sure we don't show more values than we have nicknames
                 if i >= len(self.nick): break
+
                 line = line + cprint(self.val[name], ctype, self.width, scale)
-                sep = char['space']
+                sep  = char['space']
+
                 if i + 1 != len(self.nick):
                     line = line + sep
+
         return line
 
     def showend(self, totlist, vislist):
