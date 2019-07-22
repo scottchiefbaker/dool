@@ -54,26 +54,26 @@ pluginpath = [
 
 class Options:
     def __init__(self, args):
-        self.args = args
-        self.bits = True
+        self.args         = args
+        self.bits         = True
         self.blackonwhite = False
-        self.count = -1
-        self.cpulist = None
-        self.debug = 0
-        self.delay = 1
-        self.disklist = None
-        self.full = False
-        self.float = False
-        self.integer = False
-        self.intlist = None
-        self.netlist = None
-        self.swaplist = None
-        self.color = None
-        self.update = True
-        self.header = True
-        self.output = False
-        self.pidfile = False
-        self.profile = ''
+        self.count        = -1
+        self.cpulist      = None
+        self.debug        = 0
+        self.delay        = 1
+        self.disklist     = None
+        self.full         = False
+        self.float        = False
+        self.integer      = False
+        self.intlist      = None
+        self.netlist      = None
+        self.swaplist     = None
+        self.color        = None
+        self.update       = True
+        self.header       = True
+        self.output       = False
+        self.pidfile      = False
+        self.profile      = ''
 
         ### List of available plugins
         allplugins = listplugins()
@@ -83,7 +83,7 @@ class Options:
 
         ### Implicit if no terminal is used
         if not sys.stdout.isatty():
-            self.color = False
+            self.color  = False
             self.header = False
             self.update = False
 
@@ -313,19 +313,19 @@ count is the number of updates to display before exiting (default: unlimited)
 
 ### START STATS DEFINITIONS ###
 class dstat:
-    vars = None
-    name = None
-    nick = None
-    type = 'f'
-    types = ()
-    width = 5
-    scale = 1024
+    vars   = None
+    name   = None
+    nick   = None
+    type   = 'f'
+    types  = ()
+    width  = 5
+    scale  = 1024
     scales = ()
-    cols = 0
+    cols   = 0
     struct = None
-#    val = {}
-#    set1 = {}
-#    set2 = {}
+    #val    = {}
+    #set1   = {}
+    #set2   = {}
 
     def prepare(self):
         if callable(self.discover):
@@ -594,10 +594,10 @@ class dstat:
 
 class dool_aio(dstat):
     def __init__(self):
-        self.name = 'async'
-        self.nick = ('#aio',)
-        self.vars = ('aio',)
-        self.type = 'd'
+        self.name  = 'async'
+        self.nick  = ('#aio',)
+        self.vars  = ('aio',)
+        self.type  = 'd'
         self.width = 5;
         self.open('/proc/sys/fs/aio-nr')
 
@@ -608,12 +608,12 @@ class dool_aio(dstat):
 
 class dool_cpu(dstat):
     def __init__(self):
-        self.nick = ( 'usr', 'sys', 'idl', 'wai', 'stl' )
-        self.type = 'p'
+        self.nick  = ( 'usr', 'sys', 'idl', 'wai', 'stl' )
+        self.type  = 'p'
         self.width = 3
         self.scale = 34
         self.open('/proc/stat')
-        self.cols = 5
+        self.cols  = 5
 
     def discover(self, *objlist):
         ret = []
@@ -671,12 +671,12 @@ class dool_cpu(dstat):
 
 class dool_cpu_use(dool_cpu):
     def __init__(self):
-        self.name = 'per cpu usage'
-        self.type = 'p'
+        self.name  = 'per cpu usage'
+        self.type  = 'p'
         self.width = 3
         self.scale = 34
         self.open('/proc/stat')
-        self.cols = 7
+        self.cols  = 7
         if not op.cpulist:
             self.vars = [ str(x) for x in list(range(cpunr)) ]
 
@@ -699,12 +699,12 @@ class dool_cpu_use(dool_cpu):
 
 class dool_cpu_adv(dool_cpu):
     def __init__(self):
-        self.nick = ( 'usr', 'sys', 'idl', 'wai', 'hiq', 'siq', 'stl' )
-        self.type = 'p'
+        self.nick  = ( 'usr', 'sys', 'idl', 'wai', 'hiq', 'siq', 'stl' )
+        self.type  = 'p'
         self.width = 3
         self.scale = 34
         self.open('/proc/stat')
-        self.cols = 7
+        self.cols  = 7
 
     def extract(self):
         for l in self.splitlines():
@@ -726,12 +726,12 @@ class dool_cpu_adv(dool_cpu):
 
 class dool_cpu24(dstat):
     def __init__(self):
-        self.nick = ( 'usr', 'sys', 'idl')
-        self.type = 'p'
+        self.nick  = ( 'usr', 'sys', 'idl')
+        self.type  = 'p'
         self.width = 3
         self.scale = 34
         self.open('/proc/stat')
-        self.cols = 3
+        self.cols  = 3
 
     def discover(self, *objlist):
         ret = []
@@ -784,11 +784,11 @@ class dool_cpu24(dstat):
 
 class dool_disk(dstat):
     def __init__(self):
-        self.nick = ('read', 'writ')
-        self.type = 'b'
+        self.nick       = ('read', 'writ')
+        self.type       = 'b'
         self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
         self.open('/proc/diskstats')
-        self.cols = 2
+        self.cols       = 2
 
     def discover(self, *objlist):
         ret = []
@@ -955,12 +955,12 @@ class dool_disk24(dstat):
 ### FIXME: Needs rework, does anyone care ?
 class dool_disk24_old(dstat):
     def __init__(self):
-        self.nick = ('read', 'writ')
-        self.type = 'b'
+        self.nick       = ('read', 'writ')
+        self.type       = 'b'
         self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
-        self.regexp = re.compile('^\((\d+),(\d+)\):\(\d+,\d+,(\d+),\d+,(\d+)\)$')
+        self.regexp     = re.compile('^\((\d+),(\d+)\):\(\d+,\d+,(\d+),\d+,(\d+)\)$')
         self.open('/proc/stat')
-        self.cols = 2
+        self.cols       = 2
 
     def discover(self, *objlist):
         ret = []
@@ -1033,8 +1033,8 @@ class dool_disk24_old(dstat):
 
 class dool_epoch(dstat):
     def __init__(self):
-        self.name = 'epoch'
-        self.vars = ('epoch',)
+        self.name  = 'epoch'
+        self.vars  = ('epoch',)
         self.width = 10
         if op.debug:
             self.width = 13
@@ -1047,9 +1047,9 @@ class dool_epoch(dstat):
 
 class dool_fs(dstat):
     def __init__(self):
-        self.name = 'filesystem'
-        self.vars = ('files', 'inodes')
-        self.type = 'd'
+        self.name  = 'filesystem'
+        self.vars  = ('files', 'inodes')
+        self.type  = 'd'
         self.width = 6
         self.scale = 1000
 
@@ -1065,10 +1065,10 @@ class dool_fs(dstat):
 
 class dool_int(dstat):
     def __init__(self):
-        self.name = 'interrupts'
-        self.type = 'd'
-        self.width = 5
-        self.scale = 1000
+        self.name   = 'interrupts'
+        self.type   = 'd'
+        self.width  = 5
+        self.scale  = 1000
         self.open('/proc/stat')
         self.intmap = self.intmap()
 
@@ -1133,8 +1133,8 @@ class dool_int(dstat):
 
 class dool_int24(dstat):
     def __init__(self):
-        self.name = 'interrupts'
-        self.type = 'd'
+        self.name  = 'interrupts'
+        self.type  = 'd'
         self.width = 5
         self.scale = 1000
         self.open('/proc/interrupts')
@@ -1205,13 +1205,13 @@ class dool_int24(dstat):
 
 class dool_io(dstat):
     def __init__(self):
-        self.nick = ('read', 'writ')
-        self.type = 'f'
-        self.width = 5
-        self.scale = 1000
+        self.nick       = ('read', 'writ')
+        self.type       = 'f'
+        self.width      = 5
+        self.scale      = 1000
         self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
         self.open('/proc/diskstats')
-        self.cols = 2
+        self.cols       = 2
 
     def discover(self, *objlist):
         ret = []
@@ -1272,9 +1272,9 @@ class dool_io(dstat):
 
 class dool_ipc(dstat):
     def __init__(self):
-        self.name = 'sysv ipc'
-        self.vars = ('msg', 'sem', 'shm')
-        self.type = 'd'
+        self.name  = 'sysv ipc'
+        self.vars  = ('msg', 'sem', 'shm')
+        self.type  = 'd'
         self.width = 3
         self.scale = 10
 
@@ -1284,10 +1284,10 @@ class dool_ipc(dstat):
 
 class dool_load(dstat):
     def __init__(self):
-        self.name = 'load avg'
-        self.nick = ('1m', '5m', '15m')
-        self.vars = ('load1', 'load5', 'load15')
-        self.type = 'f'
+        self.name  = 'load avg'
+        self.nick  = ('1m', '5m', '15m')
+        self.vars  = ('load1', 'load5', 'load15')
+        self.type  = 'f'
         self.width = 4
         self.scale = 0.5
         self.open('/proc/loadavg')
@@ -1301,10 +1301,10 @@ class dool_load(dstat):
 
 class dool_lock(dstat):
     def __init__(self):
-        self.name = 'file locks'
-        self.nick = ('pos', 'lck', 'rea', 'wri')
-        self.vars = ('posix', 'flock', 'read', 'write')
-        self.type = 'f'
+        self.name  = 'file locks'
+        self.nick  = ('pos', 'lck', 'rea', 'wri')
+        self.vars  = ('posix', 'flock', 'read', 'write')
+        self.type  = 'f'
         self.width = 3
         self.scale = 10
         self.open('/proc/locks')
@@ -1353,11 +1353,11 @@ class dool_mem_adv(dool_mem):
 
 class dool_net(dstat):
     def __init__(self):
-        self.nick = ('recv', 'send')
-        self.type = 'b'
+        self.nick        = ('recv', 'send')
+        self.type        = 'b'
         self.totalfilter = re.compile('^(lo|bond\d+|face|.+\.\d+)$')
         self.open('/proc/net/dev')
-        self.cols = 2
+        self.cols        = 2
 
     def discover(self, *objlist):
         ret = []
@@ -1457,10 +1457,10 @@ class dool_page24(dstat):
 
 class dool_proc(dstat):
     def __init__(self):
-        self.name = 'procs'
-        self.nick = ('run', 'blk', 'new')
-        self.vars = ('procs_running', 'procs_blocked', 'processes')
-        self.type = 'f'
+        self.name  = 'procs'
+        self.nick  = ('run', 'blk', 'new')
+        self.vars  = ('procs_running', 'procs_blocked', 'processes')
+        self.type  = 'f'
         self.width = 3
         self.scale = 10
         self.open('/proc/stat')
@@ -1488,10 +1488,10 @@ class dool_proc(dstat):
 
 class dool_raw(dstat):
     def __init__(self):
-        self.name = 'raw'
-        self.nick = ('raw',)
-        self.vars = ('sockets',)
-        self.type = 'd'
+        self.name  = 'raw'
+        self.nick  = ('raw',)
+        self.vars  = ('sockets',)
+        self.type  = 'd'
         self.width = 4
         self.scale = 1000
         self.open('/proc/net/raw')
@@ -1506,13 +1506,13 @@ class dool_raw(dstat):
 
 class dool_socket(dstat):
     def __init__(self):
-        self.name = 'sockets'
-        self.type = 'd'
+        self.name  = 'sockets'
+        self.type  = 'd'
         self.width = 4
         self.scale = 1000
         self.open('/proc/net/sockstat')
-        self.nick = ('tot', 'tcp', 'udp', 'raw', 'frg')
-        self.vars = ('sockets:', 'TCP:', 'UDP:', 'RAW:', 'FRAG:')
+        self.nick  = ('tot', 'tcp', 'udp', 'raw', 'frg')
+        self.vars  = ('sockets:', 'TCP:', 'UDP:', 'RAW:', 'FRAG:')
 
     def extract(self):
         for l in self.splitlines():
@@ -1591,10 +1591,10 @@ class dool_swap_old(dstat):
 
 class dool_sys(dstat):
     def __init__(self):
-        self.name = 'system'
-        self.nick = ('int', 'csw')
-        self.vars = ('intr', 'ctxt')
-        self.type = 'd'
+        self.name  = 'system'
+        self.nick  = ('int', 'csw')
+        self.vars  = ('intr', 'ctxt')
+        self.type  = 'd'
         self.width = 5
         self.scale = 1000
         self.open('/proc/stat')
@@ -1614,10 +1614,10 @@ class dool_sys(dstat):
 
 class dool_tcp(dstat):
     def __init__(self):
-        self.name = 'tcp sockets'
-        self.nick = ('lis', 'act', 'syn', 'tim', 'clo')
-        self.vars = ('listen', 'established', 'syn', 'wait', 'close')
-        self.type = 'd'
+        self.name  = 'tcp sockets'
+        self.nick  = ('lis', 'act', 'syn', 'tim', 'clo')
+        self.vars  = ('listen', 'established', 'syn', 'wait', 'close')
+        self.type  = 'd'
         self.width = 4
         self.scale = 1000
         self.open('/proc/net/tcp', '/proc/net/tcp6')
@@ -1657,10 +1657,10 @@ class dool_time(dstat):
 
 class dool_udp(dstat):
     def __init__(self):
-        self.name = 'udp'
-        self.nick = ('lis', 'act')
-        self.vars = ('listen', 'established')
-        self.type = 'd'
+        self.name  = 'udp'
+        self.nick  = ('lis', 'act')
+        self.vars  = ('listen', 'established')
+        self.type  = 'd'
         self.width = 4
         self.scale = 1000
         self.open('/proc/net/udp', '/proc/net/udp6')
@@ -1673,10 +1673,10 @@ class dool_udp(dstat):
 
 class dool_unix(dstat):
     def __init__(self):
-        self.name = 'unix sockets'
-        self.nick = ('dgm', 'str', 'lis', 'act')
-        self.vars = ('datagram', 'stream', 'listen', 'established')
-        self.type = 'd'
+        self.name  = 'unix sockets'
+        self.nick  = ('dgm', 'str', 'lis', 'act')
+        self.vars  = ('datagram', 'stream', 'listen', 'established')
+        self.type  = 'd'
         self.width = 4
         self.scale = 1000
         self.open('/proc/net/unix')
@@ -1692,12 +1692,12 @@ class dool_unix(dstat):
 
 class dool_vm(dstat):
     def __init__(self):
-        self.name = 'virtual memory'
-        self.nick = ('majpf', 'minpf', 'alloc', 'free')
+        self.name  = 'virtual memory'
+        self.nick  = ('majpf', 'minpf', 'alloc', 'free')
         ### Page allocations should include all page zones, not just ZONE_NORMAL,
         ### but also ZONE_DMA, ZONE_HIGHMEM, ZONE_DMA32 (depending on architecture)
-        self.vars = ('pgmajfault', 'pgfault', 'pgalloc_*', 'pgfree')
-        self.type = 'd'
+        self.vars  = ('pgmajfault', 'pgfault', 'pgalloc_*', 'pgfree')
+        self.type  = 'd'
         self.width = 5
         self.scale = 1000
         self.open('/proc/vmstat')
@@ -1719,22 +1719,22 @@ class dool_vm(dstat):
 
 class dool_vm_adv(dool_vm):
     def __init__(self):
-        self.name = 'advanced virtual memory'
-        self.nick = ('steal', 'scanK', 'scanD', 'pgoru', 'astll')
-        self.vars = ('pgsteal_*', 'pgscan_kswapd_*', 'pgscan_direct_*', 'pageoutrun', 'allocstall')
-        self.type = 'd'
+        self.name  = 'advanced virtual memory'
+        self.nick  = ('steal', 'scanK', 'scanD', 'pgoru', 'astll')
+        self.vars  = ('pgsteal_*', 'pgscan_kswapd_*', 'pgscan_direct_*', 'pageoutrun', 'allocstall')
+        self.type  = 'd'
         self.width = 5
         self.scale = 1000
         self.open('/proc/vmstat')
 
 class dool_zones(dstat):
     def __init__(self):
-        self.name = 'zones memory'
+        self.name  = 'zones memory'
 #        self.nick = ('dmaF', 'dmaH', 'd32F', 'd32H', 'movaF', 'movaH')
 #        self.vars = ('DMA_free', 'DMA_high', 'DMA32_free', 'DMA32_high', 'Movable_free', 'Movable_high')
-        self.nick = ('d32F', 'd32H', 'normF', 'normH')
-        self.vars = ('DMA32_free', 'DMA32_high', 'Normal_free', 'Normal_high')
-        self.type = 'd'
+        self.nick  = ('d32F', 'd32H', 'normF', 'normH')
+        self.vars  = ('DMA32_free', 'DMA32_high', 'Normal_free', 'Normal_high')
+        self.type  = 'd'
         self.width = 5
         self.scale = 1000
         self.open('/proc/zoneinfo')
@@ -1854,7 +1854,7 @@ def set_theme():
             'unit_hi'   : color['darkgray'],
             'colors_lo' : (color['darkred'], color['darkmagenta'], color['darkgreen'], color['darkblue'],
                           color['darkcyan'], color['black'], color['red'], color['green']),
-            'colors_hi': (color['red'], color['magenta'], color['green'], color['blue'],
+            'colors_hi' : (color['red'], color['magenta'], color['green'], color['blue'],
                           color['cyan'], color['darkgray'], color['darkred'], color['darkgreen']),
         }
     else:
@@ -1875,7 +1875,7 @@ def set_theme():
             'unit_hi'   : color['darkgray'],
             'colors_lo' : (color['red'], color['yellow'], color['green'], color['blue'],
                           color['cyan'], color['white'], color['darkred'], color['darkgreen']),
-            'colors_hi': (color['darkred'], color['darkyellow'], color['darkgreen'], color['darkblue'],
+            'colors_hi' : (color['darkred'], color['darkyellow'], color['darkgreen'], color['darkblue'],
                           color['darkcyan'], color['gray'], color['red'], color['green']),
         }
     return theme
@@ -2162,14 +2162,14 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
 
     if step == op.delay:
         colors = theme['colors_lo']
-        ctext = theme['text_lo']
-        cunit = theme['unit_lo']
-        cdone = theme['done_lo']
+        ctext  = theme['text_lo']
+        cunit  = theme['unit_lo']
+        cdone  = theme['done_lo']
     else:
         colors = theme['colors_hi']
-        ctext = theme['text_hi']
-        cunit = theme['unit_hi']
-        cdone = theme['done_hi']
+        ctext  = theme['text_hi']
+        cunit  = theme['unit_hi']
+        cdone  = theme['done_hi']
 
     ### Convert value to string given base and field-length
     if op.integer and ctype in ('b', 'd', 'p', 'f'):
@@ -2410,15 +2410,15 @@ def sysfs_dev(device):
 
 def dev(maj, min):
     "Convert major/minor pairs into device names"
-    ram = [1, ]
-    ide = [3, 22, 33, 34, 56, 57, 88, 89, 90, 91]
-    loop = [7, ]
-    scsi = [8, 65, 66, 67, 68, 69, 70, 71, 128, 129, 130, 131, 132, 133, 134, 135]
-    md = [9, ]
-    ida = [72, 73, 74, 75, 76, 77, 78, 79]
-    ubd = [98,]
+    ram   = [1, ]
+    ide   = [3, 22, 33, 34, 56, 57, 88, 89, 90, 91]
+    loop  = [7, ]
+    scsi  = [8, 65, 66, 67, 68, 69, 70, 71, 128, 129, 130, 131, 132, 133, 134, 135]
+    md    = [9, ]
+    ida   = [72, 73, 74, 75, 76, 77, 78, 79]
+    ubd   = [98,]
     cciss = [104,]
-    dm =  [253,]
+    dm    = [253,]
     if maj in scsi:
         disc = chr(ord('a') + scsi.index(maj) * 16 + min / 16)
         part = min % 16
@@ -2568,11 +2568,11 @@ def main():
     except:
         # Support Python 3
         maxint = float("inf")
-    ownpid = str(os.getpid())
+
+    ownpid   = str(os.getpid())
     pagesize = resource.getpagesize()
     interval = 1
-
-    user = getpass.getuser()
+    user     = getpass.getuser()
     hostname = os.uname()[1]
 
     ### Write term-title
