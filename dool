@@ -2877,4 +2877,4 @@ else:
     op = Options('')
     step = 1
 
-# vim:ts=4:sw=4:et
+# vim: tabstop=4 shiftwidth=4 expandtab autoindent softtabstop=4
