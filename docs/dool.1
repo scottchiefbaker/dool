@@ -1,5 +1,5 @@
 '\" t
-.\"     Title: dstat
+.\"     Title: dool
 .\"    Author: Dag Wieers <dag@wieers.com>
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
 .\"      Date: August 2014
@@ -7,7 +7,7 @@
 .\"    Source: \ \& 0.7.3
 .\"  Language: English
 .\"
-.TH "DSTAT" "1" "August 2014" "\ \& 0\&.7\&.3" "\ \&"
+.TH "DOOL" "1" "August 2014" "\ \& 0\&.7\&.3" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -19,21 +19,21 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-dstat \- versatile tool for generating system resource statistics
+dool \- versatile tool for generating system resource statistics
 .SH "SYNOPSIS"
 .sp
-dstat [\-afv] [options\&.\&.] [delay [count]]
+dool [\-afv] [options\&.\&.] [delay [count]]
 .SH "DESCRIPTION"
 .sp
-Dstat is a versatile replacement for vmstat, iostat and ifstat\&. Dstat overcomes some of the limitations and adds some extra features\&.
+Dool is a versatile replacement for vmstat, iostat and ifstat\&. Dool overcomes some of the limitations and adds some extra features\&.
 .sp
-Dstat allows you to view all of your system resources instantly, you can eg\&. compare disk usage in combination with interrupts from your IDE controller, or compare the network bandwidth numbers directly with the disk throughput (in the same interval)\&.
+Dool allows you to view all of your system resources instantly, you can eg\&. compare disk usage in combination with interrupts from your IDE controller, or compare the network bandwidth numbers directly with the disk throughput (in the same interval)\&.
 .sp
-Dstat also cleverly gives you the most detailed information in columns and clearly indicates in what magnitude and unit the output is displayed\&. Less confusion, less mistakes, more efficient\&.
+Dool also cleverly gives you the most detailed information in columns and clearly indicates in what magnitude and unit the output is displayed\&. Less confusion, less mistakes, more efficient\&.
 .sp
-Dstat is unique in letting you aggregate block device throughput for a certain diskset or network bandwidth for a group of interfaces, ie\&. you can see the throughput for all the block devices that make up a single filesystem or storage system\&.
+Dool is unique in letting you aggregate block device throughput for a certain diskset or network bandwidth for a group of interfaces, ie\&. you can see the throughput for all the block devices that make up a single filesystem or storage system\&.
 .sp
-Dstat allows its data to be directly written to a CSV file to be imported and used by OpenOffice, Gnumeric or Excel to create graphs\&.
+Dool allows its data to be directly written to a CSV file to be imported and used by OpenOffice, Gnumeric or Excel to create graphs\&.
 .if n \{\
 .sp
 .\}
@@ -47,7 +47,7 @@ Dstat allows its data to be directly written to a CSV file to be imported and us
 .ps -1
 .br
 .sp
-Users of Sleuthkit might find Sleuthkit\(cqs dstat being renamed to datastat to avoid a name conflict\&. See Debian bug #283709 for more information\&.
+Users of Sleuthkit might find Sleuthkit\(cqs dool being renamed to datastat to avoid a name conflict\&. See Debian bug #283709 for more information\&.
 .sp .5v
 .RE
 .SH "OPTIONS"
@@ -303,11 +303,11 @@ write CSV output to file
 .PP
 \-\-profile
 .RS 4
-show profiling statistics when exiting dstat
+show profiling statistics when exiting dool
 .RE
 .SH "PLUGINS"
 .sp
-While anyone can create their own dstat plugins (and contribute them) dstat ships with a number of plugins already that extend its capabilities greatly\&. Here is an overview of the plugins dstat ships with:
+While anyone can create their own dool plugins (and contribute them) dool ships with a number of plugins already that extend its capabilities greatly\&. Here is an overview of the plugins dool ships with:
 .PP
 \-\-battery
 .RS 4
@@ -359,24 +359,24 @@ percentage of CPU time during which I/O requests were issued to the device (band
 average time (in milliseconds) for I/O requests issued to the device to be served
 .RE
 .PP
-\-\-dstat
+\-\-dool
 .RS 4
-show dstat cputime consumption and latency
+show dool cputime consumption and latency
 .RE
 .PP
-\-\-dstat\-cpu
+\-\-dool\-cpu
 .RS 4
-show dstat advanced cpu usage
+show dool advanced cpu usage
 .RE
 .PP
-\-\-dstat\-ctxt
+\-\-dool\-ctxt
 .RS 4
-show dstat context switches
+show dool context switches
 .RE
 .PP
-\-\-dstat\-mem
+\-\-dool\-mem
 .RS 4
-show dstat advanced memory usage
+show dool advanced memory usage
 .RE
 .PP
 \-\-fan
@@ -401,7 +401,7 @@ GPFS filesystem operations (needs mmpmon)
 .PP
 \-\-helloworld
 .RS 4
-Hello world example dstat plugin
+Hello world example dool plugin
 .RE
 .PP
 \-\-innodb\-buffer
@@ -548,29 +548,29 @@ show sendmail queue size (needs sendmail)
 .PP
 \-\-snmp\-cpu
 .RS 4
-show CPU stats using SNMP from DSTAT_SNMPSERVER
+show CPU stats using SNMP from DOOL_SNMPSERVER
 .RE
 .PP
 \-\-snmp\-load
 .RS 4
-show load stats using SNMP from DSTAT_SNMPSERVER
+show load stats using SNMP from DOOL_SNMPSERVER
 .RE
 .PP
 \-\-snmp\-mem
 .RS 4
-show memory stats using SNMP from DSTAT_SNMPSERVER
+show memory stats using SNMP from DOOL_SNMPSERVER
 .RE
 .PP
 \-\-snmp\-net
 .RS 4
-show network stats using SNMP from DSTAT_SNMPSERVER
+show network stats using SNMP from DOOL_SNMPSERVER
 .RE
 .sp
-\-\-snmp\-net\-err: show network errors using SNMP from DSTAT_SNMPSERVER
+\-\-snmp\-net\-err: show network errors using SNMP from DOOL_SNMPSERVER
 .PP
 \-\-snmp\-sys
 .RS 4
-show system stats (interrupts and context switches) using SNMP from DSTAT_SNMPSERVER
+show system stats (interrupts and context switches) using SNMP from DOOL_SNMPSERVER
 .RE
 .PP
 \-\-snooze
@@ -741,30 +741,30 @@ show ZFS zil stats
 The default delay is 1 and count is unspecified (unlimited)
 .SH "INTERMEDIATE UPDATES"
 .sp
-When invoking dstat with a \fBdelay\fR greater than 1 and without the \fB\-\-noupdate\fR option, it will show intermediate updates, ie\&. the first time a 1 sec average, the second update a 2 second average, etc\&. until the delay has been reached\&.
+When invoking dool with a \fBdelay\fR greater than 1 and without the \fB\-\-noupdate\fR option, it will show intermediate updates, ie\&. the first time a 1 sec average, the second update a 2 second average, etc\&. until the delay has been reached\&.
 .sp
 So in case you specified a delay of 10, \fBthe 9 intermediate updates are NOT snapshots\fR, they are averages over the time that passed since the last final update\&. The end result is that you get a 10 second average on a new line, just like with vmstat\&.
 .SH "EXAMPLES"
 .sp
-Using dstat to relate disk\-throughput with network\-usage (eth0), total CPU\-usage and system counters:
+Using dool to relate disk\-throughput with network\-usage (eth0), total CPU\-usage and system counters:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-dstat \-dnyc \-N eth0 \-C total \-f 5
+dool \-dnyc \-N eth0 \-C total \-f 5
 .fi
 .if n \{\
 .RE
 .\}
 .sp
-Checking dstat\(cqs behaviour and the system impact of dstat:
+Checking dool\(cqs behaviour and the system impact of dool:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-dstat \-taf \-\-debug
+dool \-taf \-\-debug
 .fi
 .if n \{\
 .RE
@@ -776,7 +776,7 @@ Using the time plugin together with cpu, net, disk, system, load, proc and top_c
 .RS 4
 .\}
 .nf
-dstat \-tcndylp \-\-top\-cpu
+dool \-tcndylp \-\-top\-cpu
 .fi
 .if n \{\
 .RE
@@ -788,26 +788,26 @@ this is identical to
 .RS 4
 .\}
 .nf
-dstat \-\-time \-\-cpu \-\-net \-\-disk \-\-sys \-\-load \-\-proc \-\-top\-cpu
+dool \-\-time \-\-cpu \-\-net \-\-disk \-\-sys \-\-load \-\-proc \-\-top\-cpu
 .fi
 .if n \{\
 .RE
 .\}
 .sp
-Using dstat to relate advanced cpu stats with interrupts per device:
+Using dool to relate advanced cpu stats with interrupts per device:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-dstat \-t \-\-cpu\-adv \-yif
+dool \-t \-\-cpu\-adv \-yif
 .fi
 .if n \{\
 .RE
 .\}
 .SH "BUGS"
 .sp
-Since it is practically impossible to test dstat on every possible permutation of kernel, python or distribution version, I need your help and your feedback to fix the remaining problems\&. If you have improvements or bugreports, please send them to: \m[blue]\fBdag@wieers\&.com\fR\m[]\&\s-2\u[1]\d\s+2
+Since it is practically impossible to test dool on every possible permutation of kernel, python or distribution version, I need your help and your feedback to fix the remaining problems\&. If you have improvements or bugreports, please send them to: \m[blue]\fBdag@wieers\&.com\fR\m[]\&\s-2\u[1]\d\s+2
 .if n \{\
 .sp
 .\}
@@ -826,29 +826,29 @@ Please see the TODO file for known bugs and future plans\&.
 .RE
 .SH "FILES"
 .sp
-Paths that may contain external dstat_*\&.py plugins:
+Paths that may contain external dool_*\&.py plugins:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-~/\&.dstat/
+~/\&.dool/
 (path of binary)/plugins/
-/usr/share/dstat/
-/usr/local/share/dstat/
+/usr/share/dool/
+/usr/local/share/dool/
 .fi
 .if n \{\
 .RE
 .\}
 .SH "ENVIRONMENT VARIABLES"
 .sp
-Dstat will read additional command line arguments from the environment variable \fBDSTAT_OPTS\fR\&. You can use this to configure Dstat\(cqs default behavior, e\&.g\&. if you have a black\-on\-white terminal:
+Dool will read additional command line arguments from the environment variable \fBDOOL_OPTS\fR\&. You can use this to configure Dool\(cqs default behavior, e\&.g\&. if you have a black\-on\-white terminal:
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-export DSTAT_OPTS="\-\-bw \-\-noupdate"
+export DOOL_OPTS="\-\-bw \-\-noupdate"
 .fi
 .if n \{\
 .RE
@@ -860,7 +860,7 @@ Other internal or external plugins have their own environment variables to influ
 .RS 4
 .\}
 .nf
-DSTAT_NTPSERVER
+DOOL_NTPSERVER
 .fi
 .if n \{\
 .RE
@@ -870,12 +870,12 @@ DSTAT_NTPSERVER
 .RS 4
 .\}
 .nf
-DSTAT_MYSQL
-DSTAT_MYSQL_HOST
-DSTAT_MYSQL_PORT
-DSTAT_MYSQL_SOCKET
-DSTAT_MYSQL_USER
-DSTAT_MYSQL_PWD
+DOOL_MYSQL
+DOOL_MYSQL_HOST
+DOOL_MYSQL_PORT
+DOOL_MYSQL_SOCKET
+DOOL_MYSQL_USER
+DOOL_MYSQL_PWD
 .fi
 .if n \{\
 .RE
@@ -885,8 +885,8 @@ DSTAT_MYSQL_PWD
 .RS 4
 .\}
 .nf
-DSTAT_SNMPSERVER
-DSTAT_SNMPCOMMUNITY
+DOOL_SNMPSERVER
+DOOL_SNMPCOMMUNITY
 .fi
 .if n \{\
 .RE
@@ -896,7 +896,7 @@ DSTAT_SNMPCOMMUNITY
 .RS 4
 .\}
 .nf
-DSTAT_SQUID_OPTS
+DOOL_SQUID_OPTS
 .fi
 .if n \{\
 .RE
@@ -906,7 +906,7 @@ DSTAT_SQUID_OPTS
 .RS 4
 .\}
 .nf
-DSTAT_TIMEFMT
+DOOL_TIMEFMT
 .fi
 .if n \{\
 .RE
@@ -1015,7 +1015,7 @@ collectl(1), proc(5), procinfo(8)
 .sp
 Written by Dag Wieers \m[blue]\fBdag@wieers\&.com\fR\m[]\&\s-2\u[1]\d\s+2
 .sp
-Homepage at \m[blue]\fBhttp://dag\&.wieers\&.com/home\-made/dstat/\fR\m[]
+Homepage at \m[blue]\fBhttp://dag\&.wieers\&.com/home\-made/dool/\fR\m[]
 .sp
 This manpage was initially written by Andrew Pollock \m[blue]\fBapollock@debian\&.org\fR\m[]\&\s-2\u[2]\d\s+2 for the Debian GNU/Linux system\&.
 .SH "AUTHOR"
