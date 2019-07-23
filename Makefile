@@ -1,11 +1,11 @@
-name = dstat
+name    = dool
 version = $(shell awk '/^Version: / {print $$2}' $(name).spec)
 
-prefix = /usr
+prefix     = /usr
 sysconfdir = /etc
-bindir = $(prefix)/bin
-datadir = $(prefix)/share
-mandir = $(datadir)/man
+bindir     = $(prefix)/bin
+datadir    = $(prefix)/share
+mandir     = $(datadir)/man
 
 .PHONY: all install docs clean
 
@@ -16,14 +16,14 @@ docs:
 	$(MAKE) -C docs docs
 
 install:
-#	-[ ! -f $(DESTDIR)$(sysconfdir)/dstat.conf ] && install -D -m0644 dstat.conf $(DESTDIR)$(sysconfdir)/dstat.conf
-	install -Dp -m0755 dstat $(DESTDIR)$(bindir)/dstat
-	install -d -m0755 $(DESTDIR)$(datadir)/dstat/
-	install -Dp -m0755 dstat $(DESTDIR)$(datadir)/dstat/dstat.py
-	install -Dp -m0644 plugins/dstat_*.py $(DESTDIR)$(datadir)/dstat/
-#	install -d -m0755 $(DESTDIR)$(datadir)/dstat/examples/
-#	install -Dp -m0755 examples/*.py $(DESTDIR)$(datadir)/dstat/examples/
-	install -Dp -m0644 docs/dstat.1 $(DESTDIR)$(mandir)/man1/dstat.1
+#	-[ ! -f $(DESTDIR)$(sysconfdir)/dool.conf ] && install -D -m0644 dool.conf $(DESTDIR)$(sysconfdir)/dool.conf
+	install -Dp -m0755 dool $(DESTDIR)$(bindir)/dool
+	install -d  -m0755 $(DESTDIR)$(datadir)/dool/
+	install -Dp -m0755 dool $(DESTDIR)$(datadir)/dool/dool.py
+	install -Dp -m0644 plugins/dool_*.py $(DESTDIR)$(datadir)/dool/
+#	install -d  -m0755 $(DESTDIR)$(datadir)/dool/examples/
+#	install -Dp -m0755 examples/*.py $(DESTDIR)$(datadir)/dool/examples/
+	install -Dp -m0644 docs/dool.1 $(DESTDIR)$(mandir)/man1/dool.1
 
 docs-install:
 	$(MAKE) -C docs install
@@ -33,9 +33,9 @@ clean:
 	$(MAKE) -C docs clean
 
 test:
-	./dstat --version
-	./dstat -taf 1 5
-	./dstat -t --all-plugins 1 5
+	./dool --version
+	./dool -taf 1 5
+	./dool -t --all-plugins 1 5
 
 dist: clean
 	$(MAKE) -C docs dist
