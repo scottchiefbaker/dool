@@ -38,7 +38,7 @@ try:
 except ImportError:
     from collections import Sequence # Python 2.x
 
-VERSION = '0.8.0'
+VERSION = '0.9.9'
 
 theme = { 'default': '' }
 
