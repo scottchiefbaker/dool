@@ -2,24 +2,14 @@
 
 Dool is a Python3 compatible clone of [Dstat](https://github.com/dagwieers/dstat).
 
----
+After Dag Wieers ceased development of Dstat I forked the project to continue development. Dool is a Python 2.x and 3.x compatible version of Dstat with a couple minor bug fixes. 
 
-### Original Dstat README
+### Usage
 
-Dstat is a versatile replacement for vmstat, iostat, mpstat, netstat and ifstat. Dstat overcomes some of their limitations and while also adding extra features, more counters and flexibility. Dstat is handy for monitoring systems during performance tuning tests, benchmarks or troubleshooting.
+Show the default monitoring modules every second
 
-Dstat allows you to view all of your system resources instantly. For example you can compare disk usage in combination with interrupts from your IDE controller, or compare network bandwidth directly with disk throughput.
+    dool
 
-Dstat gives you detailed selective information in columns and clearly indicates the magnitude and unit the output is displayed. Less confusion, less mistakes.
+Show more detailed statistics every fifteen seconds
 
-Dstat is unique in letting you aggregate block device throughput for a certain diskset or networkset. This allows you to see the throughput for all the block devices that make up a single filesystem or storage system.
-
-Dstat is extensible! You can write your own Dstat plugins to monitor whatever you like in just a few minutes based on provided examples and a little bit of Python knowledge.
-
-Dstat's output by default is designed for human consumption in real-time. Dstat also allows CSV output so you to archive historical data in a file to be imported later into a spreadsheet. This is useful for generating graphs.
-
-Since it's practically impossible to test dstat on every possible permutation of kernel, python or distribution version, we need your help and feedback in testing.
-
-If you have improvements or bug reports, please send them to:
-
-    http://github.com/dagwieers/dstat
+    dool --all 15
