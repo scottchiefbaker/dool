@@ -577,7 +577,7 @@ class dstat:
                     line = line + printcsv(val)
                     if j + 1 != len(self.val[name]):
                         line = line + char['sep']
-            elif isinstance(self.val[name], str):
+            elif isinstance(self.val[name], six.string_types):
                 line = line + self.val[name]
             else:
                 line = line + printcsv(self.val[name])
