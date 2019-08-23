@@ -1,34 +1,34 @@
 # $Id$
-# Authority: dag
-# Upstream: Dag Wieers <dag@wieers.com>
+# Authority: Scott Baker
+# Upstream: https://github.com/scottchiefbaker/dool
 
 Summary: Pluggable real-time performance monitoring tool
-Name: dstat
-Version: 0.7.3
+Name: dool
+Version: 0.9.9
 Release: 1
 License: GPL
 Group: System Environment/Base
-URL: http://dag.wieers.com/home-made/dstat/
+URL: https://github.com/scottchiefbaker/dool
 
-Source: http://dag.wieers.com/home-made/dstat/dstat-%{version}.tar.bz2
+Source: https://github.com/scottchiefbaker/dool/releases/dool-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildArch: noarch
-BuildRequires: python >= 2.0
-Requires: python >= 2.0
+BuildRequires: python >= 2.6
+Requires: python >= 2.6 python-six
 
 %description
-Dstat is a versatile replacement for vmstat, iostat, netstat and ifstat.
-Dstat overcomes some of their limitations and adds some extra features,
-more counters and flexibility. Dstat is handy for monitoring systems
+Dool is a versatile replacement for vmstat, iostat, netstat and ifstat.
+Dool overcomes some of their limitations and adds some extra features,
+more counters and flexibility. Dool is handy for monitoring systems
 during performance tuning tests, benchmarks or troubleshooting.
 
-Dstat allows you to view all of your system resources in real-time, you
+Dool allows you to view all of your system resources in real-time, you
 can eg. compare disk utilization in combination with interrupts from your
 IDE controller, or compare the network bandwidth numbers directly
-with the disk throughput (in the same interval). 
+with the disk throughput (in the same interval).
 
-Dstat gives you detailed selective information in columns and clearly
+Dool gives you detailed selective information in columns and clearly
 indicates in what magnitude and unit the output is displayed. Less
 confusion, less mistakes. And most importantly, it makes it very easy
 to write plugins to collect your own counters and extend in ways you
@@ -48,12 +48,15 @@ never expected.
 
 %files
 %defattr(-, root, root, 0755)
-%doc AUTHORS ChangeLog COPYING README TODO docs/*.html docs/*.adoc examples/
-%doc %{_mandir}/man1/dstat.1*
-%{_bindir}/dstat
-%{_datadir}/dstat/
+%doc AUTHORS ChangeLog COPYING README.md TODO docs/*.html docs/*.adoc examples/
+%doc %{_mandir}/man1/dool.1*
+%{_bindir}/dool
+%{_datadir}/dool/
 
 %changelog
+* Fri Aug 23 2019 Scott Baker <scott@perturb.org> - 0.9.9-1
+- Updated to release 0.9.9.
+
 * Fri Mar 18 2016 Dag Wieers <dag@wieers.com> - 0.7.3-1
 - Updated to release 0.7.3.
 
