@@ -195,7 +195,8 @@ class Options:
                 self.version()
                 sys.exit(0)
             elif opt.startswith('--'):
-                self.plugins.append(opt[2:])
+                plugin_name = opt[2:]
+                self.plugins.append(plugin_name)
             else:
                 print('dool: option %s unknown to getopt, try dool -h for a list of all the options' % opt)
                 sys.exit(1)
