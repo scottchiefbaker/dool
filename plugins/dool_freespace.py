@@ -16,14 +16,15 @@ class dstat_plugin(dstat):
     def vars(self):
         ret = []
 
+        mystr = os.environ.get('DOOL_FREESPACE_MOUNT_POINTS','').strip()
+
+        if (len(mystr) > 0):
+            mp = mystr.split(',')
+        else:
+            mp = []
+
         include_fs_types = (
             'ext2', 'ext3', 'ext4', 'btrfs', 'xfs'
-        )
-
-        ### FIXME: Excluding 'none' here may not be what people want (/dev/shm)
-        exclude_fs_types = (
-            'devpts', 'none', 'proc', 'sunrpc', 'usbfs', 'securityfs', 'hugetlbfs',
-            'configfs', 'selinuxfs', 'pstore', 'nfsd', 'tracefs', 'cgroup2', 'bpf'
         )
 
         for l in self.splitlines():
@@ -33,16 +34,23 @@ class dstat_plugin(dstat):
             mount_point = l[1]
             fs_type     = l[2]
 
-            if fs_type not in (include_fs_types):
+            #print(device + " | " + mount_point + " | " + fs_type)
+
+            # If there is an array of mount points (whitelist) and this
+            # mount point is *NOT* in that list, skip it
+            if (mp):
+                if (not mount_point in mp):
+                    continue
+            # If there is NOT an array of mount points check it against a
+            # whitelisted array of fs_types
+            elif (fs_type not in include_fs_types):
                 continue
 
-            name = l[1]
-            res  = os.statvfs(name)
+            res = os.statvfs(mount_point)
 
             if res[0] == 0: continue ### Skip zero block filesystems
-            ret.append(name)
+            ret.append(mount_point)
 
-            #print(l[0] + " / " + name + " / " + l[2])
         return ret
 
     def name(self):
