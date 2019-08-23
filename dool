@@ -96,7 +96,7 @@ class Options:
 
         try:
             opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V',
-                ['all', 'all-plugins', 'bits', 'bw', 'black-on-white', 'color',
+                ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
                  'debug', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'nocolor', 'noheaders', 'noupdate',
                  'output=', 'pidfile=', 'profile', 'version', 'vmstat'] + allplugins)
@@ -159,6 +159,8 @@ class Options:
                 plugins = list({}.fromkeys(allplugins).keys())
                 plugins.sort()
                 self.plugins += plugins
+            elif opt in ['--bytes']:
+                self.bits = False
             elif opt in ['--bits']:
                 self.bits = True
             elif opt in ['--bw', '--black-on-white', '--blackonwhite']:
