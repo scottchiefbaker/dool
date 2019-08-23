@@ -15,13 +15,30 @@ class dstat_plugin(dstat):
 
     def vars(self):
         ret = []
+
+        include_fs_types = (
+            'ext2', 'ext3', 'ext4', 'btrfs', 'xfs'
+        )
+
+        ### FIXME: Excluding 'none' here may not be what people want (/dev/shm)
+        exclude_fs_types = (
+            'devpts', 'none', 'proc', 'sunrpc', 'usbfs', 'securityfs', 'hugetlbfs',
+            'configfs', 'selinuxfs', 'pstore', 'nfsd', 'tracefs', 'cgroup2', 'bpf'
+        )
+
         for l in self.splitlines():
             if len(l) < 6: continue
-            if l[2] in ('binfmt_misc', 'devpts', 'iso9660', 'none', 'proc', 'sysfs', 'usbfs', 'cgroup', 'tmpfs', 'devtmpfs', 'debugfs', 'mqueue', 'systemd-1', 'rootfs', 'autofs'): continue
-            ### FIXME: Excluding 'none' here may not be what people want (/dev/shm)
-            if l[0] in ('devpts', 'none', 'proc', 'sunrpc', 'usbfs', 'securityfs', 'hugetlbfs', 'configfs', 'selinuxfs', 'pstore', 'nfsd'): continue
+
+            device      = l[0]
+            mount_point = l[1]
+            fs_type     = l[2]
+
+            if fs_type not in (include_fs_types):
+                continue
+
             name = l[1]
-            res = os.statvfs(name)
+            res  = os.statvfs(name)
+
             if res[0] == 0: continue ### Skip zero block filesystems
             ret.append(name)
 
