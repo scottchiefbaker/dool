@@ -98,7 +98,7 @@ class Options:
             opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V',
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
                  'debug', 'filesystem', 'float', 'full', 'help', 'integer',
-                 'list', 'mods', 'modules', 'nocolor', 'noheaders', 'noupdate',
+                 'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
                  'output=', 'pidfile=', 'profile', 'version', 'vmstat'] + allplugins)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
@@ -147,6 +147,8 @@ class Options:
             elif opt in ['-y']:
                 self.plugins.append('sys')
 
+            elif opt in ['--more']:
+                self.plugins += [ 'cpu', 'disk', 'net', 'mem', 'proc', 'load', 'time' ]
             elif opt in ['-a', '--all']:
                 self.plugins += [ 'cpu', 'disk', 'net', 'page', 'mem', 'sys', 'proc', 'load', 'time' ]
             elif opt in ['-v', '--vmstat']:
