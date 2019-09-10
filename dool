@@ -2877,6 +2877,13 @@ def perform(update):
         if not op.update:
             sys.stdout.write('\n')
 
+# Borrowed from: https://stackoverflow.com/questions/14693701/how-can-i-remove-the-ansi-escape-sequences-from-a-string-in-python
+def stripcolor(self, mystr):
+    ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+    ret         = ansi_escape.sub('', mystr)
+
+    return ret
+
 ### Main entrance
 if __name__ == '__main__':
     try:
