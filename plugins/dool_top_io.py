@@ -7,8 +7,8 @@ class dstat_plugin(dstat):
     Displays the name of the most expensive I/O process
     """
     def __init__(self):
-        self.name = 'most expensive'
-        self.vars = ('i/o process',)
+        self.name = 'top-io'
+        self.vars = ('    name    read  writ',)
         self.type = 's'
         self.width = 22
         self.scale = 0
