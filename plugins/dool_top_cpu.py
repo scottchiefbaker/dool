@@ -47,7 +47,7 @@ class dstat_plugin(dstat):
 #            self.val['name'] = name
 
         if self.val['max'] != 0.0:
-            self.output = '%-*s%s' % (self.width-3, self.val['name'][0:self.width-3], cprint(self.val['max'], 'f', 3, 34))
+            self.output = '%-*s%s' % (self.width-3, self.val['name'][0:self.width-4], cprint(self.val['max'], 'f', 3, 34))
 
         ### Debug (show PID)
 #        self.output = '%*s %-*s' % (5, self.val['pid'], self.width-6, self.val['name'])
