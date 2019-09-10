@@ -19,16 +19,16 @@ class dstat_plugin(dstat):
             raise Exception('Kernel has no per-process I/O accounting [CONFIG_TASK_IO_ACCOUNTING], use at least 2.6.20')
 
     def extract(self):
-        self.output = ''
-        self.pidset2 = {}
+        self.output       = ''
+        self.pidset2      = {}
         self.val['usage'] = 0.0
         for pid in proc_pidlist():
             try:
                 ### Reset values
                 if pid not in self.pidset2:
-                    self.pidset2[pid] = {'rchar:': 0, 'wchar:': 0}
+                    self.pidset2[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
                 if pid not in self.pidset1:
-                    self.pidset1[pid] = {'rchar:': 0, 'wchar:': 0}
+                    self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
 
                 ### Extract name
                 name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
@@ -42,19 +42,22 @@ class dstat_plugin(dstat):
             except IndexError:
                 continue
 
-            read_usage = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * 1.0 / elapsed
-            write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * 1.0 / elapsed
-            usage = read_usage + write_usage
-#            if usage > 0.0:
-#                print('%s %s:%s' % (pid, read_usage, write_usage))
+            if (op.bits):
+                factor = 8
+            else:
+                factor = 1
+
+            read_usage  = (self.pidset2[pid]['read_bytes:']  - self.pidset1[pid]['read_bytes:'])  * factor / elapsed
+            write_usage = (self.pidset2[pid]['write_bytes:'] - self.pidset1[pid]['write_bytes:']) * factor / elapsed
+            usage       = read_usage + write_usage
 
             ### Get the process that spends the most jiffies
             if usage > self.val['usage']:
-                self.val['usage'] = usage
-                self.val['read_usage'] = read_usage
+                self.val['usage']       = usage
+                self.val['read_usage']  = read_usage
                 self.val['write_usage'] = write_usage
-                self.val['pid'] = pid
-                self.val['name'] = getnamebypid(pid, name)
+                self.val['pid']         = pid
+                self.val['name']        = getnamebypid(pid, name)
 
         if step == op.delay:
             self.pidset1 = self.pidset2
