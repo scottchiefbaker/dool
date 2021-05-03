@@ -60,6 +60,10 @@ class dstat_plugin(dstat):
             )
 
         for name in self.vars:
+            # Avoid KeyError: 'rq_ticks'
+            # See https://bugs.gentoo.org/784704
+            if 'rq_ticks' not in self.set1[name] or 'rq_ticks' not in self.set2[name]:
+                continue
             self.val[name] = ( ( self.set2[name]['rq_ticks'] - self.set1[name]['rq_ticks'] ) * 1.0 / elapsed / 1000, )
 
         if step == op.delay:
