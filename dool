@@ -111,7 +111,8 @@ class Options:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
 
-        default_plugins = [ 'cpu', 'disk', 'net', 'load', 'time' ]
+        default_plugins = [ 'cpu', 'disk', 'net', 'load' ]
+        plugin_defaults = 0
 
         for opt, arg in opts:
             if opt in ['-c']:
@@ -156,11 +157,12 @@ class Options:
             elif opt in ['-y']:
                 self.plugins.append('sys')
             elif opt in ['--defaults']:
-                self.plugins = default_plugins
+                self.plugins    = default_plugins
+                plugin_defaults = 1
             elif opt in ['--more']:
-                self.plugins += [ 'cpu', 'disk', 'net', 'mem', 'proc', 'load', 'time' ]
+                self.plugins += [ 'cpu', 'disk', 'net', 'mem', 'proc', 'load' ]
             elif opt in ['-a', '--all']:
-                self.plugins += [ 'cpu', 'disk', 'net', 'page', 'mem', 'sys', 'proc', 'load', 'time' ]
+                self.plugins += [ 'cpu', 'disk', 'net', 'page', 'mem', 'sys', 'proc', 'load' ]
             elif opt in ['-v', '--vmstat']:
                 self.plugins += [ 'proc', 'mem', 'page', 'disk', 'sys', 'cpu' ]
             elif opt in ['-f', '--full']:
@@ -219,8 +221,21 @@ class Options:
             sys.exit(1)
 
         if not self.plugins:
-            self.plugins = default_plugins
+            self.plugins    = default_plugins
+            plugin_defaults = 1
             print("Using default plugins: " + ", ".join(self.plugins) + "")
+
+        # Loop through the opt array and find the keys
+        opt_keys = []
+        for x in opts:
+            key = x[0]
+            opt_keys.append(key)
+
+        # Append the 'time' plugin to the end for 'more' and 'all'
+        needs_time_added = ('time' not in self.plugins) and (("--more" in opt_keys) or ("--all" in opt_keys) or (plugin_defaults))
+
+        if needs_time_added:
+            self.plugins.append('time');
 
         try:
             if len(args) > 0: self.delay = int(args[0])
