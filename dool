@@ -1787,6 +1787,12 @@ class dool_zones(dstat):
 
 ### END STATS DEFINITIONS ###
 
+def signal_handler(signum, frame):
+    if op.output:
+        outputfile.flush()
+    sys.stdout.flush()    
+    sys.exit(0)
+
 def fcolor(num):
    ret = "\033[38;5;" + str(num) + "m"
 
@@ -2598,6 +2604,9 @@ def main():
     global totlist, inittime
     global update, missed
 
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     cpunr = getcpunr()
     hz = os.sysconf('SC_CLK_TCK')
     try:
@@ -2900,17 +2909,8 @@ def stripcolor(self, mystr):
 
     return ret
 
-def signal_handler(signum, frame):
-    print('\nStopping dool...', file=sys.stderr)
-    if op.output:
-        outputfile.flush()
-    sys.stdout.flush()    
-    sys.exit(0)
-
 ### Main entrance
 if __name__ == '__main__':
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
     try:
         initterm()
         op = Options(os.getenv('DOOL_OPTS','').split() + sys.argv[1:])
