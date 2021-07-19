@@ -30,6 +30,7 @@ import resource
 import sched
 import sys
 import time
+import signal
 
 # https://stackoverflow.com/questions/53978542/how-to-use-collections-abc-from-both-python-3-8-and-python-2-7
 try:
@@ -2899,8 +2900,17 @@ def stripcolor(self, mystr):
 
     return ret
 
+def signal_handler(signum, frame):
+    print('\nStopping dool...', file=sys.stderr)
+    if op.output:
+        outputfile.flush()
+    sys.stdout.flush()    
+    sys.exit(0)
+
 ### Main entrance
 if __name__ == '__main__':
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     try:
         initterm()
         op = Options(os.getenv('DOOL_OPTS','').split() + sys.argv[1:])
