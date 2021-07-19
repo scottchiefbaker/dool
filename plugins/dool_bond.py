@@ -49,13 +49,12 @@ class dstat_plugin(dstat):
         return ['bond/'+name for name in self.vars]
 
     def extract(self):
-        netdirname = '/sys/class/net/'
         self.set2['total'] = [0, 0]
         ifaces = self.discover
         for name in self.vars: self.set2[name] = [0, 0]
         for name in ifaces:
-            rcv_counter_name=os.path.join(netdirname, name, 'statistics/rx_bytes')
-            xmit_counter_name=os.path.join(netdirname, name, 'statistics/tx_bytes')
+            rcv_counter_name=os.path.join(self.netdirname, name, 'statistics/rx_bytes')
+            xmit_counter_name=os.path.join(self.netdirname, name, 'statistics/tx_bytes')
             rcv_lines = dopen(rcv_counter_name).readlines()
             xmit_lines = dopen(xmit_counter_name).readlines()
             if len(rcv_lines) < 1 or len(xmit_lines) < 1:
