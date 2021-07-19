@@ -32,6 +32,7 @@ import resource
 import sched
 import sys
 import time
+import signal
 
 # https://stackoverflow.com/questions/53978542/how-to-use-collections-abc-from-both-python-3-8-and-python-2-7
 try:
@@ -1466,6 +1467,13 @@ class dool_zones(dstat):
 
 ### END STATS DEFINITIONS ###
 
+def signal_handler(signum, frame):
+    if op.output:
+        outputfile.flush()
+    print('\n')
+    sys.stdout.flush()
+    sys.exit(0)
+
 def fcolor(num):
    ret = "\033[38;5;" + str(num) + "m"
 
@@ -2294,6 +2302,13 @@ def main():
     global totlist, inittime
     global update, missed
 
+    if os.name == 'nt':
+        signal.signal(signal.SIGBREAK, signal_handler)
+    elif os.name == 'posix':
+        signal.signal(signal.SIGHUP, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+
     cpunr = getcpunr()
     hz = os.sysconf('SC_CLK_TCK')
     try:
@@ -2605,6 +2620,13 @@ def find_plugin_file(name, dirs):
             return file
 
     return ""
+
+def signal_handler(signum, frame):
+    print('\nStopping dool...', file=sys.stderr)
+    if op.output:
+        outputfile.flush()
+    sys.stdout.flush()    
+    sys.exit(0)
 
 ### Main entrance
 if __name__ == '__main__':
