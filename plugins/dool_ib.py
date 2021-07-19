@@ -1,4 +1,4 @@
-### Author: Dmitry Fedin <dmitry.fedin@gmail.com>
+### Author: Dmitry Fedin <dmitry.fedin@gmail.com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 
 class dstat_plugin(dstat):
@@ -6,12 +6,12 @@ class dstat_plugin(dstat):
     """
     Bytes received or sent through infiniband/RoCE interfaces
     Usage:
-        dstat --ib -N <adapter name>:<port>,total
-        default dstat --ib is the same as
-        dstat --ib -N total
+        dool --ib -N <adapter name>:<port>,total
+        default dool --ib is the same as
+        dool --ib -N total
 
         example for Mellanox adapter, transfering data via port 2
-        dstat --ib -Nmlx4_0:2
+        dool --ib -Nmlx4_0:2
     """
 
     def __init__(self):
@@ -57,11 +57,17 @@ class dstat_plugin(dstat):
         ifaces = self.discover
         for name in self.vars: self.set2[name] = [0, 0]
         for name in ifaces:
+            factor = 1.0;
             l=name.split(':');
             if len(l) < 2:
                  continue
-            rcv_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters_ext/port_rcv_data_64')
-            xmit_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters_ext/port_xmit_data_64')
+            rcv_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters/port_rcv_data')
+            if os.path.isfile(rcv_counter_name):
+                xmit_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters/port_xmit_data')
+            else:
+                factor = 4.0;          
+                rcv_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters_ext/port_rcv_data_64')
+                xmit_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters_ext/port_xmit_data_64')
             rcv_lines = dopen(rcv_counter_name).readlines()
             xmit_lines = dopen(xmit_counter_name).readlines()
             if len(rcv_lines) < 1 or len(xmit_lines) < 1:
@@ -74,8 +80,8 @@ class dstat_plugin(dstat):
         if update:
             for name in self.set2:
                 self.val[name] = [
-                    (self.set2[name][0] - self.set1[name][0]) * 4.0 / elapsed,
-                    (self.set2[name][1] - self.set1[name][1]) * 4.0/ elapsed,
+                    (self.set2[name][0] - self.set1[name][0]) * factor / elapsed,
+                    (self.set2[name][1] - self.set1[name][1]) * factor / elapsed,                    
                 ]
                 if self.val[name][0] < 0: self.val[name][0] += maxint + 1
                 if self.val[name][1] < 0: self.val[name][1] += maxint + 1
