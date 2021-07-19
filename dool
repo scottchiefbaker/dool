@@ -1790,7 +1790,8 @@ class dool_zones(dstat):
 def signal_handler(signum, frame):
     if op.output:
         outputfile.flush()
-    sys.stdout.flush()    
+    print('\n')
+    sys.stdout.flush()
     sys.exit(0)
 
 def fcolor(num):
