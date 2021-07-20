@@ -54,18 +54,19 @@ class dstat_plugin(dstat):
 
     def extract(self):
         self.set2['total'] = [0, 0]
+        factor={'total': 1.0}
         ifaces = self.discover
         for name in self.vars: self.set2[name] = [0, 0]
         for name in ifaces:
-            factor = 1.0;
             l=name.split(':');
             if len(l) < 2:
                  continue
             rcv_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters/port_rcv_data')
             if os.path.isfile(rcv_counter_name):
+                factor[name] = 1.0
                 xmit_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters/port_xmit_data')
             else:
-                factor = 4.0;          
+                factor[name] = 4.0
                 rcv_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters_ext/port_rcv_data_64')
                 xmit_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters_ext/port_xmit_data_64')
             rcv_lines = dopen(rcv_counter_name).readlines()
@@ -76,12 +77,12 @@ class dstat_plugin(dstat):
             xmit_value = int(xmit_lines[0])
             if name in self.vars :
                 self.set2[name] = (rcv_value, xmit_value)
-            self.set2['total'] = ( self.set2['total'][0] + rcv_value, self.set2['total'][1] + xmit_value)
+            self.set2['total'] = ( self.set2['total'][0] + rcv_value * factor[name], self.set2['total'][1] + xmit_value * factor[name])
         if update:
             for name in self.set2:
                 self.val[name] = [
-                    (self.set2[name][0] - self.set1[name][0]) * factor / elapsed,
-                    (self.set2[name][1] - self.set1[name][1]) * factor / elapsed,                    
+                    (self.set2[name][0] - self.set1[name][0]) * factor[name] / elapsed,
+                    (self.set2[name][1] - self.set1[name][1]) * factor[name] / elapsed,                    
                 ]
                 if self.val[name][0] < 0: self.val[name][0] += maxint + 1
                 if self.val[name][1] < 0: self.val[name][1] += maxint + 1
