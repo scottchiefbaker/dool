@@ -63,7 +63,7 @@ class dstat_plugin(dstat):
                  continue
             rcv_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters/port_rcv_data')
             if os.path.isfile(rcv_counter_name):
-                factor[name] = 1.0
+                factor[name] = 4.0
                 xmit_counter_name=os.path.join('/sys/class/infiniband', l[0], 'ports', l[1], 'counters/port_xmit_data')
             else:
                 factor[name] = 4.0
