@@ -1845,6 +1845,7 @@ ansi = {
     'restore_all' : '\0338',
     'linewrap'    : '\033[7h',
     'nolinewrap'  : '\033[7l',
+    'column_zero' : '\033[0G',
 
     'up'   : '\033[1A',
     'down' : '\033[1B',
@@ -2842,10 +2843,12 @@ def perform(update):
         ### The first step is to show the definitive line if necessary
         newline = ''
         if op.update:
+            ### If we are starting a whole new line we \n and reset
             if step == 1 and update != 0:
-                newline = '\n' + ansi['reset'] + ansi['clearline'] + ansi['save']
+                newline = '\n' + ansi['reset'] + ansi['clearline']
+            ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['restore']
+                newline = ansi['column_zero'];
 
         ### Display header
         if showheader:
