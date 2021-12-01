@@ -2848,7 +2848,7 @@ def perform(update):
                 newline = '\n' + ansi['reset'] + ansi['clearline']
             ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['column_zero'];
+                newline = ansi['clearline'] + ansi['column_zero'];
 
         ### Display header
         if showheader:
