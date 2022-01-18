@@ -2710,14 +2710,6 @@ def main():
                         plug.check()
                         plug.prepare()
 
-                    ### Try loading C plugin (not functional yet)
-                    elif description[0] == '.so':
-                        exec('import %s; global plug; plug = %s.new()' % (pluginfile, pluginfile))
-                        plug.check()
-                        plug.prepare()
-#                        print(dir(plug))
-#                        print(plug.__module__)
-#                        print(plug.name)
                     else:
                         print('Module %s is of unknown type.' % pluginfile, file=sys.stderr)
 
