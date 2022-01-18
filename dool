@@ -2696,13 +2696,12 @@ def main():
             pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
-                    import imp
-                    fp, pathname, description = imp.find_module(pluginfile, pluginpath)
-                    fp.close()
+                    import importlib
+                    spec = importlib.machinery.PathFinder.find_spec(pluginfile, pluginpath)
 
-                    ### TODO: Would using .pyc help with anything ?
                     ### Try loading python plugin
-                    if description[0] in ('.py', ):
+                    if spec is not None:
+                        pathname = spec.origin
                         exec(open(pathname).read())
                         #execfile(pathname)
                         exec('global plug; plug = dstat_plugin(); del(dstat_plugin)')
