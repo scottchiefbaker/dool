@@ -20,7 +20,7 @@ class dstat_plugin(dstat):
         ret = []
         for l in self.splitlines():
             if len(l) < 13: continue
-            if l[3:] == ['0',] * 11: continue
+            if set(l[3:]) == {'0'}: continue
             name = l[2]
             ret.append(name)
         for item in objlist: ret.append(item)
@@ -55,7 +55,7 @@ class dstat_plugin(dstat):
         for l in self.splitlines():
             if len(l) < 13: continue
             if l[3] == '0' and l[7] == '0': continue
-            if l[3:] == ['0',] * 11: continue
+            if set(l[3:]) == {'0'}: continue
             name = l[2]
             if not self.diskfilter.match(name):
                 self.set2['total'] = ( self.set2['total'][0] + int(l[3]), self.set2['total'][1] + int(l[7]) )

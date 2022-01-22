@@ -21,7 +21,7 @@ class dstat_plugin(dstat):
         ret = []
         for l in self.splitlines():
             if len(l) < 13: continue
-            if l[3:] == ['0',] * 11: continue
+            if set(l[3:]) == {'0'}: continue
             name = l[2]
             ret.append(name)
         for item in objlist: ret.append(item)
@@ -52,7 +52,7 @@ class dstat_plugin(dstat):
     def extract(self):
         for l in self.splitlines():
             if len(l) < 13: continue
-            if l[3:] == ['0',] * 11: continue
+            if set(l[3:]) == {'0'}: continue
             if l[3] == '0' and l[7] == '0': continue
             name = l[2]
             if name not in self.vars or name == 'total': continue
