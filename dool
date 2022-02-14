@@ -2273,7 +2273,7 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
             else:
                 ret += char['space']
         except OverflowError:
-            pass
+            ret += char['space']
 
     return ret
 
