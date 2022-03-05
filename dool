@@ -37,7 +37,7 @@ try:
 except ImportError:
     from collections import Sequence # Python 2.x
 
-VERSION = '0.9.10'
+VERSION = '1.0.0'
 
 theme = { 'default': '' }
 
@@ -1845,6 +1845,7 @@ ansi = {
     'restore_all' : '\0338',
     'linewrap'    : '\033[7h',
     'nolinewrap'  : '\033[7l',
+    'column_zero' : '\033[0G',
 
     'up'   : '\033[1A',
     'down' : '\033[1B',
@@ -2695,13 +2696,12 @@ def main():
             pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
-                    import imp
-                    fp, pathname, description = imp.find_module(pluginfile, pluginpath)
-                    fp.close()
+                    import importlib
+                    spec = importlib.machinery.PathFinder.find_spec(pluginfile, pluginpath)
 
-                    ### TODO: Would using .pyc help with anything ?
                     ### Try loading python plugin
-                    if description[0] in ('.py', ):
+                    if spec is not None:
+                        pathname = spec.origin
                         exec(open(pathname).read())
                         #execfile(pathname)
                         exec('global plug; plug = dstat_plugin(); del(dstat_plugin)')
@@ -2709,14 +2709,6 @@ def main():
                         plug.check()
                         plug.prepare()
 
-                    ### Try loading C plugin (not functional yet)
-                    elif description[0] == '.so':
-                        exec('import %s; global plug; plug = %s.new()' % (pluginfile, pluginfile))
-                        plug.check()
-                        plug.prepare()
-#                        print(dir(plug))
-#                        print(plug.__module__)
-#                        print(plug.name)
                     else:
                         print('Module %s is of unknown type.' % pluginfile, file=sys.stderr)
 
@@ -2842,10 +2834,12 @@ def perform(update):
         ### The first step is to show the definitive line if necessary
         newline = ''
         if op.update:
+            ### If we are starting a whole new line we \n and reset
             if step == 1 and update != 0:
-                newline = '\n' + ansi['reset'] + ansi['clearline'] + ansi['save']
+                newline = '\n' + ansi['reset'] + ansi['clearline']
+            ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['restore']
+                newline = ansi['clearline'] + ansi['column_zero'];
 
         ### Display header
         if showheader:
