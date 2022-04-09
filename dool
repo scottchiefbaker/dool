@@ -2696,8 +2696,8 @@ def main():
             pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
-                    import importlib
-                    spec = importlib.machinery.PathFinder.find_spec(pluginfile, pluginpath)
+                    from importlib import machinery
+                    spec = machinery.PathFinder.find_spec(pluginfile, pluginpath)
 
                     ### Try loading python plugin
                     if spec is not None:
