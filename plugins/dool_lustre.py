@@ -3,22 +3,28 @@
 class dstat_plugin(dstat):
     def __init__(self):
         self.nick = ('read', 'write')
-        self.cols = 2 
+        self.cols = 2
+        self.stat_path = '/proc/fs/lustre/llite'
 
     def check(self):
-        if not os.path.exists('/proc/fs/lustre/llite'):
+        if os.path.exists('/proc/fs/lustre/llite'):
+            self.stat_path = '/proc/fs/lustre/llite'
+        elif os.path.exists('/sys/kernel/debug/lustre/llite'):
+            self.stat_path = '/sys/kernel/debug/lustre/llite'
+        else:
             raise Exception('Lustre filesystem not found')
         info(1, 'Module %s is still experimental.' % self.filename)
 
     def name(self):
-        return [mount for mount in os.listdir('/proc/fs/lustre/llite')]
+        return [mount for mount in os.listdir(self.stat_path)]
 
     def vars(self):
-        return [mount for mount in os.listdir('/proc/fs/lustre/llite')]
+        return [mount for mount in os.listdir(self.stat_path)]
 
     def extract(self):
         for name in self.vars:
-            for line in dopen(os.path.join('/proc/fs/lustre/llite', name, 'stats')).readlines():
+            read = write = 0
+            for line in dopen(os.path.join(self.stat_path, name, 'stats')).readlines():
                 l = line.split()
                 if len(l) < 6: continue
                 if l[0] == 'read_bytes':
