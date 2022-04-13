@@ -1,4 +1,4 @@
-# Author: Brock Palen <brockp@mlds-networks.com>, Kilian Vavalotti <kilian@stanford.edu>
+# Author: Brock Palen <brockp@mlds-networks.com>, Kilian Cavalotti <kilian@stanford.edu>
 
 class dstat_plugin(dstat):
     def __init__(self):
