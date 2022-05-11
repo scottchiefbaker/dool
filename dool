@@ -2696,14 +2696,11 @@ def main():
             pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
-                    import importlib
-                    spec = importlib.machinery.PathFinder.find_spec(pluginfile, pluginpath)
+                    xpath = find_plugin_file(pluginfile, pluginpath)
 
                     ### Try loading python plugin
-                    if spec is not None:
-                        pathname = spec.origin
-                        exec(open(pathname).read())
-                        #execfile(pathname)
+                    if xpath:
+                        exec(open(xpath).read())
                         exec('global plug; plug = dstat_plugin(); del(dstat_plugin)')
                         plug.filename = pluginfile
                         plug.check()
@@ -2892,6 +2889,15 @@ def stripcolor(self, mystr):
     ret         = ansi_escape.sub('', mystr)
 
     return ret
+
+# Look through each dir and try and find the .py file
+def find_plugin_file(name, dirs):
+    for x in dirs:
+        file = x + name + ".py"
+        if os.path.exists(file):
+            return file
+
+    return ""
 
 ### Main entrance
 if __name__ == '__main__':
