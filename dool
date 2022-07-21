@@ -81,6 +81,7 @@ class Options:
         self.output       = False
         self.pidfile      = False
         self.profile      = ''
+        self.use_ascii    = False
 
         ### List of available plugins
         allplugins = listplugins()
@@ -106,12 +107,13 @@ class Options:
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
                  'defaults', 'debug', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
-                 'output=', 'pidfile=', 'profile', 'version', 'vmstat'] + allplugins)
+                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii'] + allplugins)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
 
         default_plugins = [ 'cpu', 'disk', 'net', 'load' ]
+
         plugin_defaults = 0
 
         for opt, arg in opts:
@@ -176,6 +178,8 @@ class Options:
                 self.bits = False
             elif opt in ['--bits']:
                 self.bits = True
+            elif opt in ['--ascii']:
+                self.use_ascii = True
             elif opt in ['--bw', '--black-on-white', '--blackonwhite']:
                 self.blackonwhite = True
             elif opt in ['--color']:
@@ -337,6 +341,7 @@ Dool options:
   --noupdate               disable intermediate updates
   --output file            write CSV output to file
   --profile                show profiling statistics when exiting dool
+  --ascii                  output table in ascii not unicode box drawing
 
 delay is the delay in seconds between each update (default: 1)
 count is the number of updates to display before exiting (default: unlimited)
@@ -462,17 +467,19 @@ class dstat:
 
     def title(self):
         ret = theme['title']
+
         if isinstance(self.name, string_types):
             width = self.statwidth()
-            return ret + self.name[0:width].center(width).replace(' ', '-') + theme['default']
+            return ret + self.name[0:width].center(width).replace(' ', char['dash']) + theme['default']
         for i, name in enumerate(self.name):
             width = self.colwidth()
-            ret = ret + name[0:width].center(width).replace(' ', '-')
+            ret = ret + name[0:width].center(width).replace(' ', char['dash'])
             if i + 1 != len(self.vars):
                 if op.color:
                     ret = ret + theme['frame'] + char['dash'] + theme['title']
                 else:
                     ret = ret + char['space']
+
         return ret
 
     def subtitle(self):
@@ -1864,6 +1871,13 @@ char = {
     'plus'       : '+',
     'underscore' : '_',
     'sep'        : ',',
+    'title_sep'  : '|',
+}
+
+char_box_draw = {
+    'pipe'       : u'\u2502',
+    'dash'       : u'\u2504',
+    'title_sep'  : u'\u252c',
 }
 
 def set_theme():
@@ -2257,7 +2271,7 @@ def header(totlist, vislist):
     for o in vislist:
         line += o.title()
         if o is not vislist[-1]:
-            line += theme['frame'] + char['space']
+            line += theme['frame'] + char['title_sep']
         elif totlist != vislist:
             line += theme['title'] + char['gt']
     line += '\n'
@@ -2634,6 +2648,11 @@ def main():
     ### Check terminal capabilities
     if op.color == None:
         op.color = gettermcolor()
+
+    if not op.use_ascii:
+        char['dash']      = char_box_draw['dash']
+        char['pipe']      = char_box_draw['pipe']
+        char['title_sep'] = char_box_draw['title_sep']
 
     ### Prepare CSV output file (unbuffered)
     if op.output:
