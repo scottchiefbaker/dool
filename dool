@@ -331,6 +331,7 @@ Dool options:
   -v, --vmstat             equals -pmgdsc -D total
 
   --bits                   force bits for values expressed in bytes
+  --bytes                  force bytes for output measurements
   --float                  force float values on screen
   --integer                force integer values on screen
 
