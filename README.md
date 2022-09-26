@@ -8,9 +8,8 @@ development.
 ## What is Dool?
 
 Dool is a command line tool to monitor many aspects of your system: CPU,
-Memory, Network, Load Average, etc. Dool allows you to monitor many aspects
-of your system at the same time. It also includes a robust plug-in architecture
-to allow monitoring other system metrics.
+Memory, Network, Load Average, etc.  It also includes a robust plug-in
+architecture to allow monitoring other system metrics.
 
 ### Installation:
 
