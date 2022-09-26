@@ -3,7 +3,7 @@
 Dool is a Python3 compatible fork of [Dstat](https://github.com/dagwieers/dstat).
 
 After Dag Wieers ceased development of Dstat I forked the project to continue
-development. Dool is a Python 3.x compatible version of Dstat with a couple minor bug fixes.
+development.
 
 ## What is Dool?
 
@@ -20,20 +20,24 @@ My most common usage of Dool is:
 
     dool --more 15
 
-which uses the `--more` preset and outputs data every 15 seconds. Available presets are `--defaults`, `--more`, or `--all`. If no **delay** is specified, Dool will default to outputting every second.
+which uses the `--more` preset and outputs data every 15 seconds. Available
+presets are `--defaults`, `--more`, or `--all`. If no **delay** is specified,
+Dool will default to outputting every second.
 
 ### Plugins:
 
 Dool ships with many plug-ins to configure output to your taste.
 
-    dool --net --cpu --proc 15
-    dool --cpu --time 5
+    dool --cpu --net --time --ful 15   # Show CPU usage, and each network interface
+    dool --disk --memory 5             # Show disk totals, and memory consumption
+    dool --cpu --load --swap --time 60 # Show CPU, load, and swap
 
 A list of available plug-ins are available if you run `dool --version`
 
 ### Note:
 
-Dool requires a 256 color compatible terminal. Most modern terminal emulators support this automatically.
+Dool requires a 256 color compatible terminal. Most modern terminal emulators
+support this automatically.
 
 ### See also:
 
