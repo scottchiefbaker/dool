@@ -12,6 +12,16 @@ Memory, Network, Load Average, etc. Dool allows you to monitor many aspects
 of your system at the same time. It also includes a robust plug-in architecture
 to allow monitoring other system metrics.
 
+### Installation:
+
+Single user:
+1. Download the [latest release](https://github.com/scottchiefbaker/dool/releases) archive file
+2. Extract the archive to an appropriate directory on your system
+3. Create a symlink to the `dool` script in your `$PATH`
+
+System wide (as root):
+1. `make install`
+
 ### Usage:
 
     dool [--preset] [--plugin] [delay]
@@ -34,7 +44,7 @@ Light mode
 
 ### Plugins:
 
-Dool ships with many plug-ins to configure output to your taste.
+Dool ships with many plug-ins to configure the output to your taste.
 
     dool --cpu --net --time --ful 15   # Show CPU usage, and each network interface
     dool --disk --memory 5             # Show disk totals, and memory consumption
@@ -54,3 +64,4 @@ Other tools similar to Dool
 * [htop](https://htop.dev/)
 * [btop](https://github.com/aristocratos/btop)
 * [iotop](https://github.com/Tomas-M/iotop)
+
