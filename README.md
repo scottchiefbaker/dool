@@ -24,6 +24,14 @@ which uses the `--more` preset and outputs data every 15 seconds. Available
 presets are `--defaults`, `--more`, or `--all`. If no **delay** is specified,
 Dool will default to outputting every second.
 
+### Screenshots:
+
+Dark mode (default)
+![Dool Light](https://user-images.githubusercontent.com/3429760/192389287-9cce4de1-e190-4a3f-8835-33d7446ae934.png)
+
+Light mode
+![Dool Light](https://user-images.githubusercontent.com/3429760/192389235-9cf5e4a5-cec2-42d9-a116-bcd9dd4e688d.png)
+
 ### Plugins:
 
 Dool ships with many plug-ins to configure output to your taste.
