@@ -1374,7 +1374,11 @@ class dool_mem(dstat):
             if name in adv_extract_vars:
                 adv_val[name] = int(l[1]) * 1024.0
 
-        self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
+        # Original math
+        #self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
+
+        # New math that is closer to the `free` output
+        self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Cached'] - adv_val['SReclaimable']
 
 class dool_mem_adv(dool_mem):
     """
