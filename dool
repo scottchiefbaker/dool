@@ -510,7 +510,7 @@ class dstat:
 
                 # If it's not the last one
                 if i + 1 != len(self.name):
-                    ret += theme['frame'] + char['colon'] + ansi['reset']
+                    ret += theme['subtitle'] + char['space'] + ansi['reset']
                 else:
                     ret += ansi['reset']
 
@@ -580,7 +580,7 @@ class dstat:
 
             if isinstance(self.val[name], Sequence) and not isinstance(self.val[name], string_types):
                 line = line + cprintlist(self.val[name], ctype, self.width, scale)
-                sep  = theme['frame'] + char['colon']
+                sep  = theme['subtitle'] + char['colon'] + ansi['reset']
 
                 if i + 1 != len(self.vars):
                     line = line + sep
@@ -1883,6 +1883,7 @@ char_box_draw = {
     'pipe'       : u'\u2502',
     'dash'       : u'\u2504',
     'title_sep'  : u'\u252c',
+    'colon'      : u'\u250a',
 }
 
 def set_theme():
@@ -2655,9 +2656,8 @@ def main():
         op.color = gettermcolor()
 
     if not op.use_ascii:
-        char['dash']      = char_box_draw['dash']
-        char['pipe']      = char_box_draw['pipe']
-        char['title_sep'] = char_box_draw['title_sep']
+        for key in char_box_draw:
+            char[key] = char_box_draw[key]
 
     ### Prepare CSV output file (unbuffered)
     if op.output:
