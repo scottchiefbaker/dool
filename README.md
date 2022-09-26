@@ -36,7 +36,7 @@ Dool will default to outputting every second.
 ### Screenshots:
 
 Dark mode (default)
-![Dool Light](https://user-images.githubusercontent.com/3429760/192389287-9cce4de1-e190-4a3f-8835-33d7446ae934.png)
+![Dool Light](https://user-images.githubusercontent.com/3429760/192394845-bb4790b9-0a67-4137-90a2-87efcfc1014e.png)
 
 Light mode
 ![Dool Light](https://user-images.githubusercontent.com/3429760/192389235-9cf5e4a5-cec2-42d9-a116-bcd9dd4e688d.png)
