@@ -1359,8 +1359,8 @@ class dool_lock(dstat):
 class dool_mem(dstat):
     def __init__(self):
         self.name = 'memory usage'
-        self.nick = ('used', 'free', 'buff', 'cach')
-        self.vars = ('MemUsed', 'MemFree', 'Buffers', 'Cached')
+        self.nick = ('used', 'free', 'cach', 'avai')
+        self.vars = ('MemUsed', 'MemFree', 'Cached', 'MemAvailable')
         self.open('/proc/meminfo')
 
     def extract(self):
