@@ -283,10 +283,10 @@ class Options:
         showplugins()
 
     def usage(self):
-        print('Usage: dool [-afv] [options..] [delay [count]]')
+        print('Usage: dool [options] [delay] [count]')
 
     def help(self):
-        print('''Versatile tool for generating system resource statistics)
+        print('''\nVersatile tool for generating system resource statistics
 
 Dool options:
   -c, --cpu                enable cpu stats
