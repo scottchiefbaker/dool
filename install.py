@@ -56,7 +56,7 @@ def main():
         copy_files(plugins , plugin_dir, 0o644)
 
         print("Installing manpages to %s" % color(15, manpage_dir))
-        copy_files(plugins , manpage_dir, 0o644)
+        copy_files(manpages, manpage_dir, 0o644)
     else:
         print("You are a %s user, doing a local install\n" % color(227, "normal"))
 
