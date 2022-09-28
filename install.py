@@ -29,6 +29,18 @@ manpages = glob.glob(base_dir + "/docs/dool.1")
 
 ############################################################
 
+def main():
+    if (force_root_install or am_root):
+        print("You are root, doing a system wide install\n")
+
+        root_install(binaries, plugins, manpages)
+    else:
+        print("You are a regular user, doing a local install\n")
+
+        user_install(binaries, plugins, manpages)
+
+############################################################
+
 def root_install(binaries, plugins, manpages):
     bindir      = "/usr/bin/"
     plugin_dir  = "/usr/share/dool/"
@@ -78,13 +90,7 @@ def user_install(binaries, plugins, manpages):
         shutil.copyfile(x, plugin_dir + "/" + file)
         os.chmod(plugin_dir + "/" + file, 0o644)
 
-############################################################
+################################################################
 
-if (force_root_install or am_root):
-    print("You are root, doing a system wide install\n")
-
-    root_install(binaries, plugins, manpages)
-else:
-    print("You are a regular user, doing a local install\n")
-
-    user_install(binaries, plugins, manpages)
+if __name__ == "__main__":
+    main()
