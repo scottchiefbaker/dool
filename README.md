@@ -13,7 +13,6 @@ architecture to allow monitoring other system metrics.
 
 ### Installation:
 
-Single user:
 1. Download the [latest release](https://github.com/scottchiefbaker/dool/releases) archive file or clone the Git repo
 2. Extract the archive to an appropriate temporary directory on your system
 3. Run the `install.py` script
