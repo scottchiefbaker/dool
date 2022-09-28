@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import sys
-import getopt
 import glob
 import os
 import shutil
@@ -10,6 +9,18 @@ import pathlib
 base_dir = os.path.dirname(__file__)
 base_dir = base_dir or "."
 am_root  = os.getuid() == 0
+
+# Options for --user and --root install
+argv = sys.argv[1:]
+args = " ".join(argv)
+
+force_root_install = args.__contains__("--root")
+force_user_install = args.__contains__("--user")
+
+# --user overrides --root
+if (force_user_install):
+    force_root_install = False
+    am_root            = False
 
 # Glob the files we need to install
 binaries = glob.glob(base_dir + "/dool")
@@ -69,7 +80,7 @@ def user_install(binaries, plugins, manpages):
 
 ############################################################
 
-if (am_root):
+if (force_root_install or am_root):
     print("You are root, doing a system wide install\n")
 
     root_install(binaries, plugins, manpages)
