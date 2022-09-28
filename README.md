@@ -14,12 +14,9 @@ architecture to allow monitoring other system metrics.
 ### Installation:
 
 Single user:
-1. Download the [latest release](https://github.com/scottchiefbaker/dool/releases) archive file
-2. Extract the archive to an appropriate directory on your system
-3. Create a symlink to the `dool` script in your `$PATH`
-
-System wide (as root):
-1. `make install`
+1. Download the [latest release](https://github.com/scottchiefbaker/dool/releases) archive file or clone the Git repo
+2. Extract the archive to an appropriate temporary directory on your system
+3. Run the `install.py` script
 
 ### Usage:
 
