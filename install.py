@@ -1,5 +1,12 @@
 #!/usr/bin/python3
 
+###############################################################################
+# Simple install script that copies files to various paths and sets
+# permissions on files. Nothing fancy here, just copying files around
+#
+# 2022-09-28 - Scott Baker
+###############################################################################
+
 import sys
 import glob
 import os
@@ -8,12 +15,15 @@ import pathlib
 
 base_dir = os.path.dirname(__file__)
 base_dir = base_dir or "."
+
+# Are you running as root?
 am_root  = os.getuid() == 0
 
-# Options for --user and --root install
+# Pull out the ARGV so we can check for somethings
 argv = sys.argv[1:]
 args = " ".join(argv)
 
+# Set some global variables
 force_root_install = args.__contains__("--root")
 force_user_install = args.__contains__("--user")
 verbose            = args.__contains__("--verbose")
@@ -69,12 +79,14 @@ def main():
 
 ############################################################
 
+# Print a string wrapped in an ANSI color and RESET
 def color(num, mystr):
     reset = '\033[0;0m'
     ret   = "\033[38;5;" + str(num) + "m" + mystr + reset
 
     return ret
 
+# Copy an array of files to a destination dir and chmod each file to mode
 def copy_files(files, dest_dir, mode):
     ok = os.makedirs(dest_dir, exist_ok=True)
 
@@ -84,7 +96,9 @@ def copy_files(files, dest_dir, mode):
         dest_file = dest_dir + "/" + basename
         dest_file = dest_file.replace("//", "/")
 
+        # Copy file
         ok = shutil.copyfile(x, dest_file)
+        # Chmod the file after it's copied
         os.chmod(dest_file, mode)
 
         if verbose:
