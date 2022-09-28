@@ -41,7 +41,7 @@ Light mode
 
 Dool ships with many plug-ins to configure the output to your taste.
 
-    dool --cpu --net --time --ful 15   # Show CPU usage, and each network interface
+    dool --cpu --net --time --full 15  # Show CPU usage, and each network interface
     dool --disk --memory 5             # Show disk totals, and memory consumption
     dool --cpu --load --swap --time 60 # Show CPU, load, and swap
 
