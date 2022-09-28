@@ -16,6 +16,7 @@ args = " ".join(argv)
 
 force_root_install = args.__contains__("--root")
 force_user_install = args.__contains__("--user")
+verbose            = args.__contains__("--verbose")
 
 # --user overrides --root
 if (force_user_install):
@@ -26,69 +27,73 @@ if (force_user_install):
 binaries = glob.glob(base_dir + "/dool")
 plugins  = glob.glob(base_dir + "/plugins/*.py")
 manpages = glob.glob(base_dir + "/docs/dool.1")
+homedir  = os.path.expanduser("~/")
 
 ############################################################
 
 def main():
     if (force_root_install or am_root):
-        print("You are root, doing a system wide install\n")
+        print("You are %s, doing a local install\n" % color(9, "root"))
 
-        root_install(binaries, plugins, manpages)
+        bin_dir     = "/usr/bin/"
+        plugin_dir  = "/usr/share/dool/"
+        manpage_dir = "/usr/share/man/man1/"
+
+        print("Installing binaries to %s" % color(15, bin_dir))
+        copy_files(binaries, bin_dir, 0o755)
+
+        print("Installing plugins  to %s" % color(15, plugin_dir))
+        copy_files(plugins , plugin_dir, 0o644)
+
+        print("Installing manpages to %s" % color(15, manpage_dir))
+        copy_files(plugins , manpage_dir, 0o644)
     else:
-        print("You are a regular user, doing a local install\n")
+        print("You are a %s user, doing a local install\n" % color(227, "normal"))
 
-        user_install(binaries, plugins, manpages)
+        bin_dir     = (homedir + "/bin/").replace("//", "/")
+        plugin_dir  = (homedir + "/.dool/").replace("//", "/")
+        manpage_dir = ""
+
+        print("Installing binaries to %s" % color(15, bin_dir))
+        copy_files(binaries, bin_dir, 0o755)
+
+        print("Installing plugins  to %s" % color(15, plugin_dir))
+        copy_files(plugins , plugin_dir, 0o644)
+
+    dool_path = (bin_dir + "/dool").replace("//", "/")
+
+    #print(os.path.exists(dool_path))
+
+    print("")
+    print("Install complete. Dool installed to %s" % (color(84, dool_path)))
 
 ############################################################
 
-def root_install(binaries, plugins, manpages):
-    bindir      = "/usr/bin/"
-    plugin_dir  = "/usr/share/dool/"
-    manpage_dir = "/usr/share/man/man1/"
+def color(num, mystr):
+    reset = '\033[0;0m'
+    ret   = "\033[38;5;" + str(num) + "m" + mystr + reset
 
-    ok = os.makedirs(bindir, exist_ok=True)
-    ok = os.makedirs(plugin_dir, exist_ok=True)
+    return ret
 
-    print("Installing binary in %s" % bindir)
-    for x in binaries:
-        file = os.path.basename(x)
-        shutil.copyfile(x, bindir + "/" + file)
-        os.chmod(bindir + "/" + file, 0o755)
+def copy_files(files, dest_dir, mode):
+    ok = os.makedirs(dest_dir, exist_ok=True)
 
-    print("Installing plugins in %s" % plugin_dir)
-    for x in plugins:
-        file = os.path.basename(x)
-        shutil.copyfile(x, plugin_dir + "/" + file)
-        os.chmod(plugin_dir + "/" + file, 0o644)
+    count = 0
+    for x in files:
+        basename  = os.path.basename(x)
+        dest_file = dest_dir + "/" + basename
+        dest_file = dest_file.replace("//", "/")
 
-    print("Installing manpages in %s" % manpage_dir)
-    for x in manpages:
-        file = os.path.basename(x)
-        shutil.copyfile(x, manpage_dir + "/" + file)
-        os.chmod(manpage_dir + "/" + file, 0o644)
+        ok = shutil.copyfile(x, dest_file)
+        os.chmod(dest_file, mode)
 
-def user_install(binaries, plugins, manpages):
-    homedir    = os.path.expanduser("~/")
-    bindir     = homedir + "/bin/"
-    plugin_dir = homedir + "/.dool/"
+        if verbose:
+            print("%40s => %s" % (x, dest_file))
 
-    bindir     = bindir.replace("//", "/")
-    plugin_dir = plugin_dir.replace("//", "/")
+        if (ok):
+            count += 1
 
-    ok = os.makedirs(bindir, exist_ok=True)
-    ok = os.makedirs(plugin_dir, exist_ok=True)
-
-    print("Installing binary in %s" % bindir)
-    for x in binaries:
-        file = os.path.basename(x)
-        shutil.copyfile(x, bindir + "/" + file)
-        os.chmod(bindir + "/" + file, 0o755)
-
-    print("Installing plugins in %s" % plugin_dir)
-    for x in plugins:
-        file = os.path.basename(x)
-        shutil.copyfile(x, plugin_dir + "/" + file)
-        os.chmod(plugin_dir + "/" + file, 0o644)
+    return ok
 
 ################################################################
 
