@@ -580,7 +580,7 @@ class dstat:
 
             if isinstance(self.val[name], Sequence) and not isinstance(self.val[name], string_types):
                 line = line + cprintlist(self.val[name], ctype, self.width, scale)
-                sep  = theme['subtitle'] + char['colon'] + ansi['reset']
+                sep  = theme['subframe'] + char['colon'] + ansi['reset']
 
                 if i + 1 != len(self.vars):
                     line = line + sep
@@ -1893,6 +1893,7 @@ def set_theme():
             'title'     : color['darkblue'],
             'subtitle'  : color['darkcyan'] + ansi['underline'],
             'frame'     : color['darkblue'],
+            'subframe'  : color['darkcyan'],
             'default'   : ansi['default'],
             'error'     : color['white'] + color['redbg'],
             'roundtrip' : color['darkblue'],
@@ -1914,6 +1915,7 @@ def set_theme():
             'title'     : color['darkblue'],
             'subtitle'  : color['blue'] + ansi['underline'],
             'frame'     : color['darkblue'],
+            'subframe'  : color['blue'],
             'default'   : ansi['default'],
             'error'     : color['white'] + color['redbg'],
             'roundtrip' : color['darkblue'],
