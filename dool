@@ -2204,9 +2204,9 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
             return theme['error'] + '-'.rjust(width) + theme['default']
 
     if base != 1024:
-        units = (char['space'], 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
+        units = (char['space'], 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
     elif op.bits and ctype in ('b', ):
-        units = ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
+        units = ('b', 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
         base = scale = 1000
         var = var * 8.0
     else:
