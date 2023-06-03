@@ -20,18 +20,18 @@ class dstat_plugin(dstat):
         for pid in proc_pidlist():
             try:
                 ### Using dopen() will cause too many open files
-                l = proc_splitline('/proc/%s/stat' % pid)
+                l = proc_splitline('/proc/%s/statm' % pid)
             except IOError:
                 continue
 
-            if len(l) < 23: continue
-            usage = int(l[23]) * pagesize
+            if len(l) < 2: continue
+            usage = int(l[1]) * pagesize
 
             ### Is it a new topper ?
             if usage <= self.val['max']: continue
 
             self.val['max'] = usage
-            self.val['name'] = getnamebypid(pid, l[1][1:-1])
+            self.val['name'] = getnamebypid(pid, proc_splitline('/proc/%s/comm' % pid)[0:-1])
             self.val['pid'] = pid
 
         self.output = '%-*s%s' % (self.width-5, self.val['name'][0:self.width-5], cprint(self.val['max'], 'f', 5, 1024))
