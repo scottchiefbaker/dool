@@ -2684,7 +2684,6 @@ def main():
         outputfile.write(char['sep'].join(header))
 
         run_cmd = " ".join(sys.argv)
-        print(run_cmd)
 
         header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' % time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
         outputfile.write(char['sep'].join(header))
