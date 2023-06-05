@@ -14,6 +14,7 @@
 ### along with this program; if not, write to the Free Software
 ### Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+### Forked by Scott Baker in 2019
 ### Copyright 2004-2019 Dag Wieers <dag@wieers.com>
 
 from __future__ import absolute_import, division, generators, print_function
@@ -2673,7 +2674,7 @@ def main():
         if not os.path.exists(op.output):
             outputfile = open(op.output, 'w')
             outputfile.write('"Dstat %s CSV output"\n' % VERSION)
-            header = ('"Author:","Dag Wieers <dag@wieers.com>"','','','','"URL:"','"http://dag.wieers.com/home-made/dstat/"\n')
+            header = ('"Author:","Scott Baker"','','','','"URL:"','"https://github.com/scottchiefbaker/dool/"\n')
             outputfile.write(char['sep'].join(header))
         else:
             outputfile = open(op.output, 'a')
@@ -2681,7 +2682,11 @@ def main():
 
         header = ('"Host:"','"%s"' % hostname,'','','','"User:"','"%s"\n' % user)
         outputfile.write(char['sep'].join(header))
-        header = ('"Cmdline:"','"dstat %s"' % ' '.join(op.args),'','','','"Date:"','"%s"\n' % time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
+
+        run_cmd = " ".join(sys.argv)
+        print(run_cmd)
+
+        header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' % time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
         outputfile.write(char['sep'].join(header))
 
     ### Create pidfile
@@ -2889,11 +2894,13 @@ def perform(update):
             if op.output and step == op.delay:
                 oline = oline + o.showcsv() + o.showcsvend(totlist, vislist)
 
-        ### Print stats
-        sys.stdout.write(line + theme['input'])
+        ### Put the output in the csv file
         if op.output and step == op.delay:
             outputfile.write(oline + '\n')
-#            outputfile.flush()
+            outputfile.flush()
+        ### Print stats
+        elif not op.output:
+            sys.stdout.write(line + theme['input'])
 
         ### Print debugging output
         if op.debug:
