@@ -343,7 +343,7 @@ Dool options:
   --noupdate               disable intermediate updates
   --output file            write CSV output to file
   --profile                show profiling statistics when exiting dool
-  --ascii                  output table in ascii not unicode box drawing
+  --ascii                  output table data in ascii instead of ANSI
 
 delay is the delay in seconds between each update (default: 1)
 count is the number of updates to display before exiting (default: unlimited)

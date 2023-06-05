@@ -185,6 +185,9 @@ Possible internal stats are::
 --profile::
     show profiling statistics when exiting dool
 
+--ascii::
+	output table data in ascii instead of ANSI
+
 
 == PLUGINS
 While anyone can create their own dool plugins (and contribute them) dool
