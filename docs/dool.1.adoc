@@ -1,7 +1,6 @@
 = dool(1)
-Dag Wieers <dag@wieers.com>
-v0.7.3, August 2014
-
+Scott Baker <scott@perturb.org>
+v1.1.0, June 2023
 
 == NAME
 dool - versatile tool for generating system resource statistics
@@ -25,18 +24,12 @@ and clearly indicates in what magnitude and unit the output is displayed.
 Less confusion, less mistakes, more efficient.
 
 Dool is unique in letting you aggregate block device throughput for a
-certain diskset or network bandwidth for a group of interfaces, ie. 
+certain diskset or network bandwidth for a group of interfaces, ie.
 you can see the throughput for all the block devices that make up a
 single filesystem or storage system.
 
 Dool allows its data to be directly written to a CSV file to be
 imported and used by OpenOffice, Gnumeric or Excel to create graphs.
-
-[NOTE]
-Users of Sleuthkit might find Sleuthkit's dstat being renamed to
-datastat to avoid a name conflict. See Debian bug #283709 for more
-information.
-
 
 == OPTIONS
 -c, --cpu::
@@ -164,6 +157,9 @@ Possible internal stats are::
 
 --bits::
     force bits for values expressed in bytes
+
+--bytes::
+    force bytes for values expressed in bits
 
 --float::
     force float values on screen (mutual exclusive with *--integer*)
@@ -579,7 +575,11 @@ to influence their behavior, e.g.
 
 
 == AUTHOR
-Written by Dag Wieers mailto:dag@wieers.com[]
+Dool is maintained by Scott Baker mailto:scott@perturb.org[]
+
+Homepage at https://github.com/scottchiefbaker/dool[]
+
+dstat originally written by Dag Wieers mailto:dag@wieers.com[]
 
 Homepage at http://dag.wieers.com/home-made/dstat/[]
 
