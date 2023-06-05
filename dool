@@ -109,7 +109,7 @@ class Options:
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
                  'defaults', 'debug', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
-                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii'] + allplugins)
+                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display'] + allplugins)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
@@ -117,6 +117,9 @@ class Options:
         default_plugins = [ 'cpu', 'disk', 'net', 'load' ]
 
         plugin_defaults = 0
+
+        # We default to outputting to the display, but this may get toggled later by --output
+        self.display = True
 
         for opt, arg in opts:
             if opt in ['-c']:
@@ -204,6 +207,9 @@ class Options:
                 self.update = False
             elif opt in ['-o', '--output']:
                 self.output = arg
+                self.display = False
+            elif opt in ['--display']:
+                self.display = True
             elif opt in ['--pidfile']:
                 self.pidfile = arg
             elif opt in ['--profile']:
@@ -222,10 +228,16 @@ class Options:
                 print('dool: option %s unknown to getopt, try dool -h for a list of all the options' % opt)
                 sys.exit(1)
 
+        # If --display is before --output we have to reset it here
+        for opt, arg in opts:
+            if opt == '--display':
+                self.display = True
+
         if self.float and self.integer:
             print('dool: option --float and --integer are mutual exclusive, you can only force one')
             sys.exit(1)
 
+        # If no plugins are specified we use the defaults
         if not self.plugins:
             self.plugins    = default_plugins
             plugin_defaults = 1
@@ -2730,6 +2742,7 @@ def main():
         else: mods = ( plugin, )
 
         for mod in mods:
+
             pluginfile = 'dool_' + mod.replace('-', '_')
             try:
                 if pluginfile not in globals():
@@ -2897,8 +2910,9 @@ def perform(update):
         if op.output and step == op.delay:
             outputfile.write(oline + '\n')
             outputfile.flush()
-        ### Print stats
-        elif not op.output:
+
+        ### Print stats to display
+        if op.display:
             sys.stdout.write(line + theme['input'])
 
         ### Print debugging output
