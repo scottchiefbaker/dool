@@ -1506,6 +1506,11 @@ def bgcolor(num):
 
    return ret
 
+def text_color(num, mystr):
+   ret = "\033[38;5;" + str(num) + "m" + mystr +  "\033[0m"
+
+   return ret
+
 color = {
      'black': fcolor(0),
      'white': fcolor(15),
@@ -2638,6 +2643,23 @@ def find_plugin_file(name, dirs):
             return file
 
     return ""
+
+def k(obj, prefix = "DEBUG"):
+    import inspect
+
+    # https://stackoverflow.com/questions/6810999/how-to-determine-file-function-and-line-number
+    x    = inspect.stack()[1]
+    info = inspect.getframeinfo(x[0])
+
+    line_str = "#" + str(info.lineno)
+    myfile   = os.path.basename(__file__)
+
+    sys.stdout.write("%s %s @ %s: " % (prefix, text_color(228, myfile), text_color(117,line_str)))
+    print(obj)
+
+def kd(obj):
+    k(obj, "DIED")
+    sys.exit(99)
 
 ### Main entrance
 if __name__ == '__main__':
