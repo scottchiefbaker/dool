@@ -60,7 +60,8 @@ class Options:
         self.cpulist      = None
         self.debug        = 0
         self.delay        = 1
-        self.disklist     = None
+        self.disklist     = []
+        self.diskset      = {}
         self.full         = False
         self.float        = False
         self.integer      = False
@@ -87,19 +88,12 @@ class Options:
             self.header = False
             self.update = False
 
-        ### Temporary hardcoded for my own project
-        self.diskset = {
-            'local': ('sda', 'hd[a-d]'),
-            'lores': ('sd[b-k]', 'sd[v-z]', 'sda[a-e]'),
-            'hires': ('sd[l-u]', 'sda[f-o]'),
-        }
-
         try:
             opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V',
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
                  'defaults', 'debug', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
-                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display'] + allplugins)
+                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display', 'diskset='] + allplugins)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
@@ -125,6 +119,18 @@ class Options:
                 self.plugins.append('disk')
             elif opt in ['-D']:
                 self.disklist = arg.split(',')
+            elif opt in ['--diskset']:
+                parts   = arg.split(":", 1)
+                name    = list_item_default(parts, 0, "Unknown")
+                members = list_item_default(parts, 1, "").split(", ")
+
+                if (len(parts) < 2 or len(members) < 1):
+                    print("Error parsing diskset...\n")
+                    print("Format : diskset_name:dev1,dev2,dev3,etc...")
+                    print("Example: --diskset os_drives:sda,sdb")
+
+                self.diskset[name] = members
+                self.disklist.append(name)
             elif opt in ['--filesystem']:
                 self.plugins.append('fs')
             elif opt in ['-g']:
@@ -222,6 +228,9 @@ class Options:
             else:
                 print('dool: option %s unknown to getopt, try dool -h for a list of all the options' % opt)
                 sys.exit(1)
+
+        #k(self.diskset)
+        #k(self.disklist)
 
         # If --display is before --output we have to reset it here
         if '--display' in opt_keys:
@@ -2627,6 +2636,13 @@ def perform(update):
         ### Finish the line
         if not op.update:
             sys.stdout.write('\n')
+
+# Get an item from a list, or a default value if the array isn't big enough
+def list_item_default(mylist, num, default):
+    if num > len(mylist) - 1:
+        return default
+    else:
+        return mylist[num]
 
 # Borrowed from: https://stackoverflow.com/questions/14693701/how-can-i-remove-the-ansi-escape-sequences-from-a-string-in-python
 def stripcolor(self, mystr):
