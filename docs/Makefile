@@ -11,13 +11,13 @@ all:
 
 dist: docs
 
-docs: dstat.1 $(htmltargets)
+docs: dool.1 $(htmltargets)
 
-install: dstat.1
-	install -Dp -m0644 dstat.1 $(DESTDIR)$(mandir)/man1/dstat.1
+install: dool.1
+	install -Dp -m0644 dool.1 $(DESTDIR)$(mandir)/man1/dool.1
 
 clean:
-	rm -f dstat.1 *.html *.xml
+	rm -f dool.1 *.html *.xml
 
 %.1.html: %.1.adoc
 	asciidoc -d manpage $<
