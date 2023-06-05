@@ -1467,12 +1467,33 @@ class dool_zones(dstat):
 
 ### END STATS DEFINITIONS ###
 
+###############################################################################
+###############################################################################
+###############################################################################
+
 def signal_handler(signum, frame):
+    #print("We got a signal!")
+
+    # If we're outputting to a file do some cleanup
     if op.output:
         outputfile.flush()
-    print('\n')
-    sys.stdout.flush()
+
+    # If we're outputting to the display
+    if op.display:
+        # Reset the ANSI colors just in case
+        print(ansi['reset']);
+        sys.stdout.flush()
+
     sys.exit(0)
+
+def init_signal_handling():
+    if os.name == 'nt':
+        signal.signal(signal.SIGBREAK, signal_handler)
+    elif os.name == 'posix':
+        signal.signal(signal.SIGHUP, signal_handler)
+
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 
 def fcolor(num):
    ret = "\033[38;5;" + str(num) + "m"
@@ -2302,12 +2323,8 @@ def main():
     global totlist, inittime
     global update, missed
 
-    if os.name == 'nt':
-        signal.signal(signal.SIGBREAK, signal_handler)
-    elif os.name == 'posix':
-        signal.signal(signal.SIGHUP, signal_handler)
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
+    # Handle signals like CTRL+C
+    init_signal_handling()
 
     cpunr = getcpunr()
     hz = os.sysconf('SC_CLK_TCK')
