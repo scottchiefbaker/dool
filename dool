@@ -304,6 +304,7 @@ Dool options:
      -C 0,3,total             include cpu0, cpu3 and total
   -d, --disk               enable disk stats
      -D total,hda             include hda and total
+     --diskset name:sda,sdb   group disks together for aggregate stats
   -g, --page               enable page stats
   -i, --int                enable interrupt stats
      -I 5,eth2                include int5 and interrupt used by eth2
