@@ -343,6 +343,7 @@ Dool options:
   --noheaders              disable repetitive headers
   --noupdate               disable intermediate updates
   --output file            write CSV output to file
+  --display                output to the display (useful with --output)
   --profile                show profiling statistics when exiting dool
   --ascii                  output table data in ascii instead of ANSI
 

@@ -182,6 +182,10 @@ Possible internal stats are::
 --output file::
     write CSV output to file
 
+--display::
+    output tabular data to the display. Useful in conjunction with *--output*
+	to display on screen and write to a file at the same time
+
 --profile::
     show profiling statistics when exiting dool
 
