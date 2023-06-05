@@ -1,3 +1,15 @@
+* 1.2.0
+- Remove a bunch of old Kernel 2.4 functions we dont use anymore
+
+* 1.1.0
+- Use unicode box drawing characters to make things look more modern
+- Add installation script
+- Make the output cleaner by using better ANSI line clearing options
+- Better compatibility on older versions of Python. Tested on Python 3.6
+- Memory calculation is now closer to free
+- Include "available" memory instead of "buffers"
+- Major README updates to help new users get started
+
 * 1.0.0
 - Initial modern release
 
