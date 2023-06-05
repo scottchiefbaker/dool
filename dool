@@ -24,6 +24,7 @@ import getopt
 import getpass
 import glob
 import linecache
+import math
 import os
 import re
 import resource
@@ -2129,6 +2130,9 @@ def dchg(var, width, base):
     "Convert decimal to string given base and length"
     c = 0
     while True:
+        if math.isinf(var):
+            ret = 'Inf'
+            break
         ret = str(int(round(var)))
         if len(ret) <= width:
             break
@@ -2263,9 +2267,12 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
 
     ### Add unit to output
     if unit:
-        if c != -1 and round(var) != 0:
-            ret += cunit + units[c]
-        else:
+        try:
+            if c != -1 and round(var) != 0:
+                ret += cunit + units[c]
+            else:
+                ret += char['space']
+        except OverflowError:
             ret += char['space']
 
     return ret
