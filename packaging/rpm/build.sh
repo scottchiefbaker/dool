@@ -22,6 +22,7 @@ sleep 1
 # Build a tar archive of the current HEAD with the correct version number
 cd ../../
 git archive --format=tar --prefix=dool-$VERSION/ HEAD | gzip > /tmp/dool-$VERSION.tar.gz
+mkdir -p ~/rpmbuild/SOURCES/
 cp -a /tmp/dool-$VERSION.tar.gz ~/rpmbuild/SOURCES/
 cd -
 
