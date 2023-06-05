@@ -2638,13 +2638,6 @@ def find_plugin_file(name, dirs):
 
     return ""
 
-def signal_handler(signum, frame):
-    print('\nStopping dool...', file=sys.stderr)
-    if op.output:
-        outputfile.flush()
-    sys.stdout.flush()    
-    sys.exit(0)
-
 ### Main entrance
 if __name__ == '__main__':
     try:
