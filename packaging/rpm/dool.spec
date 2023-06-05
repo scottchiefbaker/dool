@@ -4,7 +4,7 @@
 
 Summary: Pluggable real-time performance monitoring tool
 Name: dool
-Version: 0.9.9
+Version: 1.1.0
 Release: 1
 License: GPL
 Group: System Environment/Base
@@ -14,8 +14,8 @@ Source: https://github.com/scottchiefbaker/dool/releases/dool-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildArch: noarch
-BuildRequires: python >= 2.6
-Requires: python >= 2.6 python-six
+BuildRequires: python3 >= 3.0
+Requires: python3 >= 3.0
 
 %description
 Dool is a versatile replacement for vmstat, iostat, netstat and ifstat.
@@ -48,7 +48,7 @@ never expected.
 
 %files
 %defattr(-, root, root, 0755)
-%doc AUTHORS ChangeLog COPYING README.md TODO docs/*.html docs/*.adoc examples/
+%doc AUTHORS ChangeLog COPYING README.md docs/*.html docs/*.adoc examples/
 %doc %{_mandir}/man1/dool.1*
 %{_bindir}/dool
 %{_datadir}/dool/
