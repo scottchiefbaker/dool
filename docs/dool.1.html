@@ -1,10 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
     "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.9" />
-<title>dstat(1)</title>
+<meta name="generator" content="AsciiDoc 8.6.10" />
+<title>dool(1)</title>
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
 
@@ -734,11 +735,11 @@ asciidoc.install();
 <body class="manpage">
 <div id="header">
 <h1>
-dstat(1) Manual Page
+dool(1) Manual Page
 </h1>
 <h2>NAME</h2>
 <div class="sectionbody">
-<p>dstat -
+<p>dool -
    versatile tool for generating system resource statistics
 </p>
 </div>
@@ -747,37 +748,27 @@ dstat(1) Manual Page
 <div class="sect1">
 <h2 id="_synopsis">SYNOPSIS</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>dstat [-afv] [options..] [delay [count]]</p></div>
+<div class="paragraph"><p>dool [-afv] [options..] [delay [count]]</p></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_description">DESCRIPTION</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Dstat is a versatile replacement for vmstat, iostat and ifstat. Dstat
+<div class="paragraph"><p>Dool is a versatile replacement for vmstat, iostat and ifstat. Dool
 overcomes some of the limitations and adds some extra features.</p></div>
-<div class="paragraph"><p>Dstat allows you to view all of your system resources instantly, you
+<div class="paragraph"><p>Dool allows you to view all of your system resources instantly, you
 can eg. compare disk usage in combination with interrupts from your
 IDE controller, or compare the network bandwidth numbers directly with
 the disk throughput (in the same interval).</p></div>
-<div class="paragraph"><p>Dstat also cleverly gives you the most detailed information in columns
+<div class="paragraph"><p>Dool also cleverly gives you the most detailed information in columns
 and clearly indicates in what magnitude and unit the output is displayed.
 Less confusion, less mistakes, more efficient.</p></div>
-<div class="paragraph"><p>Dstat is unique in letting you aggregate block device throughput for a
+<div class="paragraph"><p>Dool is unique in letting you aggregate block device throughput for a
 certain diskset or network bandwidth for a group of interfaces, ie.
 you can see the throughput for all the block devices that make up a
 single filesystem or storage system.</p></div>
-<div class="paragraph"><p>Dstat allows its data to be directly written to a CSV file to be
+<div class="paragraph"><p>Dool allows its data to be directly written to a CSV file to be
 imported and used by OpenOffice, Gnumeric or Excel to create graphs.</p></div>
-<div class="admonitionblock">
-<table><tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">Users of Sleuthkit might find Sleuthkit&#8217;s dstat being renamed to
-datastat to avoid a name conflict. See Debian bug #283709 for more
-information.</td>
-</tr></table>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -1111,6 +1102,14 @@ Possible internal stats are
 </p>
 </dd>
 <dt class="hdlist1">
+--bytes
+</dt>
+<dd>
+<p>
+    force bytes for values expressed in bits
+</p>
+</dd>
+<dt class="hdlist1">
 --float
 </dt>
 <dd>
@@ -1171,7 +1170,7 @@ Possible internal stats are
 </dt>
 <dd>
 <p>
-    show profiling statistics when exiting dstat
+    show profiling statistics when exiting dool
 </p>
 </dd>
 </dl></div>
@@ -1180,9 +1179,9 @@ Possible internal stats are
 <div class="sect1">
 <h2 id="_plugins">PLUGINS</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>While anyone can create their own dstat plugins (and contribute them) dstat
+<div class="paragraph"><p>While anyone can create their own dool plugins (and contribute them) dool
 ships with a number of plugins already that extend its capabilities greatly.
-Here is an overview of the plugins dstat ships with:</p></div>
+Here is an overview of the plugins dool ships with:</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 --battery
@@ -1265,35 +1264,35 @@ Here is an overview of the plugins dstat ships with:</p></div>
 </p>
 </dd>
 <dt class="hdlist1">
---dstat
+--dool
 </dt>
 <dd>
 <p>
-    show dstat cputime consumption and latency
+    show dool cputime consumption and latency
 </p>
 </dd>
 <dt class="hdlist1">
---dstat-cpu
+--dool-cpu
 </dt>
 <dd>
 <p>
-    show dstat advanced cpu usage
+    show dool advanced cpu usage
 </p>
 </dd>
 <dt class="hdlist1">
---dstat-ctxt
+--dool-ctxt
 </dt>
 <dd>
 <p>
-    show dstat context switches
+    show dool context switches
 </p>
 </dd>
 <dt class="hdlist1">
---dstat-mem
+--dool-mem
 </dt>
 <dd>
 <p>
-    show dstat advanced memory usage
+    show dool advanced memory usage
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1333,7 +1332,7 @@ Here is an overview of the plugins dstat ships with:</p></div>
 </dt>
 <dd>
 <p>
-    Hello world example dstat plugin
+    Hello world example dool plugin
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1569,7 +1568,7 @@ Here is an overview of the plugins dstat ships with:</p></div>
 </dt>
 <dd>
 <p>
-    show CPU stats using SNMP from DSTAT_SNMPSERVER
+    show CPU stats using SNMP from DOOL_SNMPSERVER
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1577,7 +1576,7 @@ Here is an overview of the plugins dstat ships with:</p></div>
 </dt>
 <dd>
 <p>
-    show load stats using SNMP from DSTAT_SNMPSERVER
+    show load stats using SNMP from DOOL_SNMPSERVER
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1585,7 +1584,7 @@ Here is an overview of the plugins dstat ships with:</p></div>
 </dt>
 <dd>
 <p>
-    show memory stats using SNMP from DSTAT_SNMPSERVER
+    show memory stats using SNMP from DOOL_SNMPSERVER
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1593,19 +1592,19 @@ Here is an overview of the plugins dstat ships with:</p></div>
 </dt>
 <dd>
 <p>
-    show network stats using SNMP from DSTAT_SNMPSERVER
+    show network stats using SNMP from DOOL_SNMPSERVER
 </p>
 </dd>
 </dl></div>
 <div class="paragraph"><p>--snmp-net-err:
-    show network errors using SNMP from DSTAT_SNMPSERVER</p></div>
+    show network errors using SNMP from DOOL_SNMPSERVER</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 --snmp-sys
 </dt>
 <dd>
 <p>
-    show system stats (interrupts and context switches) using SNMP from DSTAT_SNMPSERVER
+    show system stats (interrupts and context switches) using SNMP from DOOL_SNMPSERVER
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1878,7 +1877,7 @@ Here is an overview of the plugins dstat ships with:</p></div>
 <div class="sect1">
 <h2 id="_intermediate_updates">INTERMEDIATE UPDATES</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>When invoking dstat with a <strong>delay</strong> greater than 1 and without the
+<div class="paragraph"><p>When invoking dool with a <strong>delay</strong> greater than 1 and without the
 <strong>--noupdate</strong> option, it will show intermediate updates, ie. the first
 time a 1 sec average, the second update a 2 second average, etc. until
 the delay has been reached.</p></div>
@@ -1891,38 +1890,38 @@ average on a new line, just like with vmstat.</p></div>
 <div class="sect1">
 <h2 id="_examples">EXAMPLES</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Using dstat to relate disk-throughput with network-usage (eth0), total CPU-usage and system counters:</p></div>
+<div class="paragraph"><p>Using dool to relate disk-throughput with network-usage (eth0), total CPU-usage and system counters:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>dstat -dnyc -N eth0 -C total -f 5</code></pre>
+<pre><code>dool -dnyc -N eth0 -C total -f 5</code></pre>
 </div></div>
-<div class="paragraph"><p>Checking dstat&#8217;s behaviour and the system impact of dstat:</p></div>
+<div class="paragraph"><p>Checking dool&#8217;s behaviour and the system impact of dool:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>dstat -taf --debug</code></pre>
+<pre><code>dool -taf --debug</code></pre>
 </div></div>
 <div class="paragraph"><p>Using the time plugin together with cpu, net, disk, system, load, proc and
 top_cpu plugins:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>dstat -tcndylp --top-cpu</code></pre>
+<pre><code>dool -tcndylp --top-cpu</code></pre>
 </div></div>
 <div class="paragraph"><p>this is identical to</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>dstat --time --cpu --net --disk --sys --load --proc --top-cpu</code></pre>
+<pre><code>dool --time --cpu --net --disk --sys --load --proc --top-cpu</code></pre>
 </div></div>
-<div class="paragraph"><p>Using dstat to relate advanced cpu stats with interrupts per device:</p></div>
+<div class="paragraph"><p>Using dool to relate advanced cpu stats with interrupts per device:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><code>dstat -t --cpu-adv -yif</code></pre>
+<pre><code>dool -t --cpu-adv -yif</code></pre>
 </div></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_bugs">BUGS</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Since it is practically impossible to test dstat on every possible
+<div class="paragraph"><p>Since it is practically impossible to test dool on every possible
 permutation of kernel, python or distribution version, I need your
 help and your feedback to fix the remaining problems. If you have
 improvements or bugreports, please send them to:
@@ -1940,53 +1939,53 @@ improvements or bugreports, please send them to:
 <div class="sect1">
 <h2 id="_files">FILES</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Paths that may contain external dstat_*.py plugins:</p></div>
+<div class="paragraph"><p>Paths that may contain external dool_*.py plugins:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>~/.dstat/
+<pre><code>~/.dool/
 (path of binary)/plugins/
-/usr/share/dstat/
-/usr/local/share/dstat/</code></pre>
+/usr/share/dool/
+/usr/local/share/dool/</code></pre>
 </div></div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_environment_variables">ENVIRONMENT VARIABLES</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Dstat will read additional command line arguments from the environment
-variable <strong>DSTAT_OPTS</strong>. You can use this to configure Dstat&#8217;s default
+<div class="paragraph"><p>Dool will read additional command line arguments from the environment
+variable <strong>DOOL_OPTS</strong>. You can use this to configure Dool&#8217;s default
 behavior, e.g. if you have a black-on-white terminal:</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>export DSTAT_OPTS="--bw --noupdate"</code></pre>
+<pre><code>export DOOL_OPTS="--bw --noupdate"</code></pre>
 </div></div>
 <div class="paragraph"><p>Other internal or external plugins have their own environment variables
 to influence their behavior, e.g.</p></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>DSTAT_NTPSERVER</code></pre>
+<pre><code>DOOL_NTPSERVER</code></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>DSTAT_MYSQL
-DSTAT_MYSQL_HOST
-DSTAT_MYSQL_PORT
-DSTAT_MYSQL_SOCKET
-DSTAT_MYSQL_USER
-DSTAT_MYSQL_PWD</code></pre>
+<pre><code>DOOL_MYSQL
+DOOL_MYSQL_HOST
+DOOL_MYSQL_PORT
+DOOL_MYSQL_SOCKET
+DOOL_MYSQL_USER
+DOOL_MYSQL_PWD</code></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>DSTAT_SNMPSERVER
-DSTAT_SNMPCOMMUNITY</code></pre>
+<pre><code>DOOL_SNMPSERVER
+DOOL_SNMPCOMMUNITY</code></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>DSTAT_SQUID_OPTS</code></pre>
+<pre><code>DOOL_SQUID_OPTS</code></pre>
 </div></div>
 <div class="literalblock">
 <div class="content">
-<pre><code>DSTAT_TIMEFMT</code></pre>
+<pre><code>DOOL_TIMEFMT</code></pre>
 </div></div>
 </div>
 </div>
@@ -2061,7 +2060,9 @@ DSTAT_SNMPCOMMUNITY</code></pre>
 <div class="sect1">
 <h2 id="_author">AUTHOR</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Written by Dag Wieers <a href="mailto:dag@wieers.com">dag@wieers.com</a></p></div>
+<div class="paragraph"><p>Dool is maintained by Scott Baker <a href="mailto:scott@perturb.org">scott@perturb.org</a></p></div>
+<div class="paragraph"><p>Homepage at <a href="https://github.com/scottchiefbaker/dool">https://github.com/scottchiefbaker/dool</a></p></div>
+<div class="paragraph"><p>dstat originally written by Dag Wieers <a href="mailto:dag@wieers.com">dag@wieers.com</a></p></div>
 <div class="paragraph"><p>Homepage at <a href="http://dag.wieers.com/home-made/dstat/">http://dag.wieers.com/home-made/dstat/</a></p></div>
 <div class="paragraph"><p>This manpage was initially written by Andrew Pollock
 <a href="mailto:apollock@debian.org">apollock@debian.org</a> for the Debian GNU/Linux system.</p></div>
@@ -2071,8 +2072,9 @@ DSTAT_SNMPCOMMUNITY</code></pre>
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Version 0.7.3<br />
-Last updated 2015-07-04 14:07:27 CEST
+Version 1.1.0<br />
+Last updated
+ 2023-06-05 08:36:59 PDT
 </div>
 </div>
 </body>
