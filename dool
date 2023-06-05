@@ -2371,7 +2371,7 @@ def main():
     if op.output:
         if not os.path.exists(op.output):
             outputfile = open(op.output, 'w')
-            outputfile.write('"Dstat %s CSV output"\n' % VERSION)
+            outputfile.write('"dool %s CSV output"\n' % VERSION)
             header = ('"Author:","Scott Baker"','','','','"URL:"','"https://github.com/scottchiefbaker/dool/"\n')
             outputfile.write(char['sep'].join(header))
         else:
