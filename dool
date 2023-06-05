@@ -118,6 +118,11 @@ class Options:
 
         plugin_defaults = 0
 
+        # Loop through the opt array and find the keys
+        opt_keys = []
+        for x in opts:
+            opt_keys.append(x[0])
+
         # We default to outputting to the display, but this may get toggled later by --output
         self.display = True
 
@@ -229,9 +234,8 @@ class Options:
                 sys.exit(1)
 
         # If --display is before --output we have to reset it here
-        for opt, arg in opts:
-            if opt == '--display':
-                self.display = True
+        if '--display' in opt_keys:
+            self.display = True
 
         if self.float and self.integer:
             print('dool: option --float and --integer are mutual exclusive, you can only force one')
@@ -242,12 +246,6 @@ class Options:
             self.plugins    = default_plugins
             plugin_defaults = 1
             print("Using default plugins: " + ", ".join(self.plugins) + "")
-
-        # Loop through the opt array and find the keys
-        opt_keys = []
-        for x in opts:
-            key = x[0]
-            opt_keys.append(key)
 
         # Append the 'time' plugin to the end for 'more' and 'all'
         needs_time_added = ('time' not in self.plugins) and (("--more" in opt_keys) or ("--all" in opt_keys) or (plugin_defaults))
