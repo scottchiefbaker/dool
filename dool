@@ -1491,6 +1491,8 @@ def signal_handler(signum, frame):
 
     # If we're outputting to the display
     if op.display:
+        # Print a couple of spaces to cover up the "^C" that gets printed
+        print("\b\b        ")
         # Reset the ANSI colors just in case
         print(ansi['reset']);
         sys.stdout.flush()
