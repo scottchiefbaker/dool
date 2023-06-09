@@ -45,7 +45,7 @@ class dstat_plugin(dstat):
             if op.debug > 1: print('%s: lost pipe to squidclient, %s' % (self.filename, e))
             for name in self.vars: self.val[name] = -1
         except Exception as e:
-            if op.debug > 1: print('%s: exception' (self.filename, e))
+            if op.debug > 1: print('%s: exception %s' % (self.filename, e))
             for name in self.vars: self.val[name] = -1
 
 # vim:ts=4:sw=4:et
