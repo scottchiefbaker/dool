@@ -44,8 +44,11 @@ imported and used by OpenOffice, Gnumeric or Excel to create graphs.
     enable disk stats (read, write), for more disk related stats look
     into the other *--disk* plugins
 
--D total,hda::
-    include total and hda (when using -d/--disk)
+-D total,sda::
+    include total and sda (when using --disk)
+
+--diskset diskset_name:dev1,dev2,dev3,etc...::
+	group several disks together and report aggregate stats (when using --disk)
 
 -g, --page::
     enable page stats (page in, page out)
