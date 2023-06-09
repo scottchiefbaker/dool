@@ -67,9 +67,14 @@ enable disk stats (read, write), for more disk related stats look into the other
 plugins
 .RE
 .PP
-\-D total,hda
+\-D total,sda
 .RS 4
-include total and hda (when using \-d/\-\-disk)
+include total and sda (when using \-\-disk)
+.RE
+.PP
+\-\-diskset diskset_name:dev1,dev2,dev3,etc\&...
+.RS 4
+group several disks together and report aggregate stats (when using \-\-disk)
 .RE
 .PP
 \-g, \-\-page
