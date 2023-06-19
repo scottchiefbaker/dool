@@ -60,3 +60,11 @@ Other tools similar to Dool
 * [btop](https://github.com/aristocratos/btop)
 * [iotop](https://github.com/Tomas-M/iotop)
 
+### Pull Requests and Branches
+
+The latest stable release (plus bugfixes) will live on the `master` branch,
+and development of new features will occur on the `next` branch. Please have
+pull requests target the `next` branch.
+
+Various feature/bug branches may come and go as we work on more complex
+functionality, but those can be safely ignored.
