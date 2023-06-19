@@ -2456,15 +2456,20 @@ def main():
 
     ### Empty ansi and theme database if no colors are requested
     if not op.color:
+
         for key in color:
             color[key] = ''
+
         for key in theme:
             theme[key] = ''
-        for key in ansi:
-            ansi[key] = ''
+
+        # With this enabled --nocolor with a delay doesn't display correctly so
+        # I've disabled it for now
+        #for key in ansi:
+            #ansi[key] = ''
+
         theme['colors_hi'] = (ansi['default'],)
         theme['colors_lo'] = (ansi['default'],)
-#        print color['blackbg']
 
     ### Disable line-wrapping (does not work ?)
     sys.stdout.write(ansi['nolinewrap'])
