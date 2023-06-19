@@ -2556,9 +2556,6 @@ def main():
         update = update + interval
         linecache.clearcache()
 
-    if op.update:
-        sys.stdout.write('\n')
-
 def perform(update):
         "Inner loop that calculates counters and constructs output"
         global totlist, oldvislist, vislist, showheader, rows, cols
@@ -2680,10 +2677,6 @@ def perform(update):
 #            sys.stdout.write(' '+theme['error']+'= warn =')
             sys.stdout.write(' ' + theme['error'] + 'missed ' + str(missed+1) + ' ticks' + theme['input'])
             missed = 0
-
-        ### Finish the line
-        if not op.update:
-            sys.stdout.write('\n')
 
 # Get an item from a list, or a default value if the array isn't big enough
 def list_item_default(mylist, num, default):
