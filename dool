@@ -122,7 +122,7 @@ class Options:
             elif opt in ['--diskset']:
                 parts   = arg.split(":", 1)
                 name    = list_item_default(parts, 0, "Unknown")
-                members = list_item_default(parts, 1, "").split(", ")
+                members = list_item_default(parts, 1, "").split(",")
 
                 if (len(parts) < 2 or len(members) < 1):
                     print("Error parsing diskset...\n")
