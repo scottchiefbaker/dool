@@ -12,7 +12,7 @@ class dstat_plugin(dstat):
         self.name = 'most expensive'
         self.vars = ('cpu process',)
         self.type = 's'
-        self.width = 16
+        self.width = 20
         self.scale = 0
         self.pidset1 = {}
 

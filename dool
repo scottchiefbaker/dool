@@ -2178,6 +2178,19 @@ def getnamebypid(pid, name):
         if ret.startswith('-'):
             ret = basename(cmdline[-2])
             if ret.startswith('-'): raise
+
+        is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
+        if is_vm:
+            # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
+            # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
+
+            cmd_str = " ".join(cmdline)
+            xmatch  = re.search("-name (.+?),", cmd_str)
+
+            if xmatch:
+                ret = xmatch.group(1)
+                ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+
         if not ret: raise
     except:
         ret = basename(name)
