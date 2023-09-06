@@ -6,9 +6,9 @@
 class dstat_plugin(dstat):
     def __init__(self):
         self.name = 'most expensive i/o process'
-        self.vars = ('process              pid  read write cpu',)
+        self.vars = ('process              pid    read  write  cpu ',)
         self.type = 's'
-        self.width = 40
+        self.width = 45
         self.scale = 0
         self.pidset1 = {}
 
@@ -69,7 +69,14 @@ class dstat_plugin(dstat):
             self.pidset1 = self.pidset2
 
         if self.val['usage'] != 0.0:
-            self.output = '%-*s%s%-5s%s%s%s%s%%' % (self.width-14-len(pid), self.val['name'][0:self.width-14-len(pid)], color['darkblue'], self.val['pid'], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024), cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'])
+            #self.output = '%-*s%s%-5s%s%s%s%s%%' % (self.width-14-len(pid), self.val['name'][0:self.width-14-len(pid)], color['darkblue'], self.val['pid'], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024), cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'])
+
+            pid_str   = color['darkblue'] + ("%-6s" % self.val['pid']) + ansi['reset']
+            read_str  = cprint(self.val['read_usage'] , 'd', 5, 1024)
+            write_str = cprint(self.val['write_usage'], 'd', 5, 1024)
+            cpu_str   = cprint(self.val['cpu_usage']  , 'f', 4, 34)
+
+            self.output = '%-20s %s %s %s %s%%' % (self.val['name'], pid_str, read_str, write_str, cpu_str)
 
     def showcsv(self):
         return 'Top: %s\t%s\t%s\t%s' % (self.val['name'][0:self.width-20], self.val['read_usage'], self.val['write_usage'], self.val['cpu_usage'])
