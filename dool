@@ -782,11 +782,15 @@ class dool_cpu_adv(dool_cpu):
 
 class dool_disk(dool):
     def __init__(self):
-        self.nick       = ('read', 'writ')
-        self.type       = 'b'
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+)$')
+        self.nick = ('read', 'writ')
+        self.type = 'b'
+        self.cols = 2
         self.open('/proc/diskstats')
-        self.cols       = 2
+
+        # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
+        # i.e. use stats for sda not sda1/sda7/etc.
+        # NVME drives are: nvmeXnXpX
+        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
 
     def discover(self, *objlist):
         ret = []
@@ -982,13 +986,17 @@ class dool_int(dool):
 
 class dool_io(dool):
     def __init__(self):
-        self.nick       = ('read', 'writ')
-        self.type       = 'f'
-        self.width      = 5
-        self.scale      = 1000
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+)$')
+        self.nick  = ('read', 'writ')
+        self.type  = 'f'
+        self.width = 5
+        self.scale = 1000
+        self.cols  = 2
         self.open('/proc/diskstats')
-        self.cols       = 2
+
+        # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
+        # i.e. use stats for sda not sda1/sda7/etc.
+        # NVME drives are: nvmeXnXpX
+        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
 
     def discover(self, *objlist):
         ret = []
