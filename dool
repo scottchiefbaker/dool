@@ -784,7 +784,7 @@ class dool_disk(dstat):
     def __init__(self):
         self.nick       = ('read', 'writ')
         self.type       = 'b'
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
+        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+)$')
         self.open('/proc/diskstats')
         self.cols       = 2
 
@@ -841,7 +841,18 @@ class dool_disk(dstat):
         return ret
 
     def name(self):
-        return ['dsk/'+sysfs_dev(name) for name in self.vars]
+        ret = []
+        for name in self.vars:
+            # If the name is short enough we prepend "dsk/"
+            # We have to cut this off for long names like nvme1n2p3
+            if len(name) < 7:
+                x = 'dsk/' + sysfs_dev(name)
+            else:
+                x = sysfs_dev(name)
+
+            ret.append(x)
+
+        return ret
 
     def extract(self):
         for name in self.vars: self.set2[name] = (0, 0)
@@ -851,6 +862,9 @@ class dool_disk(dstat):
             name = l[2]
             if set(l[3:]) == {'0'}: continue
             if not self.diskfilter.match(name):
+                if op.debug > 1:
+                   print("Adding disk stats for '%s' %d/%d to total" % (name, int(l[5]), int(l[9])))
+
                 self.set2['total'] = ( self.set2['total'][0] + int(l[5]), self.set2['total'][1] + int(l[9]) )
             if name in self.vars and name != 'total':
                 self.set2[name] = ( self.set2[name][0] + int(l[5]), self.set2[name][1] + int(l[9]) )
@@ -972,7 +986,7 @@ class dool_io(dstat):
         self.type       = 'f'
         self.width      = 5
         self.scale      = 1000
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
+        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+)$')
         self.open('/proc/diskstats')
         self.cols       = 2
 
