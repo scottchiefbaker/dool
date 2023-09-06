@@ -6,7 +6,7 @@
 class dstat_plugin(dstat):
 	def __init__(self):
 		self.name    = 'most expensive i/o process'
-		self.vars    = ('process              pid    read  write  cpu ',)
+		self.vars    = ('process               pid    read  writ  cpu ',)
 		self.type    = 's'
 		self.width   = 45
 		self.scale   = 0
