@@ -841,7 +841,18 @@ class dool_disk(dstat):
         return ret
 
     def name(self):
-        return ['dsk/'+sysfs_dev(name) for name in self.vars]
+        ret = []
+        for name in self.vars:
+            # If the name is short enough we prepend "dsk/"
+            # We have to cut this off for long names like nvme1n2p3
+            if len(name) < 7:
+                x = 'dsk/' + sysfs_dev(name)
+            else:
+                x = sysfs_dev(name)
+
+            ret.append(x)
+
+        return ret
 
     def extract(self):
         for name in self.vars: self.set2[name] = (0, 0)
