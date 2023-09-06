@@ -1978,6 +1978,9 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
         else:
             return theme['error'] + '-'.rjust(width) + theme['default']
 
+    # There is a big discussion of bits vs bytes and the various unit lables
+    # here: https://github.com/scottchiefbaker/dool/pull/34
+    # which may help explain why these are inconsistent case
     if base != 1024:
         # Miscellaneous value using base of 1000 (1, kilo-, mega-, giga-, ...)
         units = (char['space'], 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
