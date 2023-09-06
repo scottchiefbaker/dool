@@ -20,21 +20,24 @@ class dstat_plugin(dstat):
     """
 
     def __init__(self):
-        self.name = 'ntp'
-        self.nick = ('date/time',)
-        self.vars = ('time',)
-        self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%d-%m %H:%M:%S'
-        self.ntpserver = os.getenv('DSTAT_NTPSERVER') or '0.fedora.pool.ntp.org'
-        self.type = 's'
-        self.width = len(time.strftime(self.timefmt, time.localtime()))
-        self.scale = 0
-        self.epoch = 2208988800
+        self.name      = 'ntp'
+        self.nick      = ('date/time',)
+        self.vars      = ('time',)
+        self.timefmt   = os.getenv('DOOL_TIMEFMT') or '%d-%m %H:%M:%S'
+        self.ntpserver = os.getenv('DOOL_NTPSERVER') or '0.fedora.pool.ntp.org'
+        self.type      = 's'
+        self.width     = len(time.strftime(self.timefmt, time.localtime()))
+        self.scale     = 0
+        self.epoch     = 2208988800
 #        socket.setdefaulttimeout(0.25)
         self.socket = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
         self.socket.settimeout(0.25)
 
+        if op.debug:
+            print("NTP Plugin is using: '%s'" % self.ntpserver)
+
     def gettime(self):
-        self.socket.sendto( '\x1b' + 47 * '\0', ( self.ntpserver, 123 ))
+        self.socket.sendto( b'\x1b' + 47 * b'\0', ( self.ntpserver, 123 ))
         data, address = self.socket.recvfrom(1024)
         return struct.unpack( '!12I', data )[10] - self.epoch
 
