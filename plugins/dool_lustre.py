@@ -1,6 +1,6 @@
 # Author: Brock Palen <brockp@mlds-networks.com>, Kilian Cavalotti <kilian@stanford.edu>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.nick = ('read', 'write')
         self.cols = 2

@@ -1,6 +1,6 @@
 ### Authority: Dag Wieers <dag$wieers,com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Top process with highest total latency.
 

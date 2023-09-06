@@ -5,7 +5,7 @@ global BIN_JCMD
 BIN_JCMD = '/usr/bin/jcmd'
 
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     This plugin gathers jvm stats via jcmd.
 

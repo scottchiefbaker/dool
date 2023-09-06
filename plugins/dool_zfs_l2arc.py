@@ -1,4 +1,4 @@
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     ZFS on Linux L2ARC (Level 2 Adjustable Replacement Cache)
 

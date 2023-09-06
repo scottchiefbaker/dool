@@ -6,7 +6,7 @@
 ### More information:
 ###    http://lwn.net/Articles/317814/
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'out of memory'
         self.vars = ('kill score',)

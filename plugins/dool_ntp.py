@@ -9,7 +9,7 @@ import struct
 ### FIXME: Implement millisecond granularity as well
 ### FIXME: Interrupts socket if data is overdue (more than 250ms ?)
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Time from an NTP server.
 

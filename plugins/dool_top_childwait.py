@@ -5,7 +5,7 @@
 
 global cpunr
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'most waiting for'
         self.vars = ('child process',)

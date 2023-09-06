@@ -11,7 +11,7 @@
 # # dstat --vmknic -n -N vmk0,vswif0
 # NB Data comes from /proc/vmware/net/tcpip/ifconfig
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'vmknic'
         self.nick = ('recv', 'send')

@@ -1,6 +1,6 @@
 ### Author: Dag Wieers <dag$wieers,com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Provide memory information related to the dstat process.
 

@@ -3,7 +3,7 @@
 ### FIXME: This module needs infrastructure to provide a list of mountpoints
 ### FIXME: Would be nice to have a total by default (half implemented)
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Amount of used and free space per mountpoint.
     """

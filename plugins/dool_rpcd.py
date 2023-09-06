@@ -1,6 +1,6 @@
 ### Author: Dag Wieers <dag@wieers.com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'rpc server'
         self.nick = ('call', 'erca', 'erau', 'ercl', 'xdrc')

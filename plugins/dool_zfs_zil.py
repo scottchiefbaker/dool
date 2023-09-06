@@ -1,4 +1,4 @@
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     ZFS on Linux ZIL (ZFS Intent Log)
 

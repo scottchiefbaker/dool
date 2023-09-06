@@ -1,12 +1,12 @@
 ### Author: Jihyun Yu <yjh0502@gmail.com>
 
 global redis_host 
-redis_host = os.getenv('DSTAT_REDIS_HOST') or "127.0.0.1"
+redis_host = os.getenv('DOOL_REDIS_HOST') or "127.0.0.1"
 
 global redis_port
-redis_port = os.getenv('DSTAT_REDIS_PORT') or "6379"
+redis_port = os.getenv('DOOL_REDIS_PORT') or "6379"
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.type = 'd'
         self.width = 7

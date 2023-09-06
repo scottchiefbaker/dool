@@ -12,7 +12,7 @@
 # will be used by both).
 # # dstat --vmkhba -d -D sda,vmhba1
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'vmkhba'
         self.nick = ('read', 'writ')

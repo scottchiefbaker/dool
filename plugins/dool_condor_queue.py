@@ -72,7 +72,7 @@ class condor_classad:
         finally:
             f.close()
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Plugin for Condor queue stats
     """

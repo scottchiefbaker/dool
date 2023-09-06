@@ -1,6 +1,6 @@
 ### Author: Bert de Bruijn <bert+dstat@debruijn.be>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Recovery state of software RAID rebuild.
 

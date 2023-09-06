@@ -1,7 +1,7 @@
 ### Author: Ming-Hung Chen <minghung.chen@gmail.com>
 
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     bonddirname = '/proc/net/bonding/'
     netdirname = '/sys/class/net/'
     """

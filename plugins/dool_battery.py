@@ -1,7 +1,7 @@
 ### Author: Dag Wieers <dag$wieers,com>
 ### Author: Sven-Hendrik Haase <sh@lutzhaase.com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Percentage of remaining battery power as reported by ACPI.
     """

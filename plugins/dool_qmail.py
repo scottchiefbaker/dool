@@ -1,6 +1,6 @@
 ### Author: Tom Van Looy <tom$ctors,net>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     port of qmail_qstat to dstat
     """
