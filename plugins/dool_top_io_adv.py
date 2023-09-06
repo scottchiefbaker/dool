@@ -5,11 +5,11 @@
 
 class dstat_plugin(dstat):
 	def __init__(self):
-		self.name = 'most expensive i/o process'
-		self.vars = ('process              pid    read  write  cpu ',)
-		self.type = 's'
-		self.width = 45
-		self.scale = 0
+		self.name    = 'most expensive i/o process'
+		self.vars    = ('process              pid    read  write  cpu ',)
+		self.type    = 's'
+		self.width   = 45
+		self.scale   = 0
 		self.pidset1 = {}
 
 	def check(self):
@@ -52,18 +52,18 @@ class dstat_plugin(dstat):
 			except IndexError:
 				continue
 
-			read_usage = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * 1.0 / elapsed
+			read_usage  = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * 1.0 / elapsed
 			write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * 1.0 / elapsed
-			usage = read_usage + write_usage
+			usage       = read_usage + write_usage
 
 			### Get the process that spends the most jiffies
 			if usage > self.val['usage']:
-				self.val['usage'] = usage
-				self.val['read_usage'] = read_usage
+				self.val['usage']       = usage
+				self.val['read_usage']  = read_usage
 				self.val['write_usage'] = write_usage
-				self.val['pid'] = pid
-				self.val['name'] = getnamebypid(pid, name)
-				self.val['cpu_usage'] = cpu_usage
+				self.val['pid']         = pid
+				self.val['name']        = getnamebypid(pid, name)
+				self.val['cpu_usage']   = cpu_usage
 
 		if step == op.delay:
 			self.pidset1 = self.pidset2
