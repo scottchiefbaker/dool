@@ -1955,6 +1955,9 @@ def cprintlist(varlist, ctype, width, scale):
         sep = char['space']
     return ret
 
+# var   : data to output
+# ctypes: f = float, s = string, b = bit/bytes, d = decimal, t = time
+# width : width in chars of the column
 def cprint(var, ctype = 'f', width = 4, scale = 1000):
     "Color print one column"
 
