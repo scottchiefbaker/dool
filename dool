@@ -2664,7 +2664,9 @@ def perform(update):
 
         starttime = time.time()
 
+        # The number of which update we one (not counting subdates)
         loop = int((update - 1 + op.delay) / op.delay)
+        # The step (subupdate) number inside of the current loop
         step = ((update - 1) % op.delay) + 1
 
         ### Get current time (may be different from schedule) for debugging
@@ -2718,9 +2720,10 @@ def perform(update):
         else:
             vislist = totlist
 
-        ### Prepare the colors for intermediate updates, last step in a loop is definitive
+        # If we're on the last step of the loop it's definitive and is colored differently
         if step == op.delay:
             theme['default'] = ansi['reset']
+        # It's a step/subupdate
         else:
             theme['default'] = theme['text_lo']
 
