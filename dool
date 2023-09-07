@@ -60,6 +60,7 @@ class Options:
         self.cpulist      = None
         self.debug        = 0
         self.delay        = 1
+        self.devel        = 0
         self.disklist     = []
         self.diskset      = {}
         self.full         = False
@@ -91,7 +92,7 @@ class Options:
         try:
             opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V',
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color', 'color16',
-                 'defaults', 'debug', 'filesystem', 'float', 'full', 'help', 'integer',
+                 'defaults', 'debug', 'devel', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
                  'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display', 'diskset='] + allplugins)
         except getopt.error as exc:
@@ -218,6 +219,8 @@ class Options:
                 self.pidfile = arg
             elif opt in ['--profile']:
                 self.profile = 'dool_profile.log'
+            elif opt in ['--devel']:
+                self.devel = 1
             elif opt in ['-h', '--help']:
                 self.usage()
                 self.help()
@@ -876,8 +879,7 @@ class dool_disk(dool):
             name = l[2]
             if set(l[3:]) == {'0'}: continue
             if not self.diskfilter.match(name):
-                if op.debug > 1:
-                   print("Adding disk stats for '%s' %d/%d to total" % (name, int(l[5]), int(l[9])))
+                devel_log("Adding disk stats for '%s' %d/%d to total" % (name, int(l[5]), int(l[9])))
 
                 self.set2['total'] = ( self.set2['total'][0] + int(l[5]), self.set2['total'][1] + int(l[9]) )
             if name in self.vars and name != 'total':
@@ -1965,6 +1967,40 @@ def tchg(var, width):
                 ret = '%2dw' % (var / 60 / 24 / 7)
     return ret
 
+# Global/static variables to speed up repeated calls to this function
+DEBUG_LAST = 0
+DEBUG_FH   = 0
+def devel_log(msg):
+    global DEBUG_LAST, DEBUG_FH
+
+    if not op.devel:
+        return -1
+
+    if not DEBUG_FH:
+        log_file = "/tmp/dool-devel.log"
+        print("Writing devel log: '%s'" % log_file)
+        DEBUG_FH = open(log_file, "w", 1)
+
+    xtime    = time.time()
+    time_fmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
+    time_str = time.strftime(time_fmt, time.localtime())
+
+    # Append MS the ghetto way
+    time_ms  = "." + str(round(xtime * 1000 % 1000))
+    time_str += time_ms
+
+    # Calculate the ms since the previous call
+    if DEBUG_LAST > 0:
+       time_diff = (xtime - DEBUG_LAST) * 1000 # Milliseconds
+    else:
+       time_diff = 0
+
+    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg)
+    DEBUG_FH.write(log_line);
+
+    # Save the time of this call for the next call
+    DEBUG_LAST = xtime
+
 def cprintlist(varlist, ctype, width, scale):
     "Return all columns color printed"
     ret = sep = ''
@@ -2435,6 +2471,8 @@ def main():
     global ansi, theme, outputfile
     global totlist, inittime
     global update, missed
+
+    devel_log("Dool startup")
 
     # Handle signals like CTRL+C
     init_signal_handling()
