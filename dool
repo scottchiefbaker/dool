@@ -1995,7 +1995,7 @@ def devel_log(msg):
     else:
        time_diff = 0
 
-    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg)
+    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg.strip())
     DEBUG_FH.write(log_line);
 
     # Save the time of this call for the next call
