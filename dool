@@ -1973,9 +1973,11 @@ DEBUG_FH   = 0
 def devel_log(msg):
     global DEBUG_LAST, DEBUG_FH
 
+    # If we didn't enable `--devel` on the CLI we don't do anything
     if not op.devel:
         return -1
 
+    # If the filehandle isn't already open, we open it
     if not DEBUG_FH:
         log_file = "/tmp/dool-devel.log"
         print("Writing devel log: '%s'" % log_file)
