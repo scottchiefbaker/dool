@@ -2602,14 +2602,19 @@ def main():
     update = 0
     missed = 0
 
-    ### Let the games begin
-    while update <= op.delay * (op.count-1) or op.count == -1:
+    # This the main loop that does all the output. It has two options:
+    # Loop X number of times where X is (delay * count) and stop
+    # or
+    # loop forever (op.count = -1 is how we say "forever")
+    while (update <= (op.delay * (op.count - 1))) or (op.count == -1):
+        # We are scheduling to run perform(update) every 1 second
         scheduler.enterabs(inittime + update, 1, perform, (update,))
-#        scheduler.enter(1, 1, perform, (update,))
         scheduler.run()
         sys.stdout.flush()
+        # The time the next update will run
         update = update + interval
         linecache.clearcache()
+        devel_log("Loop #%d" % update)
 
     print()
 
