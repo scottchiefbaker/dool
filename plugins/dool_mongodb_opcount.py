@@ -1,15 +1,15 @@
 ### Author: <gianfranco@mongodb.com>
 
 global mongodb_user
-mongodb_user = os.getenv('DSTAT_MONGODB_USER') or os.getenv('USER')
+mongodb_user = os.getenv('DOOL_MONGODB_USER') or os.getenv('USER')
 
 global mongodb_pwd
-mongodb_pwd = os.getenv('DSTAT_MONGODB_PWD')
+mongodb_pwd = os.getenv('DOOL_MONGODB_PWD')
 
 global mongodb_host
-mongodb_host = os.getenv('DSTAT_MONGODB_HOST') or '127.0.0.1:27017'
+mongodb_host = os.getenv('DOOL_MONGODB_HOST') or '127.0.0.1:27017'
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
   """
   Plugin for MongoDB.
   """

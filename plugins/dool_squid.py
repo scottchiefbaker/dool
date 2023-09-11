@@ -7,9 +7,9 @@
 # - Squid 2.6 and 2.7
  
 global squidclient_options
-squidclient_options = os.getenv('DSTAT_SQUID_OPTS') # -p 8080
+squidclient_options = os.getenv('DOOL_SQUID_OPTS') # -p 8080
  
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     '''
     Provides various Squid statistics.
     '''

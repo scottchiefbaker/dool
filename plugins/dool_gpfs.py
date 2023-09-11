@@ -1,6 +1,6 @@
 ### Author: Dag Wieers <dag$wieers,com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Total amount of read and write throughput (in bytes) on a GPFS filesystem.
     """

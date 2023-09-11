@@ -170,6 +170,12 @@ Possible internal stats are::
 --integer::
     force integer values on screen (mutual exclusive with *--float*)
 
+--color::
+	force 256 color output (default)
+
+--color16::
+	force 16 color
+
 --bw, --blackonwhite::
     change colors for white background terminal
 

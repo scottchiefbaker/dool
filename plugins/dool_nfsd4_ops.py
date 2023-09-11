@@ -1,7 +1,7 @@
 ### Author: Adam Michel <elfurbe@furbism.com>
 ### Based on work by: Dag Wieers <dag@wieers.com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'nfs4 server'
         # this vars/nick pair is the ones I considered relevant. Any set of the full list would work.

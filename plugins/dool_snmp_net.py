@@ -1,12 +1,12 @@
 ### Author: Dag Wieers <dag$wieers,com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.nick = ('recv', 'send')
         self.type = 'b'
         self.cols = 2
-        self.server = os.getenv('DSTAT_SNMPSERVER') or '192.168.1.1'
-        self.community = os.getenv('DSTAT_SNMPCOMMUNITY') or 'public'
+        self.server = os.getenv('DOOL_SNMPSERVER') or '192.168.1.1'
+        self.community = os.getenv('DOOL_SNMPCOMMUNITY') or 'public'
 
     def check(self):
         try:

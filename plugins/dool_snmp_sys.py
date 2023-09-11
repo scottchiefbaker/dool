@@ -1,6 +1,6 @@
 ### Author: Dag Wieers <dag$wieers,com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'system'
         self.nick = ('int', 'csw')
@@ -8,8 +8,8 @@ class dstat_plugin(dstat):
         self.type = 'd'
         self.width = 5
         self.scale = 1000
-        self.server = os.getenv('DSTAT_SNMPSERVER') or '192.168.1.1'
-        self.community = os.getenv('DSTAT_SNMPCOMMUNITY') or 'public'
+        self.server = os.getenv('DOOL_SNMPSERVER') or '192.168.1.1'
+        self.community = os.getenv('DOOL_SNMPCOMMUNITY') or 'public'
 
     def check(self):
         try:

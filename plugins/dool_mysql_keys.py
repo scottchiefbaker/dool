@@ -1,7 +1,7 @@
 global mysql_options
-mysql_options = os.getenv('DSTAT_MYSQL')
+mysql_options = os.getenv('DOOL_MYSQL')
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'mysql key status'
         self.nick = ('used', 'read', 'writ', 'rreq', 'wreq')

@@ -2,7 +2,7 @@
 global socket
 import socket
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Memcache hit count plugin.
 

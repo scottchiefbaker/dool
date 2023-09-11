@@ -1,6 +1,6 @@
 ### Author: dag@wieers.com
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     CPU frequency in percentage as reported by ACPI.
     """

@@ -3,7 +3,7 @@
 ###
 ### Authority: Guillermo Cantu Luna
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'most expensive block i/o process'
         self.vars = ('process              pid  read write cpu',)

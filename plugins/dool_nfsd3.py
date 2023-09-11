@@ -1,6 +1,6 @@
 ### Author: Dag Wieers <dag@wieers.com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'nfs3 server'
         self.nick = ('read', 'writ', 'rdir', 'inod', 'fs', 'cmmt')

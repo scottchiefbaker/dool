@@ -1,21 +1,21 @@
 ### Author: <lefred$inuits,be>
 
 global mysql_user
-mysql_user = os.getenv('DSTAT_MYSQL_USER') or os.getenv('USER')
+mysql_user = os.getenv('DOOL_MYSQL_USER') or os.getenv('USER')
 
 global mysql_pwd
-mysql_pwd = os.getenv('DSTAT_MYSQL_PWD') 
+mysql_pwd = os.getenv('DOOL_MYSQL_PWD') 
 
 global mysql_host
-mysql_host = os.getenv('DSTAT_MYSQL_HOST')
+mysql_host = os.getenv('DOOL_MYSQL_HOST')
 
 global mysql_port
-mysql_port = os.getenv('DSTAT_MYSQL_PORT')
+mysql_port = os.getenv('DOOL_MYSQL_PORT')
 
 global mysql_socket
-mysql_socket = os.getenv('DSTAT_MYSQL_SOCKET')
+mysql_socket = os.getenv('DOOL_MYSQL_SOCKET')
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Plugin for MySQL 5 Keys.
     """

@@ -20,7 +20,7 @@
 #       vfs_write_chars          23864660931174682
 #       io_pbs                                  16
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.nick = ['read', 'write', 'dirty', 'cancel', 'missed']
         self.cols = len(self.nick)

@@ -3,7 +3,7 @@
 ### For more information, see:
 ###     http://eaglet.rain.com/rick/linux/schedstat/
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Name and total amount of CPU time consumed in milliseconds of the process
     that has the highest total amount of cputime for the measured timeframe.

@@ -1,7 +1,7 @@
 ### Author: Dmitry Fedin <dmitry.fedin@gmail.com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     ibdirname = '/sys/class/infiniband'
     """
     Bytes received or sent through infiniband/RoCE interfaces

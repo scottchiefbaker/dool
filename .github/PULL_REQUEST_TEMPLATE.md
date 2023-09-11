@@ -1,14 +1,5 @@
-##### ISSUE TYPE
-<!--- Pick one below and delete the rest: -->
- - New plugin pull-request
- - Feature pull-request
- - Bugfix pull-request
- - Docs pull-request
-
-##### DSTAT VERSION
-```
-<!--- Paste verbatim output from “dstat --version” here -->
-```
+##### DOOL VERSION
+<!--- Paste Dool version here -->
 
 ##### SUMMARY
 <!--- Describe the change here, including rationale and design decisions -->

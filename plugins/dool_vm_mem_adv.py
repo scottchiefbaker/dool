@@ -4,7 +4,7 @@
 ### Displays memory stats coming from the hypervisor inside VMware VMs.
 ### The vmGuestLib API from VMware Tools needs to be installed
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'vmware advanced memory'
         self.vars = ('active', 'ballooned', 'mapped', 'overhead', 'saved', 'shared', 'swapped', 'targetsize', 'used')

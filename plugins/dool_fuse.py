@@ -1,6 +1,6 @@
 ### Author: Vikas Gorur (http://github.com/vikasgorur)
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     Waiting calls on mounted FUSE filesystems
 

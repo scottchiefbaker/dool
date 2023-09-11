@@ -1,4 +1,4 @@
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'snooze'
         self.vars = ('snooze',)

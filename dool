@@ -40,7 +40,7 @@ try:
 except ImportError:
     from collections import Sequence # Python 2.x
 
-VERSION = '1.2.0'
+VERSION = '1.3.0'
 
 theme = { 'default': '' }
 
@@ -60,6 +60,7 @@ class Options:
         self.cpulist      = None
         self.debug        = 0
         self.delay        = 1
+        self.devel        = 0
         self.disklist     = []
         self.diskset      = {}
         self.full         = False
@@ -90,8 +91,8 @@ class Options:
 
         try:
             opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V',
-                ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color',
-                 'defaults', 'debug', 'filesystem', 'float', 'full', 'help', 'integer',
+                ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color', 'color16',
+                 'defaults', 'debug', 'devel', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
                  'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display', 'diskset='] + allplugins)
         except getopt.error as exc:
@@ -122,7 +123,7 @@ class Options:
             elif opt in ['--diskset']:
                 parts   = arg.split(":", 1)
                 name    = list_item_default(parts, 0, "Unknown")
-                members = list_item_default(parts, 1, "").split(", ")
+                members = list_item_default(parts, 1, "").split(",")
 
                 if (len(parts) < 2 or len(members) < 1):
                     print("Error parsing diskset...\n")
@@ -189,7 +190,10 @@ class Options:
             elif opt in ['--bw', '--black-on-white', '--blackonwhite']:
                 self.blackonwhite = True
             elif opt in ['--color']:
-                self.color = True
+                self.color = 256
+                self.update = True
+            elif opt in ['--color16']:
+                self.color = 16
                 self.update = True
             elif opt in ['--debug']:
                 self.debug = self.debug + 1
@@ -214,7 +218,9 @@ class Options:
             elif opt in ['--pidfile']:
                 self.pidfile = arg
             elif opt in ['--profile']:
-                self.profile = 'dstat_profile.log'
+                self.profile = 'dool_profile.log'
+            elif opt in ['--devel']:
+                self.devel = 1
             elif opt in ['-h', '--help']:
                 self.usage()
                 self.help()
@@ -348,7 +354,8 @@ Dool options:
   --integer                force integer values on screen
 
   --bw, --black-on-white   change colors for white background terminal
-  --color                  force colors
+  --color                  force 256 colors
+  --color16                force 16 colors
   --nocolor                disable colors
   --noheaders              disable repetitive headers
   --noupdate               disable intermediate updates
@@ -362,7 +369,7 @@ count is the number of updates to display before exiting (default: unlimited)
 ''')
 
 ### START STATS DEFINITIONS ###
-class dstat:
+class dool:
     vars   = None
     name   = None
     nick   = None
@@ -624,8 +631,18 @@ class dstat:
 
         line = ''
         for i, name in enumerate(self.vars):
+            # What TYPE of variable is this. May be used for conversions later
+            if i < len(self.types):
+                ctype = self.types[i]
+            else:
+                ctype = self.type
+
             if isinstance(self.val[name], list) or isinstance(self.val[name], tuple):
                 for j, val in enumerate(self.val[name]):
+                    # If this is a bytes value and we have bits enabled we need to convert
+                    if ctype == 'b' and op.bits:
+                        val *= 8.0;
+
                     line = line + printcsv(val)
                     if j + 1 != len(self.val[name]):
                         line = line + char['sep']
@@ -644,7 +661,7 @@ class dstat:
             return char['sep']
         return ''
 
-class dool_aio(dstat):
+class dool_aio(dool):
     def __init__(self):
         self.name  = 'async'
         self.nick  = ('#aio',)
@@ -658,7 +675,7 @@ class dool_aio(dstat):
             if len(l) < 1: continue
             self.val['aio'] = int(l[0])
 
-class dool_cpu(dstat):
+class dool_cpu(dool):
     def __init__(self):
         self.nick  = ( 'usr', 'sys', 'idl', 'wai', 'stl' )
         self.type  = 'p'
@@ -776,13 +793,17 @@ class dool_cpu_adv(dool_cpu):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_disk(dstat):
+class dool_disk(dool):
     def __init__(self):
-        self.nick       = ('read', 'writ')
-        self.type       = 'b'
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
+        self.nick = ('read', 'writ')
+        self.type = 'b'
+        self.cols = 2
         self.open('/proc/diskstats')
-        self.cols       = 2
+
+        # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
+        # i.e. use stats for sda not sda1/sda7/etc.
+        # NVME drives are: nvmeXnXpX
+        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
 
     def discover(self, *objlist):
         ret = []
@@ -837,7 +858,18 @@ class dool_disk(dstat):
         return ret
 
     def name(self):
-        return ['dsk/'+sysfs_dev(name) for name in self.vars]
+        ret = []
+        for name in self.vars:
+            # If the name is short enough we prepend "dsk/"
+            # We have to cut this off for long names like nvme1n2p3
+            if len(name) < 7:
+                x = 'dsk/' + sysfs_dev(name)
+            else:
+                x = sysfs_dev(name)
+
+            ret.append(x)
+
+        return ret
 
     def extract(self):
         for name in self.vars: self.set2[name] = (0, 0)
@@ -847,6 +879,8 @@ class dool_disk(dstat):
             name = l[2]
             if set(l[3:]) == {'0'}: continue
             if not self.diskfilter.match(name):
+                devel_log("Adding disk stats for '%s' %d/%d to total" % (name, int(l[5]), int(l[9])))
+
                 self.set2['total'] = ( self.set2['total'][0] + int(l[5]), self.set2['total'][1] + int(l[9]) )
             if name in self.vars and name != 'total':
                 self.set2[name] = ( self.set2[name][0] + int(l[5]), self.set2[name][1] + int(l[9]) )
@@ -862,7 +896,7 @@ class dool_disk(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_epoch(dstat):
+class dool_epoch(dool):
     def __init__(self):
         self.name  = 'epoch'
         self.vars  = ('epoch',)
@@ -876,7 +910,7 @@ class dool_epoch(dstat):
 #        self.val['epoch'] = time.time()
         self.val['epoch'] = starttime
 
-class dool_fs(dstat):
+class dool_fs(dool):
     def __init__(self):
         self.name  = 'filesystem'
         self.vars  = ('files', 'inodes')
@@ -894,7 +928,7 @@ class dool_fs(dstat):
             if len(l) < 2: continue
             self.val['inodes'] = int(l[0]) - int(l[1])
 
-class dool_int(dstat):
+class dool_int(dool):
     def __init__(self):
         self.name   = 'interrupts'
         self.type   = 'd'
@@ -962,15 +996,19 @@ class dool_int(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_io(dstat):
+class dool_io(dool):
     def __init__(self):
-        self.nick       = ('read', 'writ')
-        self.type       = 'f'
-        self.width      = 5
-        self.scale      = 1000
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
+        self.nick  = ('read', 'writ')
+        self.type  = 'f'
+        self.width = 5
+        self.scale = 1000
+        self.cols  = 2
         self.open('/proc/diskstats')
-        self.cols       = 2
+
+        # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
+        # i.e. use stats for sda not sda1/sda7/etc.
+        # NVME drives are: nvmeXnXpX
+        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
 
     def discover(self, *objlist):
         ret = []
@@ -1029,7 +1067,7 @@ class dool_io(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_ipc(dstat):
+class dool_ipc(dool):
     def __init__(self):
         self.name  = 'sysv ipc'
         self.vars  = ('msg', 'sem', 'shm')
@@ -1041,7 +1079,7 @@ class dool_ipc(dstat):
         for name in self.vars:
             self.val[name] = len(dopen('/proc/sysvipc/'+name).readlines()) - 1
 
-class dool_load(dstat):
+class dool_load(dool):
     def __init__(self):
         self.name  = 'load avg'
         self.nick  = ('1m', '5m', '15m')
@@ -1058,7 +1096,7 @@ class dool_load(dstat):
             self.val['load5'] = float(l[1])
             self.val['load15'] = float(l[2])
 
-class dool_lock(dstat):
+class dool_lock(dool):
     def __init__(self):
         self.name  = 'file locks'
         self.nick  = ('pos', 'lck', 'rea', 'wri')
@@ -1077,7 +1115,7 @@ class dool_lock(dstat):
             if l[3] == 'READ': self.val['read'] += 1
             elif l[3] == 'WRITE': self.val['write'] += 1
 
-class dool_mem(dstat):
+class dool_mem(dool):
     def __init__(self):
         self.name = 'memory usage'
         self.nick = ('used', 'free', 'cach', 'avai')
@@ -1114,7 +1152,7 @@ class dool_mem_adv(dool_mem):
         self.vars = ('MemTotal', 'MemUsed', 'MemFree', 'Buffers', 'Cached', 'Dirty', 'Shmem', 'SReclaimable')
         self.open('/proc/meminfo')
 
-class dool_net(dstat):
+class dool_net(dool):
     def __init__(self):
         self.nick        = ('recv', 'send')
         self.type        = 'b'
@@ -1174,7 +1212,7 @@ class dool_net(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_page(dstat):
+class dool_page(dool):
     def __init__(self):
         self.name = 'paging'
         self.nick = ('in', 'out')
@@ -1195,7 +1233,7 @@ class dool_page(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_proc(dstat):
+class dool_proc(dool):
     def __init__(self):
         self.name  = 'procs'
         self.nick  = ('run', 'blk', 'new')
@@ -1226,7 +1264,7 @@ class dool_proc(dstat):
             for name in ('procs_running', 'procs_blocked'):
                 self.set2[name] = 0
 
-class dool_raw(dstat):
+class dool_raw(dool):
     def __init__(self):
         self.name  = 'raw'
         self.nick  = ('raw',)
@@ -1244,7 +1282,7 @@ class dool_raw(dstat):
         ### Cannot use len() on generator
 #        self.val['sockets'] = len(self.readlines()) - 1
 
-class dool_socket(dstat):
+class dool_socket(dool):
     def __init__(self):
         self.name  = 'sockets'
         self.type  = 'd'
@@ -1261,7 +1299,7 @@ class dool_socket(dstat):
 
         self.val['other'] = self.val['sockets:'] - self.val['TCP:'] - self.val['UDP:'] - self.val['RAW:'] - self.val['FRAG:']
 
-class dool_swap(dstat):
+class dool_swap(dool):
     def __init__(self):
         self.name = 'swap'
         self.nick = ('used', 'free')
@@ -1312,7 +1350,7 @@ class dool_swap(dstat):
             self.val[name] = ( int(l[3]) * 1024.0, (int(l[2]) - int(l[3])) * 1024.0 )
             self.val['total'] = ( self.val['total'][0] + self.val[name][0], self.val['total'][1] + self.val[name][1])
 
-class dool_sys(dstat):
+class dool_sys(dool):
     def __init__(self):
         self.name  = 'system'
         self.nick  = ('int', 'csw')
@@ -1335,7 +1373,7 @@ class dool_sys(dstat):
         if step == op.delay:
             self.set1.update(self.set2)
 
-class dool_tcp(dstat):
+class dool_tcp(dool):
     def __init__(self):
         self.name  = 'tcp sockets'
         self.nick  = ('lis', 'act', 'syn', 'tim', 'clo')
@@ -1358,11 +1396,11 @@ class dool_tcp(dstat):
             elif l[3] in ('06',): self.val['wait'] += 1
             elif l[3] in ('04', '05', '07', '08', '0B',): self.val['close'] += 1
 
-class dool_time(dstat):
+class dool_time(dool):
     def __init__(self):
         self.name = 'system'
-        #self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%d-%m %H:%M:%S'
-        self.timefmt = os.getenv('DSTAT_TIMEFMT') or '%b-%d %H:%M:%S'
+        #self.timefmt = os.getenv('DOOL_TIMEFMT') or '%d-%m %H:%M:%S'
+        self.timefmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
         self.type = 's'
         if op.debug:
             self.width = len(time.strftime(self.timefmt, time.localtime())) + 4
@@ -1378,7 +1416,7 @@ class dool_time(dstat):
         else:
             self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime))
 
-class dool_udp(dstat):
+class dool_udp(dool):
     def __init__(self):
         self.name  = 'udp'
         self.nick  = ('lis', 'act')
@@ -1394,7 +1432,7 @@ class dool_udp(dstat):
             if l[3] == '07': self.val['listen'] += 1
             elif l[3] == '01': self.val['established'] += 1
 
-class dool_unix(dstat):
+class dool_unix(dool):
     def __init__(self):
         self.name  = 'unix sockets'
         self.nick  = ('dgm', 'str', 'lis', 'act')
@@ -1413,7 +1451,7 @@ class dool_unix(dstat):
                 if l[5] == '01': self.val['listen'] += 1
                 elif l[5] == '03': self.val['established'] += 1
 
-class dool_vm(dstat):
+class dool_vm(dool):
     def __init__(self):
         self.name  = 'virtual memory'
         self.nick  = ('majpf', 'minpf', 'alloc', 'free')
@@ -1450,7 +1488,7 @@ class dool_vm_adv(dool_vm):
         self.scale = 1000
         self.open('/proc/vmstat')
 
-class dool_zones(dstat):
+class dool_zones(dool):
     def __init__(self):
         self.name  = 'zones memory'
 #        self.nick = ('dmaF', 'dmaH', 'd32F', 'd32H', 'movaF', 'movaH')
@@ -1492,9 +1530,10 @@ def signal_handler(signum, frame):
     # If we're outputting to the display
     if op.display:
         # Print a couple of spaces to cover up the "^C" that gets printed
-        print("\b\b        ")
+        sys.stdout.write("\b\b        ")
         # Reset the ANSI colors just in case
-        print(ansi['reset']);
+        sys.stdout.write(ansi['reset'])
+        sys.stdout.write("\n")
         sys.stdout.flush()
 
     sys.exit(0)
@@ -1558,6 +1597,35 @@ color = {
      'whitebg'  : '\033[47m',
 }
 
+color16 = {
+    'black': '\033[0;30m',
+    'darkred': '\033[0;31m',
+    'darkgreen': '\033[0;32m',
+    'darkyellow': '\033[0;33m',
+    'darkblue': '\033[0;34m',
+    'darkmagenta': '\033[0;35m',
+    'darkcyan': '\033[0;36m',
+    'gray': '\033[0;37m',
+
+    'darkgray': '\033[1;30m',
+    'red': '\033[1;31m',
+    'green': '\033[1;32m',
+    'yellow': '\033[1;33m',
+    'blue': '\033[1;34m',
+    'magenta': '\033[1;35m',
+    'cyan': '\033[1;36m',
+    'white': '\033[1;37m',
+
+    'blackbg': '\033[40m',
+    'redbg': '\033[41m',
+    'greenbg': '\033[42m',
+    'yellowbg': '\033[43m',
+    'bluebg': '\033[44m',
+    'magentabg': '\033[45m',
+    'cyanbg': '\033[46m',
+    'whitebg': '\033[47m',
+}
+
 ansi = {
     'reset'    : '\033[0;0m',
     'bold'     : '\033[1m',
@@ -1603,6 +1671,10 @@ char_box_draw = {
 
 def set_theme():
     "Provide a set of colors to use"
+    global color
+    if op.color == 16:
+        color = color16
+
     if op.blackonwhite:
         theme = {
             'title'     : color['darkblue'],
@@ -1805,14 +1877,14 @@ def proc_splitline(filename, sep=None):
 ### FIXME: Should we cache this within every step ?
 def proc_pidlist():
     "Return a list of process IDs"
-    dstat_pid = str(os.getpid())
+    dool_pid = str(os.getpid())
     for pid in os.listdir('/proc/'):
         try:
             ### Is it a pid ?
             int(pid)
 
-            ### Filter out dstat
-            if pid == dstat_pid: continue
+            ### Filter out dool
+            if pid == dool_pid: continue
 
             yield pid
 
@@ -1895,6 +1967,42 @@ def tchg(var, width):
                 ret = '%2dw' % (var / 60 / 24 / 7)
     return ret
 
+# Global/static variables to speed up repeated calls to this function
+DEBUG_LAST = 0
+DEBUG_FH   = 0
+def devel_log(msg):
+    global DEBUG_LAST, DEBUG_FH
+
+    # If we didn't enable `--devel` on the CLI we don't do anything
+    if not op.devel:
+        return -1
+
+    # If the filehandle isn't already open, we open it
+    if not DEBUG_FH:
+        log_file = "/tmp/dool-devel.log"
+        print("Writing devel log: '%s'" % log_file)
+        DEBUG_FH = open(log_file, "w", 1)
+
+    xtime    = time.time()
+    time_fmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
+    time_str = time.strftime(time_fmt, time.localtime())
+
+    # Append MS the ghetto way
+    time_ms  = "." + str(round(xtime * 1000 % 1000))
+    time_str += time_ms
+
+    # Calculate the ms since the previous call
+    if DEBUG_LAST > 0:
+       time_diff = (xtime - DEBUG_LAST) * 1000 # Milliseconds
+    else:
+       time_diff = 0
+
+    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg.strip())
+    DEBUG_FH.write(log_line);
+
+    # Save the time of this call for the next call
+    DEBUG_LAST = xtime
+
 def cprintlist(varlist, ctype, width, scale):
     "Return all columns color printed"
     ret = sep = ''
@@ -1903,6 +2011,9 @@ def cprintlist(varlist, ctype, width, scale):
         sep = char['space']
     return ret
 
+# var   : data to output
+# ctypes: f = float, s = string, b = bit/bytes, d = decimal, t = time
+# width : width in chars of the column
 def cprint(var, ctype = 'f', width = 4, scale = 1000):
     "Color print one column"
 
@@ -1923,6 +2034,9 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
         else:
             return theme['error'] + '-'.rjust(width) + theme['default']
 
+    # There is a big discussion of bits vs bytes and the various unit lables
+    # here: https://github.com/scottchiefbaker/dool/pull/34
+    # which may help explain why these are inconsistent case
     if base != 1024:
         # Miscellaneous value using base of 1000 (1, kilo-, mega-, giga-, ...)
         units = (char['space'], 'k', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
@@ -2091,7 +2205,8 @@ def gettermcolor():
         try:
             import curses
             curses.setupterm()
-            if curses.tigetnum('colors') < 0:
+            colors = curses.tigetnum('colors')
+            if colors < 0:
                 return False
         except ImportError:
             print('Color support is disabled as python-curses is not installed.', file=sys.stderr)
@@ -2099,7 +2214,9 @@ def gettermcolor():
         except:
             print('Color support is disabled as curses does not find terminal "%s".' % os.getenv('TERM'), file=sys.stderr)
             return False
-        return True
+        if colors == 256:
+            return colors
+        return 16
     return False
 
 ### We only want to filter out paths, not ksoftirqd/1
@@ -2126,6 +2243,19 @@ def getnamebypid(pid, name):
         if ret.startswith('-'):
             ret = basename(cmdline[-2])
             if ret.startswith('-'): raise
+
+        is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
+        if is_vm:
+            # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
+            # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
+
+            cmd_str = " ".join(cmdline)
+            xmatch  = re.search("-name (.+?),", cmd_str)
+
+            if xmatch:
+                ret = xmatch.group(1)
+                ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+
         if not ret: raise
     except:
         ret = basename(name)
@@ -2344,6 +2474,8 @@ def main():
     global totlist, inittime
     global update, missed
 
+    devel_log("Dool startup")
+
     # Handle signals like CTRL+C
     init_signal_handling()
 
@@ -2419,15 +2551,20 @@ def main():
 
     ### Empty ansi and theme database if no colors are requested
     if not op.color:
+
         for key in color:
             color[key] = ''
+
         for key in theme:
             theme[key] = ''
-        for key in ansi:
-            ansi[key] = ''
+
+        # With this enabled --nocolor with a delay doesn't display correctly so
+        # I've disabled it for now
+        #for key in ansi:
+            #ansi[key] = ''
+
         theme['colors_hi'] = (ansi['default'],)
         theme['colors_lo'] = (ansi['default'],)
-#        print color['blackbg']
 
     ### Disable line-wrapping (does not work ?)
     sys.stdout.write(ansi['nolinewrap'])
@@ -2458,7 +2595,7 @@ def main():
                     ### Try loading python plugin
                     if xpath:
                         exec(open(xpath).read())
-                        exec('global plug; plug = dstat_plugin(); del(dstat_plugin)')
+                        exec('global plug; plug = dool_plugin(); del(dool_plugin)')
                         plug.filename = pluginfile
                         plug.check()
                         plug.prepare()
@@ -2505,17 +2642,21 @@ def main():
     update = 0
     missed = 0
 
-    ### Let the games begin
-    while update <= op.delay * (op.count-1) or op.count == -1:
+    # This the main loop that does all the output. It has two options:
+    # Loop X number of times where X is (delay * count) and stop
+    # or
+    # loop forever (op.count = -1 is how we say "forever")
+    while (update <= (op.delay * (op.count - 1))) or (op.count == -1):
+        # We are scheduling to run perform(update) every 1 second
         scheduler.enterabs(inittime + update, 1, perform, (update,))
-#        scheduler.enter(1, 1, perform, (update,))
         scheduler.run()
         sys.stdout.flush()
+        # The time the next update will run
         update = update + interval
         linecache.clearcache()
+        devel_log("Loop #%d" % update)
 
-    if op.update:
-        sys.stdout.write('\n')
+    print()
 
 def perform(update):
         "Inner loop that calculates counters and constructs output"
@@ -2525,7 +2666,9 @@ def perform(update):
 
         starttime = time.time()
 
+        # The number of which update we one (not counting subdates)
         loop = int((update - 1 + op.delay) / op.delay)
+        # The step (subupdate) number inside of the current loop
         step = ((update - 1) % op.delay) + 1
 
         ### Get current time (may be different from schedule) for debugging
@@ -2579,9 +2722,10 @@ def perform(update):
         else:
             vislist = totlist
 
-        ### Prepare the colors for intermediate updates, last step in a loop is definitive
+        # If we're on the last step of the loop it's definitive and is colored differently
         if step == op.delay:
             theme['default'] = ansi['reset']
+        # It's a step/subupdate
         else:
             theme['default'] = theme['text_lo']
 
@@ -2638,10 +2782,6 @@ def perform(update):
 #            sys.stdout.write(' '+theme['error']+'= warn =')
             sys.stdout.write(' ' + theme['error'] + 'missed ' + str(missed+1) + ' ticks' + theme['input'])
             missed = 0
-
-        ### Finish the line
-        if not op.update:
-            sys.stdout.write('\n')
 
 # Get an item from a list, or a default value if the array isn't big enough
 def list_item_default(mylist, num, default):

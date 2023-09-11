@@ -1,7 +1,7 @@
 ### Author: David Nicklay <david-d$nicklay,com>
 ### Modified from disk-util: Dag Wieers <dag$wieers,com>
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     The average service time (in milliseconds) for I/O requests that were
     issued to the device.

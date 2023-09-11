@@ -6,7 +6,7 @@
 ### For more information, see:
 ###     http://eaglet.rain.com/rick/linux/schedstat/
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'highest average'
         self.vars = ('latency process',)

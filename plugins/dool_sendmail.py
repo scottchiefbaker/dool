@@ -2,7 +2,7 @@
 
 ### FIXME: Should read /var/log/mail/statistics or /etc/mail/statistics (format ?)
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'sendmail'
         self.vars = ('queue',)

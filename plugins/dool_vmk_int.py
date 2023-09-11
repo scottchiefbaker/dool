@@ -11,7 +11,7 @@
 # # dstat --vmkint -i -I 14,0x5a
 # Look at /proc/vmware/interrupts to see which interrupt is linked to which function
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     def __init__(self):
         self.name = 'vmkint'
         self.type = 'd'
