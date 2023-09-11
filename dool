@@ -2012,7 +2012,7 @@ def cprintlist(varlist, ctype, width, scale):
     return ret
 
 # var   : data to output
-# ctypes: f = float, s = string, b = bit/bytes, d = decimal, t = time
+# ctypes: f = float, s = string, b = bit/bytes, d = decimal, t = time, p = percent
 # width : width in chars of the column
 def cprint(var, ctype = 'f', width = 4, scale = 1000):
     "Color print one column"
