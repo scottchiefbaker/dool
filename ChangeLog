@@ -1,3 +1,16 @@
+* 1.3.0
+- add support for terminals with only 16 colors by @leahneukirchen in #43
+- Correctly report disk stats for NVME drives by @scottchiefbaker in #49
+- Capture VM name for top-cpu by @scottchiefbaker in #48
+- Properly capitalize unit letters for real this time by @Low-power in #34
+- Add a \n to output when using a count
+- Fix the NTP plugin for Python 3.x
+- Massive internal naming change dstat -> dool
+- Fix bits/bytes in CSV file output
+- Add a --devel logging option to assist in future developementg
+- Update Github templates to simplify them and reflect the Dool name
+- Lots of comments in the code as I slowly learn more about how it works
+
 * 1.2.0
 - Remove a bunch of old Kernel 2.4 functions we dont use anymore
 
