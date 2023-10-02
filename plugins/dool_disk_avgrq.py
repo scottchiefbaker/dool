@@ -12,7 +12,6 @@ class dool_plugin(dool):
         self.type = 'f'
         self.width = 4
         self.scale = 10
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
         self.open('/proc/diskstats')
         self.cols = 1
         self.struct = dict( nr_ios=0, rd_sect=0, wr_sect=0 )
@@ -37,7 +36,7 @@ class dool_plugin(dool):
             varlist = []
             blockdevices = [os.path.basename(filename) for filename in glob.glob('/sys/block/*')]
             for name in self.discover:
-                if self.diskfilter.match(name): continue
+                if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices: continue
                 varlist.append(name)
             varlist.sort()

@@ -51,6 +51,12 @@ pluginpath = [
     '/usr/local/share/dool/',
 ]
 
+# Global variable to match drives in /proc/
+# This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
+# i.e. use stats for sda not sda1/sda7/etc.
+# NVME drives are: nvmeXnXpX
+DOOL_DISKFILTER = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
+
 class Options:
     def __init__(self, args):
         self.args         = args
@@ -800,11 +806,6 @@ class dool_disk(dool):
         self.cols = 2
         self.open('/proc/diskstats')
 
-        # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
-        # i.e. use stats for sda not sda1/sda7/etc.
-        # NVME drives are: nvmeXnXpX
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
-
     def discover(self, *objlist):
         ret = []
         for l in self.splitlines():
@@ -847,7 +848,7 @@ class dool_disk(dool):
         else:
             varlist = []
             for name in self.discover:
-                if self.diskfilter.match(name): continue
+                if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices(): continue
                 varlist.append(name)
 #           if len(varlist) > 2: varlist = varlist[0:2]
@@ -878,7 +879,7 @@ class dool_disk(dool):
             if l[5] == '0' and l[9] == '0': continue
             name = l[2]
             if set(l[3:]) == {'0'}: continue
-            if not self.diskfilter.match(name):
+            if not DOOL_DISKFILTER.match(name):
                 devel_log("Adding disk stats for '%s' %d/%d to total" % (name, int(l[5]), int(l[9])))
 
                 self.set2['total'] = ( self.set2['total'][0] + int(l[5]), self.set2['total'][1] + int(l[9]) )
@@ -1005,11 +1006,6 @@ class dool_io(dool):
         self.cols  = 2
         self.open('/proc/diskstats')
 
-        # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
-        # i.e. use stats for sda not sda1/sda7/etc.
-        # NVME drives are: nvmeXnXpX
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
-
     def discover(self, *objlist):
         ret = []
         for l in self.splitlines():
@@ -1031,7 +1027,7 @@ class dool_io(dool):
         else:
             varlist = []
             for name in self.discover:
-                if self.diskfilter.match(name): continue
+                if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices(): continue
                 varlist.append(name)
 #           if len(varlist) > 2: varlist = varlist[0:2]
@@ -1051,7 +1047,7 @@ class dool_io(dool):
             if l[3] == '0' and l[7] == '0': continue
             name = l[2]
             if set(l[3:]) == {'0'}: continue
-            if not self.diskfilter.match(name):
+            if not DOOL_DISKFILTER.match(name):
                 self.set2['total'] = ( self.set2['total'][0] + int(l[3]), self.set2['total'][1] + int(l[7]) )
             if name in self.vars and name != 'total':
                 self.set2[name] = ( self.set2[name][0] + int(l[3]), self.set2[name][1] + int(l[7]) )

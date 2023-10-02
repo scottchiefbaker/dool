@@ -12,7 +12,6 @@ class dool_plugin(dool):
         self.type = 'd'
         self.width = 5
         self.scale = 1000
-        self.diskfilter = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+)$')
         self.open('/proc/diskstats')
         self.cols = 2
 
@@ -37,7 +36,7 @@ class dool_plugin(dool):
         else:
             varlist = []
             for name in self.discover:
-                if self.diskfilter.match(name): continue
+                if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices(): continue
                 varlist.append(name)
 #           if len(varlist) > 2: varlist = varlist[0:2]
@@ -57,7 +56,7 @@ class dool_plugin(dool):
             if l[3] == '0' and l[7] == '0': continue
             if set(l[3:]) == {'0'}: continue
             name = l[2]
-            if not self.diskfilter.match(name):
+            if not DOOL_DISKFILTER.match(name):
                 self.set2['total'] = ( self.set2['total'][0] + int(l[3]), self.set2['total'][1] + int(l[7]) )
             if name in self.vars and name != 'total':
                 self.set2[name] = ( self.set2[name][0] + int(l[3]), self.set2[name][1] + int(l[7]))
