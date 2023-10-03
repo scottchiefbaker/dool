@@ -59,32 +59,35 @@ DOOL_DISKFILTER = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|
 
 class Options:
     def __init__(self, args):
-        self.args         = args
-        self.bits         = True
-        self.blackonwhite = False
-        self.count        = -1
-        self.cpulist      = None
-        self.debug        = 0
-        self.delay        = 1
-        self.devel        = 0
-        self.disklist     = []
-        self.diskset      = {}
-        self.full         = False
-        self.float        = False
-        self.integer      = False
-        self.intlist      = None
-        self.netlist      = None
-        self.swaplist     = None
-        self.color        = None
-        self.update       = True
-        self.header       = True
-        self.output       = False
-        self.pidfile      = False
-        self.profile      = ''
-        self.use_ascii    = False
+        self.args          = args
+        self.bits          = True
+        self.blackonwhite  = False
+        self.count         = -1
+        self.cpulist       = None
+        self.debug         = 0
+        self.delay         = 1
+        self.devel         = 0
+        self.disklist      = []
+        self.diskset       = {}
+        self.full          = False
+        self.float         = False
+        self.integer       = False
+        self.intlist       = None
+        self.netlist       = None
+        self.swaplist      = None
+        self.color         = None
+        self.update        = True
+        self.header        = True
+        self.output        = False
+        self.pidfile       = False
+        self.profile       = ''
+        self.use_ascii     = False
+        self.plugin_params = {} # Not currently used
 
         ### List of available plugins
-        allplugins = listplugins()
+        (builtin, external) = listplugins()
+
+        allplugins = builtin + external
 
         ### List of plugins to show
         self.plugins = []
@@ -236,7 +239,9 @@ class Options:
                 sys.exit(0)
             elif opt.startswith('--'):
                 plugin_name = opt[2:]
+
                 self.plugins.append(plugin_name)
+                self.plugin_params[plugin_name] = arg # Not currently used
             else:
                 print('dool: option %s unknown to getopt, try dool -h for a list of all the options' % opt)
                 sys.exit(1)
@@ -2392,17 +2397,32 @@ def dev(maj, min):
 #    sched_setscheduler (0,SCHED_FIFO , &sp);
 
 def listplugins():
-    plugins = []
-    remod = re.compile('dool_(.+)$')
+    # These are the built-in plugins
+    remod   = re.compile('dool_(.+)$')
+    builtin = []
     for filename in globals():
         if filename.startswith('dool_'):
-            plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
-    remod = re.compile('.+/dool_(.+).py$')
+            plugin_name = remod.match(filename).group(0)
+            name        = plugin_name.replace('_', '-')
+
+            builtin.append(name)
+
+    # The external `.py` plugins
+    remod     = re.compile('.+/dool_(.+).py$')
+    external  = []
     for path in pluginpath:
         for filename in glob.glob(path + '/dool_*.py'):
-            plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
-    plugins.sort()
-    return plugins
+            plugin_name = remod.match(filename).group(0)
+            name        = plugin_name.replace('_', '-')
+
+            external.append(name)
+
+    builtin.sort()
+    external.sort()
+
+    ret = (builtin, external)
+
+    return ret
 
 def showplugins():
     rows, cols = gettermsize()
