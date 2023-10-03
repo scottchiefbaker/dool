@@ -2402,7 +2402,7 @@ def listplugins():
     builtin = []
     for filename in globals():
         if filename.startswith('dool_'):
-            plugin_name = remod.match(filename).group(0)
+            plugin_name = remod.match(filename).group(1)
             name        = plugin_name.replace('_', '-')
 
             builtin.append(name)
@@ -2412,7 +2412,7 @@ def listplugins():
     external  = []
     for path in pluginpath:
         for filename in glob.glob(path + '/dool_*.py'):
-            plugin_name = remod.match(filename).group(0)
+            plugin_name = remod.match(filename).group(1)
             name        = plugin_name.replace('_', '-')
 
             external.append(name)
