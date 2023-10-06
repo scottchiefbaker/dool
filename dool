@@ -357,7 +357,7 @@ Dool options:
   --more                   equals -cdnmplt
   -a, --all                equals -cdngmyplt
   -f, --full               automatically expand -C, -D, -I, -N and -S lists
-  -v, --vmstat             equals -pmgdsc -D total
+  -v, --vmstat             equals -pmgdyc -D total
 
   --bits                   force bits for values expressed in bytes
   --bytes                  force bytes for output measurements
