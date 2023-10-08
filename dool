@@ -84,10 +84,9 @@ class Options:
         self.use_ascii     = False
         self.plugin_params = {} # Not currently used
 
-        ### List of available plugins
-        (builtin, external) = listplugins()
-
-        allplugins = builtin + external
+        ### Get all the plugins and their details
+        self.plugin_details = get_plugin_details()
+        plugin_opt_list     = self.get_opt_list_from_details(self.plugin_details)
 
         ### List of plugins to show
         self.plugins = []
@@ -103,7 +102,7 @@ class Options:
                 ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color', 'color16',
                  'defaults', 'debug', 'devel', 'filesystem', 'float', 'full', 'help', 'integer',
                  'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
-                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display', 'diskset='] + allplugins)
+                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display', 'diskset='] + plugin_opt_list)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
@@ -282,6 +281,43 @@ class Options:
 
         if self.debug:
             print('Plugins: %s' % self.plugins)
+
+    def get_opt_list_from_details(self, plugin_details):
+        plugin_names = list(plugin_details.keys())
+        plugin_names.sort()
+
+        builtin  = []
+        external = []
+
+        for name in plugin_names:
+            path   = plugin_details[name]['file']   # Path to plugin file
+            params = plugin_details[name]['params'] # Plugin needs CLI params
+            ptype  = plugin_details[name]['type']   # builtin or exteral
+
+            if params:
+                param_str = "yes"
+
+                # For getopt we need to add the '=' to the end to indicate
+                # that we need a param
+                if ptype == 'builtin':
+                    builtin.append(name + "=")
+                else:
+                    external.append(name + "=")
+
+            else:
+                param_str = "no"
+
+                if ptype == 'builtin':
+                    builtin.append(name)
+                else:
+                    external.append(name)
+
+            #print("%15s = %s (params: %s)" % (name, path, param_str))
+
+        # For getopt() purposes the internal plugins have to come before the external
+        ret = builtin + external
+
+        return ret
 
     def version(self):
         print('Dool %s' % VERSION)
@@ -2424,6 +2460,49 @@ def listplugins():
 
     return ret
 
+def get_plugin_details():
+    # These are the built-in plugins
+    remod   = re.compile('dool_(.+)$')
+    ret     = {}
+
+    for function_name in globals():
+        if function_name.startswith('dool_'):
+            plugin_name = remod.match(function_name).group(1)
+            name        = plugin_name.replace('_', '-')
+
+            # If the function name is dool__ that means it needs params
+            needs_params = function_name.startswith("dool__")
+
+            obj           = {}
+            obj['file']   = function_name
+            obj['type']   = 'builtin'
+            obj['params'] = needs_params
+
+            ret[name] = obj
+
+    # The external `.py` plugins
+    remod     = re.compile('.+/dool__?(.+).py$')
+    external  = []
+    for path in pluginpath:
+        for filename in glob.glob(path + '/dool_*.py'):
+            plugin_name = remod.match(filename).group(1)
+            name        = plugin_name.replace('_', '-')
+
+            ret[name] = filename
+
+            # If the filename has 'dool__' in it that means it needs params
+            basename     = os.path.basename(filename)
+            needs_params = basename.startswith("dool__")
+
+            obj           = {}
+            obj['file']   = filename
+            obj['type']   = 'external'
+            obj['params'] = needs_params
+
+            ret[name] = obj
+
+    return ret
+
 def showplugins():
     rows, cols = gettermsize()
     print('internal:\n\t', end='')
@@ -2591,6 +2670,7 @@ def main():
     ### Build list of requested plugins
     linewidth = 0
     totlist = []
+
     for plugin in op.plugins:
 
         ### Set up fallback lists
@@ -2603,21 +2683,18 @@ def main():
 
         for mod in mods:
 
-            pluginfile = 'dool_' + mod.replace('-', '_')
+            pluginfile = op.plugin_details[mod]['file']
+
             try:
                 if pluginfile not in globals():
-                    xpath = find_plugin_file(pluginfile, pluginpath)
+                    exec(open(pluginfile).read())
+                    exec('global plug; plug = dool_plugin(); del(dool_plugin)')
+                    plug.filename = pluginfile
+                    plug.check()
+                    plug.prepare()
 
-                    ### Try loading python plugin
-                    if xpath:
-                        exec(open(xpath).read())
-                        exec('global plug; plug = dool_plugin(); del(dool_plugin)')
-                        plug.filename = pluginfile
-                        plug.check()
-                        plug.prepare()
-
-                    else:
-                        print('Module %s is of unknown type.' % pluginfile, file=sys.stderr)
+                    #else:
+                    #    print("Cannot load pluging '%s' from file '%s'" % (mod, pluginfile), file=sys.stderr)
 
                 else:
                     exec('global plug; plug = %s()' % pluginfile)
