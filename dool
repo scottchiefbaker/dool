@@ -2839,6 +2839,18 @@ def kd(obj):
     k(obj, "DIED")
     sys.exit(99)
 
+# Read in a full file (or optional only X bytes)
+def file_slurp(filename, size = -1):
+    ret = ""
+
+    try:
+        fd  = open(filename)
+        ret = fd.read(size)
+    finally:
+        fd.close()
+
+    return ret
+
 # Make human readable device names that are shorter
 #
 # Example mappings:
