@@ -2504,32 +2504,61 @@ def get_plugin_details():
     return ret
 
 def showplugins():
+    plugin_details = get_plugin_details()
+    plugin_names   = list(plugin_details.keys())
+    plugin_names.sort()
+
+    builtin  = []
+    external = []
+
+    for name in plugin_names:
+        ptype    = plugin_details[name]['type']
+        params   = plugin_details[name]['params']
+        filename = plugin_details[name]['file']
+        path     = os.path.dirname(filename)
+
+        if ptype == 'builtin':
+            builtin.append(name)
+        else:
+            external.append(name)
+
+    # Print the builtin plugins
     rows, cols = gettermsize()
     print('internal:\n\t', end='')
-    remod = re.compile('^dool_(.+)$')
-    plugins = []
-    for filename in globals():
-        if filename.startswith('dool_'):
-            plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
-    plugins.sort()
     cols2 = cols - 8
-    for mod in plugins:
+
+    for mod in builtin:
         cols2 = cols2 - len(mod) - 2
         if cols2 <= 0:
             print('\n\t', end='')
             cols2 = cols - len(mod) - 10
-        if mod != plugins[-1]:
+        if mod != builtin[-1]:
             print(mod, end=',')
+
     print(mod)
-    remod = re.compile('.+/dool_(.+).py$')
+
+    ######################################################################
+
+    # Print the external plugins sorted by path
     for path in pluginpath:
         plugins = []
-        for filename in glob.glob(path + '/dool_*.py'):
-            plugins.append(remod.match(filename).groups()[0].replace('_', '-'))
+        for name in external:
+            pfile = plugin_details[name]['file']
+            pdir  = os.path.dirname(pfile) + "/"
+
+            #print("%s = %s" % (pdir,path))
+
+            # If this plugin is in the dir we're looking for we put it
+            # in this grouping
+            if (pdir == path):
+                plugins.append(name)
+
         if not plugins: continue
         plugins.sort()
+
         cols2 = cols - 8
         print('%s:' % os.path.abspath(path), end='\n\t')
+
         for mod in plugins:
             cols2 = cols2 - len(mod) - 2
             if cols2 <= 0:
@@ -2537,6 +2566,7 @@ def showplugins():
                 cols2 = cols - len(mod) - 10
             if mod != plugins[-1]:
                 print(mod, end=',')
+
         print(mod)
 
 def exit(ret):
