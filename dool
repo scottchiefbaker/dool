@@ -2406,60 +2406,6 @@ def dev(maj, min):
     else:
         return 'dev%d-%d' % (maj, min)
 
-#def mountpoint(dev):
-#   "Return the mountpoint of a mounted device/file"
-#   for entry in dopen('/etc/mtab').readlines():
-#       if entry:
-#           devlist = entry.split()
-#           if dev == devlist[0]:
-#               return devlist[1]
-
-#def readfile(file):
-#    ret = ''
-#    for line in open(file,'r').readlines():
-#        ret = ret + line
-#    return ret
-
-#cdef extern from "sched.h":
-#    struct sched_param:
-#        int sched_priority
-#        int sched_setscheduler(int pid, int policy,sched_param  *p)
-#
-#SCHED_FIFO = 1
-#
-#def switchRTCPriority(nb):
-#    cdef sched_param sp
-#    sp.sched_priority = nb
-#    sched_setscheduler (0,SCHED_FIFO , &sp);
-
-def listplugins():
-    # These are the built-in plugins
-    remod   = re.compile('dool_(.+)$')
-    builtin = []
-    for filename in globals():
-        if filename.startswith('dool_'):
-            plugin_name = remod.match(filename).group(1)
-            name        = plugin_name.replace('_', '-')
-
-            builtin.append(name)
-
-    # The external `.py` plugins
-    remod     = re.compile('.+/dool_(.+).py$')
-    external  = []
-    for path in pluginpath:
-        for filename in glob.glob(path + '/dool_*.py'):
-            plugin_name = remod.match(filename).group(1)
-            name        = plugin_name.replace('_', '-')
-
-            external.append(name)
-
-    builtin.sort()
-    external.sort()
-
-    ret = (builtin, external)
-
-    return ret
-
 def get_plugin_details():
     # These are the built-in plugins
     remod   = re.compile('dool_(.+)$')
@@ -2919,15 +2865,6 @@ def stripcolor(self, mystr):
     ret         = ansi_escape.sub('', mystr)
 
     return ret
-
-# Look through each dir and try and find the .py file
-def find_plugin_file(name, dirs):
-    for x in dirs:
-        file = x + name + ".py"
-        if os.path.exists(file):
-            return file
-
-    return ""
 
 def k(obj, prefix = "DEBUG"):
     import inspect
