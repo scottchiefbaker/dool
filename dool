@@ -210,7 +210,7 @@ class Options:
             elif opt in ['--integer']:
                 self.integer = True
             elif opt in ['--list']:
-                showplugins()
+                show_plugins()
                 sys.exit(0)
             elif opt in ['--nocolor']:
                 self.color = False
@@ -344,7 +344,7 @@ class Options:
 
         global op
         op = self
-        showplugins()
+        show_plugins()
 
     def usage(self):
         print('Usage: dool [options] [delay] [count]')
@@ -1584,12 +1584,12 @@ def init_signal_handling():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
-def fcolor(num):
+def fg_color(num):
    ret = "\033[38;5;" + str(num) + "m"
 
    return ret
 
-def bgcolor(num):
+def bg_color(num):
    ret = "\033[48;5;" + str(num) + "m"
 
    return ret
@@ -1600,29 +1600,29 @@ def text_color(num, mystr):
    return ret
 
 color = {
-     'black': fcolor(0),
-     'white': fcolor(15),
+     'black': fg_color(0),
+     'white': fg_color(15),
 
-     'red'    : fcolor(9),
-     'darkred': fcolor(88),
+     'red'    : fg_color(9),
+     'darkred': fg_color(88),
 
-     'blue'    : fcolor(51),
-     'darkblue': fcolor(39),
+     'blue'    : fg_color(51),
+     'darkblue': fg_color(39),
 
-     'green'    : fcolor(83),
-     'darkgreen': fcolor(28),
+     'green'    : fg_color(83),
+     'darkgreen': fg_color(28),
 
-     'yellow'    : fcolor(227),
-     'darkyellow': fcolor(214),
+     'yellow'    : fg_color(227),
+     'darkyellow': fg_color(214),
 
-     'gray'    : fcolor(7),
-     'darkgray': fcolor(239),
+     'gray'    : fg_color(7),
+     'darkgray': fg_color(239),
 
-     'magenta'    : fcolor(13),
-     'darkmagenta': fcolor(5),
+     'magenta'    : fg_color(13),
+     'darkmagenta': fg_color(5),
 
-     'cyan'     : fcolor(14),
-     'darkcyan' : fcolor(5),
+     'cyan'     : fg_color(14),
+     'darkcyan' : fg_color(5),
 
      'blackbg'  : '\033[40m',
      'redbg'    : '\033[41m',
@@ -2449,7 +2449,7 @@ def get_plugin_details():
 
     return ret
 
-def showplugins():
+def show_plugins():
     plugin_details = get_plugin_details()
     plugin_names   = list(plugin_details.keys())
     plugin_names.sort()
