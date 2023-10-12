@@ -26,6 +26,8 @@ class dool_plugin(dool):
 		self.type  = 'd'
 		# Group the colorings to chunks of 20
 		self.scale = 20
+		# The number of columns we're showing
+		self.cols  = len(devices)
 
 	def get_devs(self):
 		# If there was a disk filter specified on the CLI
