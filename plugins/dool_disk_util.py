@@ -56,8 +56,8 @@ class dool_plugin(dool):
         ret     = []
         varlist = []
 
-		# If there was a disk filter specified on the CLI
-		# example: dool --disk-infligh -D md123,sda
+        # If there was a disk filter specified on the CLI
+        # example: dool --disk-infligh -D md123,sda
         if op.disklist:
             for x in op.disklist:
                 base = self.basename(x)
