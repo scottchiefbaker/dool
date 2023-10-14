@@ -902,14 +902,11 @@ class dool_disk(dool):
     def name(self):
         ret = []
         for name in self.vars:
-            # If the name is short enough we prepend "dsk/"
-            # We have to cut this off for long names like nvme1n2p3
-            if len(name) < 7:
-                x = 'dsk/' + sysfs_dev(name)
-            else:
-                x = sysfs_dev(name)
+            # Shorten the device name to 5 chars
+            short = dev_short_name(name, 5)
+            full  = "dsk/" + short
 
-            ret.append(x)
+            ret.append(full)
 
         return ret
 
