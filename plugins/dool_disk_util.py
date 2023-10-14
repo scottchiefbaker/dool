@@ -10,13 +10,13 @@ class dool_plugin(dool):
     """
 
     def __init__(self):
-        self.nick = ('util', )
-        self.type = 'f'
-        self.width = 4
-        self.scale = 34
-        self.open('/proc/diskstats')
-        self.cols = 1
+        self.nick   = ('util', )
+        self.type   = 'f'
+        self.width  = 4
+        self.scale  = 34
+        self.cols   = 1
         self.struct = dict( tot_ticks=0 )
+        self.open('/proc/diskstats')
 
     def discover(self, *objlist):
         ret = []
@@ -28,6 +28,7 @@ class dool_plugin(dool):
         for item in objlist: ret.append(item)
         if not ret:
             raise Exception('No suitable block devices found to monitor')
+
         return ret
 
     def basename(self, disk):
@@ -52,24 +53,36 @@ class dool_plugin(dool):
             return disk
 
     def vars(self):
-        ret = []
+        ret     = []
+        varlist = []
+
+		# If there was a disk filter specified on the CLI
+		# example: dool --disk-infligh -D md123,sda
         if op.disklist:
-            varlist = list(map(self.basename, op.disklist))
+            for x in op.disklist:
+                base = self.basename(x)
+                varlist.append(base)
+        # We're grabbing them all on the fly via discover()
         else:
-            varlist = []
             for name in self.discover:
                 if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices(): continue
                 varlist.append(name)
-#           if len(varlist) > 2: varlist = varlist[0:2]
+
             varlist.sort()
+
         for name in varlist:
             if name in self.discover:
                 ret.append(name)
+
         return ret
 
     def name(self):
-        return [sysfs_dev(name) for name in self.vars]
+        ret = []
+        for x in self.vars:
+            ret.append(dev_short_name(x))
+
+        return ret
 
     def extract(self):
         for l in self.splitlines():
@@ -87,3 +100,5 @@ class dool_plugin(dool):
 
         if step == op.delay:
             self.set1.update(self.set2)
+
+# vim: tabstop=4 shiftwidth=4 expandtab autoindent softtabstop=4
