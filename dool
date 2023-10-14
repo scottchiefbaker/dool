@@ -146,6 +146,9 @@ class Options:
                     if base:
                         cleaned.append(base)
 
+                if len(cleaned) == 0:
+                    print('dool: diskset %s has no valid members' % name)
+
                 self.diskset[name] = cleaned
                 self.disklist.append(name)
             elif opt in ['--filesystem']:
