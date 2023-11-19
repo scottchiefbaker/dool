@@ -10,7 +10,7 @@ class dool_plugin(dool):
         self.type = 'd'
         self.width = 5
         self.scale = 1000
-        self.totalfilter = re.compile('^(lo|bond\d+|face|.+\.\d+)$')
+        self.totalfilter = re.compile(r'^(lo|bond\d+|face|.+\.\d+)$')
         self.open('/proc/net/dev')
         self.cols = 2
 

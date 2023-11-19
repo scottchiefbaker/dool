@@ -25,8 +25,8 @@ class dool_plugin(dool):
             ### Cleanup possible names from /proc/interrupts
             l2 = ' '.join(l[cpunr+3:])
             l2 = l2.replace('_hcd:', '/')
-            l2 = re.sub('@pci[:\d+\.]+', '', l2)
-            l2 = re.sub('ahci\[[:\da-z\.]+\]', 'ahci', l2)
+            l2 = re.sub(r'@pci[:\d+\.]+', '', l2)
+            l2 = re.sub(r'ahci\[[:\da-z\.]+\]', 'ahci', l2)
             ret[l1] = l2
         return ret
 

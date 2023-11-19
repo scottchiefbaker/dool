@@ -55,7 +55,7 @@ pluginpath = [
 # This is a regexp filter to EXCLUDE partitions, so we only add stats for the main parent drive
 # i.e. use stats for sda not sda1/sda7/etc.
 # NVME drives are: nvmeXnXpX
-DOOL_DISKFILTER = re.compile('^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
+DOOL_DISKFILTER = re.compile(r'^([hsv]d[a-z]+\d+|cciss/c\d+d\d+p\d+|dm-\d+|md\d+|mmcblk\d+p\d0|VxVM\d+|nvme\d+n\d+p\d+)$')
 
 class Options:
     def __init__(self, args):
@@ -1191,7 +1191,7 @@ class dool_net(dool):
     def __init__(self):
         self.nick        = ('recv', 'send')
         self.type        = 'b'
-        self.totalfilter = re.compile('^(lo|bond\d+|face|.+\.\d+)$')
+        self.totalfilter = re.compile(r'^(lo|bond\d+|face|.+\.\d+)$')
         self.open('/proc/net/dev')
         self.cols        = 2
 
@@ -2327,7 +2327,7 @@ def getcpunr():
 
     # Fallback 2
     try:
-        search = re.compile('^cpu\d+')
+        search = re.compile(r'^cpu\d+')
         cpunr = 0
         for line in dopen('/proc/stat').readlines():
             if search.match(line):
@@ -2344,14 +2344,14 @@ def blockdevices():
 ### FIXME: Add scsi support too and improve
 def sysfs_dev(device):
     "Convert sysfs device names into device names"
-    m = re.match('ide/host(\d)/bus(\d)/target(\d)/lun(\d)/disc', device)
+    m = re.match(r'ide/host(\d)/bus(\d)/target(\d)/lun(\d)/disc', device)
     if m:
         l = m.groups()
         # ide/host0/bus0/target0/lun0/disc -> 0 -> hda
         # ide/host0/bus1/target0/lun0/disc -> 2 -> hdc
         nr = int(l[1]) * 2 + int(l[3])
         return 'hd' + chr(ord('a') + nr)
-    m = re.match('cciss/(c\dd\d)', device)
+    m = re.match(r'cciss/(c\dd\d)', device)
     if m:
         l = m.groups()
         return l[0]
@@ -2916,7 +2916,7 @@ def dev_short_name(xinput, xlen = 4):
         # This gets all the a-z chars up to the first digit
         # Then it gets any sequential digits followed by a
         # non-digit separator, and any remaining digits
-        x = re.match("([a-zA-Z]+).*?(\d+)(.*\D.*?(\d+))?", xinput)
+        x = re.match(r"([a-zA-Z]+).*?(\d+)(.*\D.*?(\d+))?", xinput)
 
         # If we match the regexp we build a shorter string
         if x:
