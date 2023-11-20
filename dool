@@ -1386,7 +1386,8 @@ class dool_swap(dool):
         else:
             ret = []
             for dev in self.vars:
-                short_name = dev_short_name(dev)
+                dev        = basename(dev)
+                short_name = dev_short_name(dev, 4)
                 ret.append('swap/' + short_name)
 
         return ret
