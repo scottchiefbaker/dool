@@ -97,12 +97,18 @@ class Options:
             self.header = False
             self.update = False
 
+        long_opts = [
+            'all'     , 'all-plugins', 'ascii'   , 'bits'  , 'bw'     , 'bytes'     , 'black-on-white', 'color'    ,
+            'color16' , 'defaults'   , 'debug'   , 'devel' , 'display', 'filesystem', 'float'         , 'full'     ,
+            'help'    , 'integer'    , 'list'    , 'mods'  , 'modules', 'more'      , 'nocolor'       , 'noheaders',
+            'noupdate', 'profile'    , 'version' , 'vmstat',
+            'diskset=', 'output='    , 'pidfile='
+        ]
+
+        long_opts += plugin_opt_list
+
         try:
-            opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V',
-                ['all', 'all-plugins', 'bits', 'bw', 'bytes', 'black-on-white', 'color', 'color16',
-                 'defaults', 'debug', 'devel', 'filesystem', 'float', 'full', 'help', 'integer',
-                 'list', 'mods', 'modules', 'more', 'nocolor', 'noheaders', 'noupdate',
-                 'output=', 'pidfile=', 'profile', 'version', 'vmstat', 'ascii', 'display', 'diskset='] + plugin_opt_list)
+            opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V', long_opts)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
