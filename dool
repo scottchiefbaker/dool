@@ -1377,7 +1377,20 @@ class dool_swap(dool):
         return ret
 
     def name(self):
-        return ['swp/'+improve(name) for name in self.vars]
+        num_swaps = len(self.vars)
+
+        # If it's just ONE swap the name is simple: 'swap'
+        if (num_swaps == 1):
+            ret = "swap"
+        # If we have more than one we break them out
+        else:
+            ret = []
+            for dev in self.vars:
+                short_name = dev_short_name(dev)
+                ret.append('swap/' + short_name)
+
+        return ret
+
 
     def extract(self):
         self.val['total'] = [0, 0]
