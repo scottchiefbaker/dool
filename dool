@@ -1339,7 +1339,6 @@ class dool_socket(dool):
 
 class dool_swap(dool):
     def __init__(self):
-        self.name = 'swap'
         self.nick = ('used', 'free')
         self.type = 'd'
         self.open('/proc/swaps')
