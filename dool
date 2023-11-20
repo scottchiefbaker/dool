@@ -202,10 +202,7 @@ class Options:
             elif opt in ['-f', '--full']:
                 self.full = True
             elif opt in ['--all-plugins']:
-                ### Make list unique in a fancy fast way
-                plugins = list({}.fromkeys(allplugins).keys())
-                plugins.sort()
-                self.plugins += plugins
+                self.plugins += plugin_opt_list
             elif opt in ['--bytes']:
                 self.bits = False
             elif opt in ['--bits']:
