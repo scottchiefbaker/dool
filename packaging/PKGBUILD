@@ -1,0 +1,30 @@
+# Maintainer: Your Name <youremail@domain.com>
+pkgname=dool
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Command to inspect the OS. Uses plug-ins."
+arch=(x86_64)
+url="https://github.com/scottchiefbaker/dool"
+license=('GPL2')
+groups=()
+depends=()
+# makedepends=(asciidoc xmlto)
+provides=("${pkgname%}")
+conflicts=("${pkgname%}")
+replaces=()
+backup=()
+options=()
+install=
+source=("https://github.com/scottchiefbaker/dool/archive/refs/tags/v1.1.0.tar.gz")
+noextract=()
+md5sums=('SKIP')
+
+build() {
+    cd "$pkgname-$pkgver"
+    make
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    make DESTDIR="$pkgdir/" install
+}
