@@ -49,7 +49,7 @@ class dool_plugin(dool):
 		cpu_str   = cprint(cpu_usage, 'f', 3, 34)
 		disk_rd   = cprint(disk_rd	, 'd', 5, 1024)
 		disk_wr   = cprint(disk_wr	, 'd', 5, 1024)
-		mem_usage = cprint(mem_usage, 'd', 4, 1024)
+		mem_usage = cprint(mem_usage, 'f', 4, 1024)
 
 		self.output = "%s %s %s %s" % (cpu_str, disk_rd, disk_wr, mem_usage)
 
