@@ -98,11 +98,11 @@ class Options:
             self.update = False
 
         long_opts = [
-            'all'     , 'all-plugins', 'ascii'   , 'bits'  , 'bw'     , 'bytes'     , 'black-on-white', 'color'    ,
-            'color16' , 'defaults'   , 'debug'   , 'devel' , 'display', 'filesystem', 'float'         , 'full'     ,
-            'help'    , 'integer'    , 'list'    , 'mods'  , 'modules', 'more'      , 'nocolor'       , 'noheaders',
-            'noupdate', 'profile'    , 'version' , 'vmstat',
-            'diskset=', 'output='    , 'pidfile='
+            'all'      , 'all-plugins', 'ascii'   , 'bits'   , 'bw'     , 'bytes'  , 'black-on-white', 'color'  ,
+            'color16'  , 'defaults'   , 'debug'   , 'devel'  , 'display', 'dstat'  , 'filesystem'    , 'float'  ,
+            'full'     , 'help'       , 'integer' , 'list'   , 'mods'   , 'modules', 'more'          , 'nocolor',
+            'noheaders', 'noupdate'   , 'profile' , 'version', 'vmstat' ,
+            'diskset=' , 'output='    , 'pidfile='
         ]
 
         long_opts += plugin_opt_list
@@ -157,6 +157,18 @@ class Options:
 
                 self.diskset[name] = cleaned
                 self.disklist.append(name)
+            elif opt in ['--dstat']:
+                self.bits      = False
+                self.use_ascii = True
+                self.color     = 16
+
+                # --dstat by itself so we load the old default plug-ins
+                if len(opts) == 1:
+                    self.plugins.append('cpu')
+                    self.plugins.append('disk')
+                    self.plugins.append('net')
+                    self.plugins.append('page')
+                    self.plugins.append('sys')
             elif opt in ['--filesystem']:
                 self.plugins.append('fs')
             elif opt in ['-g']:
