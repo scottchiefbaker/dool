@@ -52,6 +52,13 @@ A list of available plug-ins are available if you run `dool --version`
 Dool requires a 256 color compatible terminal. Most modern terminal emulators
 support this automatically.
 
+### Bits vs Bytes:
+
+One of the changes in `dool` is measurement of network and disk bandwidth in
+*bits* instead of bytes. This can be confusing if you're used to seeing the
+lower numbers in `dstat`. If you'd rather see bandwidth reported in bytes you
+can pass the `--bytes` option.
+
 ### See also:
 
 Other tools similar to Dool
