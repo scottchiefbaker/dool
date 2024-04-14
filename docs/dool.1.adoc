@@ -195,6 +195,9 @@ Possible internal stats are::
     output tabular data to the display. Useful in conjunction with *--output*
 	to display on screen and write to a file at the same time
 
+--dstat::
+    enable legacy Dstat output mode
+
 --profile::
     show profiling statistics when exiting dool
 
