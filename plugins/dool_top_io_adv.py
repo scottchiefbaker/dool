@@ -56,13 +56,17 @@ class dool_plugin(dool):
 			write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * 1.0 / elapsed
 			usage       = read_usage + write_usage
 
+			# Make sure the name isn't too long
+			pid_name = getnamebypid(pid, name)
+			pid_name = pid_name[0:20]
+
 			### Get the process that spends the most jiffies
 			if usage > self.val['usage']:
 				self.val['usage']       = usage
 				self.val['read_usage']  = read_usage
 				self.val['write_usage'] = write_usage
 				self.val['pid']         = pid
-				self.val['name']        = getnamebypid(pid, name)
+				self.val['name']        = pid_name
 				self.val['cpu_usage']   = cpu_usage
 
 		if step == op.delay:
