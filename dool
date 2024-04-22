@@ -3039,7 +3039,7 @@ def __main():
     # Exit cleanly
     exit(0)
 
-# Standary Python entry point
+# Standard Python entry point
 if __name__ == '__main__':
     __main()
 
