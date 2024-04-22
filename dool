@@ -2231,6 +2231,26 @@ def die(ret, msg):
     print(msg, file=sys.stderr)
     exit(ret)
 
+# Quit in a clean way
+def exit(ret):
+    sys.stdout.write(ansi['reset'])
+    sys.stdout.flush()
+
+    # Remove any pidfiles
+    if op.pidfile and os.path.exists(op.pidfile):
+        os.remove(op.pidfile)
+
+    if op.profile and os.path.exists(op.profile):
+        rows, cols = get_term_size()
+        import pstats
+
+        p = pstats.Stats(op.profile)
+        p.sort_stats('cumulative').print_stats(rows - 13)
+    elif op.profile:
+        print('No profiling data was found, maybe profiler was interrupted ?', file=sys.stderr)
+
+    sys.exit(ret)
+
 def init_term():
     "Initialise terminal"
     global termsize
@@ -2555,30 +2575,6 @@ def show_plugins():
                 print(mod, end=',')
 
         print(mod)
-
-# Quit in a clean way
-def exit(ret):
-    sys.stdout.write(ansi['reset'])
-    sys.stdout.flush()
-
-    if op.pidfile and os.path.exists(op.pidfile):
-        os.remove(op.pidfile)
-
-    if op.profile and os.path.exists(op.profile):
-        rows, cols = get_term_size()
-        import pstats
-        p = pstats.Stats(op.profile)
-#        p.sort_stats('name')
-#        p.print_stats()
-        p.sort_stats('cumulative').print_stats(rows - 13)
-#        p.sort_stats('time').print_stats(rows - 13)
-#        p.sort_stats('file').print_stats('__init__')
-#        p.sort_stats('time', 'cum').print_stats(.5, 'init')
-#        p.print_callees()
-    elif op.profile:
-        print('No profiling data was found, maybe profiler was interrupted ?', file=sys.stderr)
-
-    sys.exit(ret)
 
 # The main ingress point of the whole thing
 def main():
