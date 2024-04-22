@@ -3007,25 +3007,48 @@ def get_dev_name(disk):
 
     return ret
 
-### Main entrance
-if __name__ == '__main__':
+# Start performance profiling
+def start_profiling():
+    import profile
+
+    # Remove any previous profile data
+    if os.path.exists(op.profile):
+        os.remove(op.profile)
+
+    profile.run('main()', op.profile)
+
+# Main ingress point
+def __main():
+    global op
+    global theme
+
     try:
         init_term()
-        op = Options(os.getenv('DOOL_OPTS','').split() + sys.argv[1:])
+
+        # We use $DOOL_OPTS env variable and the CLI params to get all requested options
+        env_opts = os.getenv('DOOL_OPTS','').split()
+        cli_opts = sys.argv[1:]
+        op       = Options(env_opts + cli_opts)
+
+        # Pick color depth theme we're going to use
         theme = set_theme()
+
+        # If we're doing performance profiling
         if op.profile:
-            import profile
-            if os.path.exists(op.profile):
-                os.remove(op.profile)
-            profile.run('main()', op.profile)
+            start_profiling()
         else:
             main()
+
+    # This should handle catching CTRL + C and finalizing the output
     except KeyboardInterrupt as e:
         if op.update:
             sys.stdout.write('\n')
+
+    # Exit cleanly
     exit(0)
-else:
-    op = Options('')
-    step = 1
+
+# Standary Python entry point
+if __name__ == '__main__':
+    __main()
 
 # vim: tabstop=4 shiftwidth=4 expandtab autoindent softtabstop=4
