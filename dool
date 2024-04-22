@@ -34,11 +34,7 @@ import sys
 import time
 import signal
 
-# https://stackoverflow.com/questions/53978542/how-to-use-collections-abc-from-both-python-3-8-and-python-2-7
-try:
-    from collections.abc import Sequence # Python 3.8+
-except ImportError:
-    from collections import Sequence # Python 2.x
+from collections.abc import Sequence
 
 VERSION = '1.3.2'
 
