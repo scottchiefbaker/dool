@@ -2660,59 +2660,38 @@ def main():
 
     ### Build list of requested plugins
     linewidth = 0
-    totlist = []
+    totlist   = []
 
     for plugin in op.plugins:
+        pluginfile = op.plugin_details[plugin]['file']
 
-        ### Set up fallback lists
-        if   plugin == 'cpu' : mods = ( 'cpu',  )
-        elif plugin == 'disk': mods = ( 'disk', )
-        elif plugin == 'int' : mods = ( 'int',  )
-        elif plugin == 'page': mods = ( 'page', )
-        elif plugin == 'swap': mods = ( 'swap', )
-        else                 : mods = ( plugin, )
+        try:
+            if pluginfile not in globals():
+                exec(open(pluginfile).read())
+                exec('global plug; plug = dool_plugin(); del(dool_plugin)')
+                plug.filename = pluginfile
+                plug.check()
+                plug.prepare()
+            else:
+                exec('global plug; plug = %s()' % pluginfile)
+                plug.check()
+                plug.prepare()
 
-        for mod in mods:
+        except Exception as e:
+            if mod == mods[-1]:
+                print('Module %s failed to load. (%s)' % (pluginfile, e), file=sys.stderr)
+            elif op.debug:
+                print('Module %s failed to load, trying another. (%s)' % (pluginfile, e), file=sys.stderr)
+            if op.debug >= 3:
+                raise
 
-            pluginfile = op.plugin_details[mod]['file']
+            continue
 
-            try:
-                if pluginfile not in globals():
-                    exec(open(pluginfile).read())
-                    exec('global plug; plug = dool_plugin(); del(dool_plugin)')
-                    plug.filename = pluginfile
-                    plug.check()
-                    plug.prepare()
+        except:
+            print('Module %s caused unknown exception' % pluginfile, file=sys.stderr)
 
-                    #else:
-                    #    print("Cannot load pluging '%s' from file '%s'" % (mod, pluginfile), file=sys.stderr)
-
-                else:
-                    exec('global plug; plug = %s()' % pluginfile)
-                    plug.check()
-                    plug.prepare()
-#                print(plug.__module__)
-            except Exception as e:
-                if mod == mods[-1]:
-                    print('Module %s failed to load. (%s)' % (pluginfile, e), file=sys.stderr)
-                elif op.debug:
-                    print('Module %s failed to load, trying another. (%s)' % (pluginfile, e), file=sys.stderr)
-                if op.debug >= 3:
-                    raise
-#                tb = sys.exc_info()[2]
-                continue
-            except:
-                print('Module %s caused unknown exception' % pluginfile, file=sys.stderr)
-
-            linewidth = linewidth + plug.statwidth() + 1
-            totlist.append(plug)
-
-            if op.debug:
-                print('Module %s' % pluginfile, end='')
-                if hasattr(plug, 'file'):
-                    print(' requires %s' % plug.file, end='')
-                print()
-            break
+        linewidth = linewidth + plug.statwidth() + 1
+        totlist.append(plug)
 
     if not totlist:
         die(8, 'None of the stats you selected are available.')
@@ -2721,7 +2700,7 @@ def main():
         outputfile.write(csv_header(totlist))
 
     scheduler = sched.scheduler(time.time, time.sleep)
-    inittime = time.time()
+    inittime  = time.time()
 
     update = 0
     missed = 0
