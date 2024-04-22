@@ -1579,6 +1579,7 @@ class dool_zones(dool):
 ###############################################################################
 ###############################################################################
 
+# Handle catching CTRL + C when we quit
 def signal_handler(signum, frame):
     #print("We got a signal!")
 
@@ -1597,6 +1598,7 @@ def signal_handler(signum, frame):
 
     sys.exit(0)
 
+# Configure which signals to listen for
 def init_signal_handling():
     if os.name == 'nt':
         signal.signal(signal.SIGBREAK, signal_handler)
@@ -1606,21 +1608,25 @@ def init_signal_handling():
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
+# Set the ANSI foreground color
 def fg_color(num):
    ret = "\033[38;5;" + str(num) + "m"
 
    return ret
 
+# Set the ANSI background color
 def bg_color(num):
    ret = "\033[48;5;" + str(num) + "m"
 
    return ret
 
+# Wrap some text in a color and then a reset
 def text_color(num, mystr):
    ret = "\033[38;5;" + str(num) + "m" + mystr +  "\033[0m"
 
    return ret
 
+# Colors for a 256 color terminal
 color = {
      'black': fg_color(0),
      'white': fg_color(15),
@@ -1686,6 +1692,7 @@ color16 = {
     'whitebg'  : '\033[47m',
 }
 
+# Some ANSI presets to make the code easier to read
 ansi = {
     'reset'    : '\033[0;0m',
     'bold'     : '\033[1m',
@@ -1710,6 +1717,7 @@ ansi = {
     'default': '\033[0;0m',
 }
 
+# Characters we use to draw the boxes
 char = {
     'pipe'       : '|',
     'colon'      : ':',
@@ -1722,6 +1730,7 @@ char = {
     'title_sep'  : '|',
 }
 
+# Unicode chars we use to override the defaults to get cleaner boxes
 char_box_draw = {
     'pipe'       : u'\u2502',
     'dash'       : u'\u2504',
@@ -1729,6 +1738,7 @@ char_box_draw = {
     'colon'      : u'\u250a',
 }
 
+# Build a theme based on the color choice 16/256
 def set_theme():
     "Provide a set of colors to use"
     global color
@@ -1879,16 +1889,19 @@ def matchpipe(fileobj, string, tmout = 0.001):
         raise Exception('Nothing found during matchpipe data collection')
     return None
 
+# Test if a command is capable of being run
 def cmd_test(cmd):
     pipes = os.popen3(cmd, 't', 0)
     for line in pipes[2].readlines():
         raise Exception(line.strip())
 
+# Read command output line by line
 def cmd_readlines(cmd):
     pipes = os.popen3(cmd, 't', 0)
     for line in pipes[1].readlines():
        yield line
 
+# Read command output column by column
 def cmd_splitlines(cmd, sep=None):
     pipes = os.popen3(cmd, 't', 0)
     for line in pipes[1].readlines():
@@ -1947,6 +1960,7 @@ def proc_pidlist():
         except ValueError:
             continue
 
+# Get a single SNMP OID
 def snmpget(server, community, oid):
     errorIndication, errorStatus, errorIndex, varBinds = cmdgen.CommandGenerator().getCmd(
         cmdgen.CommunityData('test-agent', community, 0),
@@ -1957,6 +1971,7 @@ def snmpget(server, community, oid):
     for x in varBinds:
         return str(x[1])
 
+# Do a full SNMP walk
 def snmpwalk(server, community, oid):
     ret = []
     errorIndication, errorStatus, errorIndex, varBindTable = cmdgen.CommandGenerator().nextCmd(
@@ -2023,9 +2038,11 @@ def tchg(var, width):
                 ret = '%2dw' % (var / 60 / 24 / 7)
     return ret
 
-# Global/static variables to speed up repeated calls to this function
+# Global/static variables to speed up repeated calls to devel_log()
 DEBUG_LAST = 0
 DEBUG_FH   = 0
+
+# Write some debug data to a log if we enabled --devel
 def devel_log(msg):
     global DEBUG_LAST, DEBUG_FH
 
@@ -2105,11 +2122,13 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
         # Byte value using base of 1024 (byte, kibibyte, mebibyte, gibibyte, ...)
         units = ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
 
+    # Interim update is faded out a bit
     if step == op.delay:
         colors = theme['colors_lo']
         ctext  = theme['text_lo']
         cunit  = theme['unit_lo']
         cdone  = theme['done_lo']
+    # Real update is bright color
     else:
         colors = theme['colors_hi']
         ctext  = theme['text_hi']
@@ -2354,6 +2373,7 @@ def getcpunr():
     except:
         raise Exception("Problem finding number of CPUs in system.")
 
+# Find all the block devices in /sys/block
 def blockdevices():
     ### We have to replace '!' by '/' to support cciss!c0d0 type devices :-/
     return [os.path.basename(filename).replace('!', '/') for filename in glob.glob('/sys/block/*')]
@@ -2425,6 +2445,7 @@ def dev(maj, min):
     else:
         return 'dev%d-%d' % (maj, min)
 
+# Gather all the plugins from their assorted directory locations
 def get_plugin_details():
     # These are the built-in plugins
     remod   = re.compile('dool_(.+)$')
@@ -2468,6 +2489,7 @@ def get_plugin_details():
 
     return ret
 
+# For the --help print out a list of all the plugins and what/where they are
 def show_plugins():
     plugin_details = get_plugin_details()
     plugin_names   = list(plugin_details.keys())
@@ -2534,6 +2556,7 @@ def show_plugins():
 
         print(mod)
 
+# Quit in a clean way
 def exit(ret):
     sys.stdout.write(ansi['reset'])
     sys.stdout.flush()
@@ -2557,6 +2580,7 @@ def exit(ret):
 
     sys.exit(ret)
 
+# The main ingress point of the whole thing
 def main():
     "Initialization of the program, terminal, internal structures"
     global cpunr, hz, maxint, ownpid, pagesize
@@ -2871,7 +2895,7 @@ def perform(update):
             sys.stdout.write(' ' + theme['error'] + 'missed ' + str(missed+1) + ' ticks' + theme['input'])
             missed = 0
 
-# Get an item from a list, or a default value if the array isn't big enough
+# Get an item from a list, or a default value if the array isn't big enough (null coalesce)
 def list_item_default(mylist, num, default):
     if num > len(mylist) - 1:
         return default
