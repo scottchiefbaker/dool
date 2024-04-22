@@ -2598,18 +2598,6 @@ def main():
         if shell == '/bin/bash' and term and re.compile('(screen*|xterm*)').match(term):
             sys.stdout.write('\033]0;(%s@%s) %s %s\007' % (user, hostname.split('.')[0], os.path.basename(sys.argv[0]), ' '.join(op.args)))
 
-    ### Check background color (rxvt)
-    ### COLORFGBG="15;default;0"
-#   if os.environ['COLORFGBG'] and len(os.environ['COLORFGBG'].split(';')) >= 3:
-#       l = os.environ['COLORFGBG'].split(';')
-#       bg = int(l[2])
-#       if bg < 7:
-#           print 'Background is dark'
-#       else:
-#           print 'Background is light'
-#   else:
-#       print 'Background is unknown, assuming dark.'
-
     ### Check terminal capabilities
     if op.color == None:
         op.color = get_term_color()
