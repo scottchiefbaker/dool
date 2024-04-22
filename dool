@@ -1457,16 +1457,18 @@ class dool_tcp(dool):
 
 class dool_time(dool):
     def __init__(self):
-        self.name = 'system'
-        #self.timefmt = os.getenv('DOOL_TIMEFMT') or '%d-%m %H:%M:%S'
+        self.name    = 'system'
         self.timefmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
-        self.type = 's'
+        self.type    = 's'
+
+        # In debug we append ms, so we extend the width to accomodate
         if op.debug:
             self.width = len(time.strftime(self.timefmt, time.localtime())) + 4
         else:
             self.width = len(time.strftime(self.timefmt, time.localtime()))
+
         self.scale = 0
-        self.vars = ('time',)
+        self.vars  = ('time',)
 
     ### We are now using the starttime for this plugin, not the execution time of this plugin
     def extract(self):
