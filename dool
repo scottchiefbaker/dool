@@ -952,13 +952,14 @@ class dool_epoch(dool):
         self.name  = 'epoch'
         self.vars  = ('epoch',)
         self.width = 10
-        if op.debug:
-            self.width = 13
         self.scale = 0
 
-    ### We are now using the starttime instead of the execution time of this plugin
+        # We append ms in debug mode so we widen this a bit
+        if op.debug:
+            self.width += 4
+
+    # This is the unixtime when this loop interation ran
     def extract(self):
-#        self.val['epoch'] = time.time()
         self.val['epoch'] = starttime
 
 class dool_fs(dool):
