@@ -6,9 +6,9 @@
 class dool_plugin(dool):
 	def __init__(self):
 		self.name    = 'most expensive i/o process'
-		self.vars    = ('process               pid    read  writ  cpu ',)
+		self.vars    = ('process                  pid  read  writ   cpu',)
 		self.type    = 's'
-		self.width   = 45
+		self.width   = 46
 		self.scale   = 0
 		self.pidset1 = {}
 
@@ -75,7 +75,7 @@ class dool_plugin(dool):
 		if self.val['usage'] != 0.0:
 			#self.output = '%-*s%s%-5s%s%s%s%s%%' % (self.width-14-len(pid), self.val['name'][0:self.width-14-len(pid)], color['darkblue'], self.val['pid'], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024), cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'])
 
-			pid_str   = color['darkblue'] + ("%-6s" % self.val['pid']) + ansi['reset']
+			pid_str   = color['darkblue'] + ("%7s" % self.val['pid']) + ansi['reset']
 			read_str  = cprint(self.val['read_usage'] , 'd', 5, 1024)
 			write_str = cprint(self.val['write_usage'], 'd', 5, 1024)
 			cpu_str   = cprint(self.val['cpu_usage']  , 'f', 4, 34)
