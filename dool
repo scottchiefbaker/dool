@@ -2581,13 +2581,9 @@ def main():
     # Handle signals like CTRL+C
     init_signal_handling()
 
-    cpunr = getcpunr()
-    hz = os.sysconf('SC_CLK_TCK')
-    try:
-        maxint = (sys.maxint + 1) * 2
-    except:
-        # Support Python 3
-        maxint = float("inf")
+    cpunr  = getcpunr()
+    hz     = os.sysconf('SC_CLK_TCK')
+    maxint = float("inf")
 
     ownpid   = str(os.getpid())
     pagesize = resource.getpagesize()
