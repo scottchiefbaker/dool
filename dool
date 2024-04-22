@@ -98,13 +98,16 @@ class Options:
             'color16'  , 'defaults'   , 'debug'   , 'devel'  , 'display', 'dstat'  , 'filesystem'    , 'float'  ,
             'full'     , 'help'       , 'integer' , 'list'   , 'mods'   , 'modules', 'more'          , 'nocolor',
             'noheaders', 'noupdate'   , 'profile' , 'version', 'vmstat' ,
+        ]
+
+        param_opts = [
             'diskset=' , 'output='    , 'pidfile='
         ]
 
-        long_opts += plugin_opt_list
+        all_opts = (long_opts + param_opts + plugin_opt_list)
 
         try:
-            opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V', long_opts)
+            opts, args = getopt.getopt(args, 'acdfghilmno:prstTvyC:D:I:M:N:S:V', all_opts)
         except getopt.error as exc:
             print('dool: %s, try dool -h for a list of all the options' % exc)
             sys.exit(1)
