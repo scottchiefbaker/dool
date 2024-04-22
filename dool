@@ -270,9 +270,6 @@ class Options:
                 print('dool: option %s unknown to getopt, try dool -h for a list of all the options' % opt)
                 sys.exit(1)
 
-        #k(self.diskset)
-        #k(self.disklist)
-
         # If --display is before --output we have to reset it here
         if '--display' in opt_keys:
             self.display = True
