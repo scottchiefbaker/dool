@@ -1459,24 +1459,22 @@ class dool_tcp(dool):
 class dool_time(dool):
     def __init__(self):
         self.name    = 'system'
-        self.timefmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
+        self.vars    = ('time',)
         self.type    = 's'
+        self.scale   = 0
+        self.timefmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
+        self.width   = len(time.strftime(self.timefmt, time.localtime()))
 
         # In debug we append ms, so we extend the width to accomodate
         if op.debug:
-            self.width = len(time.strftime(self.timefmt, time.localtime())) + 4
-        else:
-            self.width = len(time.strftime(self.timefmt, time.localtime()))
+            self.width += 4
 
-        self.scale = 0
-        self.vars  = ('time',)
-
-    ### We are now using the starttime for this plugin, not the execution time of this plugin
+    # starttime is the unixtime this loop started
     def extract(self):
+        self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime))
+
         if op.debug:
-            self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime)) + ".%03d" % (round(starttime * 1000 % 1000 ))
-        else:
-            self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime))
+            self.val['time'] += ".%03d" % (round(starttime * 1000 % 1000))
 
 class dool_udp(dool):
     def __init__(self):
