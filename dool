@@ -2730,7 +2730,7 @@ def perform(update):
 
         starttime = time.time()
 
-        # The number of which update we one (not counting subdates)
+        # The number of the current loop (not counting subdates)
         loop = int((update - 1 + op.delay) / op.delay)
         # The step (subupdate) number inside of the current loop
         step = ((update - 1) % op.delay) + 1
