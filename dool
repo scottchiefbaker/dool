@@ -1582,7 +1582,7 @@ class dool_zones(dool):
 
 # Handle catching CTRL + C when we quit
 def signal_handler(signum, frame):
-    #print("We got a signal!")
+    #print("%s\n\nWe caught signal #%d!" % (fg_color(15), signum))
 
     # If we're outputting to a file do some cleanup
     if op.output:
