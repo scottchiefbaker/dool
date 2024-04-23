@@ -2364,7 +2364,7 @@ def getcpunr():
         import multiprocessing
         return multiprocessing.cpu_count()
     except (ImportError, NotImplementedError):
-       pass
+        pass
 
     # Fallback 1
     try:
