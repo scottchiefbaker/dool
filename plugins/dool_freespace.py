@@ -57,6 +57,13 @@ class dool_plugin(dool):
             if res[0] == 0: continue ### Skip zero block filesystems
             ret.append(mount_point)
 
+        # Make sure we found all the requested mount points
+        missing_mps = array_diff(mp, ret)
+
+        for item in missing_mps:
+            msg = text_color(214, "Warning: unable to find mount point %s in /etc/mtab" % (item));
+            print(msg)
+
         return ret
 
     def name(self):
