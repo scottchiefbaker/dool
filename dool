@@ -79,6 +79,12 @@ class Options:
         self.profile       = ''
         self.use_ascii     = False
         self.plugin_params = {} # Not currently used
+        self.opt_params    = {} # CLI arguments that *optionally* have a param
+
+        # See if any of the CLI arguments are "optional" and remove them
+        # getopt() doesn't support optional params, so we remove them so getopt()
+        # won't freak out. We store the optional params in self.opt_params
+        args = self.optional_params(args)
 
         ### Get all the plugins and their details
         self.plugin_details = get_plugin_details()
@@ -303,6 +309,38 @@ class Options:
 
         if self.debug:
             print('Plugins: %s' % self.plugins)
+
+    # Loop through the args array and find any items that are optional. If we
+    # find an optional one, check the NEXT item. If the next item does NOT
+    # start with "--" it's a param for the current item.
+    #
+    # getopt() doesn't support optional params so we remove them here, and
+    # the plugins themselves are able to read the params manually from the
+    # op.opt_params dictionary
+    def optional_params(self, args):
+        optional_arguments = ["freespace"]
+        to_remove          = []
+
+        # Loop through each of the args
+        for x in range(len(args)):
+            item      = args[x]
+            # Remove leading "--"
+            item      = re.sub(r'^--', '', item)
+            next_item = list_item_default(args, x + 1, "")
+
+            # If the item is one of the ones we flagged as optional
+            # check to see if it has optional params
+            if item in optional_arguments:
+                if not re.match(r"^--", next_item):
+                    #print("Removing %s" % next_item)
+                    to_remove.append(next_item)
+                    self.opt_params[item] = next_item
+
+        # If we found optional params we remove them from the array
+        for x in to_remove:
+            args.remove(x)
+
+        return args
 
     def get_opt_list_from_details(self, plugin_details):
         plugin_names = list(plugin_details.keys())
