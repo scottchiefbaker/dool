@@ -3001,6 +3001,11 @@ def get_dev_name(disk):
 
     return ret
 
+# Calculate the differences of two arrays
+def array_diff(first, second):
+    second = set(second)
+    return [item for item in first if item not in second]
+
 # Start performance profiling
 def start_profiling():
     import profile
