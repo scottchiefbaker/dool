@@ -11,7 +11,6 @@ import sys
 import glob
 import os
 import shutil
-import pathlib
 
 base_dir = os.path.dirname(__file__)
 base_dir = base_dir or "."

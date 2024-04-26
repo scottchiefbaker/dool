@@ -5,7 +5,7 @@ white="\033[1;37m"
 reset="\033[0m"
 
 # Extract the version number from the dool script
-export VERSION=`perl -nE 'if (/VERSION = .*?([\.\d]+)/) { print $1; } ' ../../dool`
+export VERSION=`perl -nE 'if (/__version__ = .*?([\.\d]+)/) { print $1; } ' ../../dool`
 
 if [[ -z $VERSION ]]
 then
