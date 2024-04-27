@@ -113,7 +113,7 @@ class Options:
         ]
 
         param_opts = [
-            'diskset=' , 'output='    , 'pidfile='
+            'diskset=' , 'output='    , 'pidfile=',
         ]
 
         all_opts = (long_opts + param_opts + plugin_opt_list)
@@ -2008,7 +2008,7 @@ def snmpget(server, community, oid):
     errorIndication, errorStatus, errorIndex, varBinds = cmdgen.CommandGenerator().getCmd(
         cmdgen.CommunityData('test-agent', community, 0),
         cmdgen.UdpTransportTarget((server, 161)),
-        oid
+        oid,
     )
 #    print('%s -> ind: %s, stat: %s, idx: %s' % (oid, errorIndication, errorStatus, errorIndex))
     for x in varBinds:
@@ -2020,7 +2020,7 @@ def snmpwalk(server, community, oid):
     errorIndication, errorStatus, errorIndex, varBindTable = cmdgen.CommandGenerator().nextCmd(
         cmdgen.CommunityData('test-agent', community, 0),
         cmdgen.UdpTransportTarget((server, 161)),
-        oid
+        oid,
     )
 #    print('%s -> ind: %s, stat: %s, idx: %s' % (oid, errorIndication, errorStatus, errorIndex))
     for x in varBindTable:
