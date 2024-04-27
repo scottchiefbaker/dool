@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import sys
 sys.path.insert(0, '/usr/share/dstat/')

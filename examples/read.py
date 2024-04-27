@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 ### Example 1: Direct accessing stats
 ### This is a quick example showing how you can access dstat data

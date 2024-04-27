@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 import select, sys, os
 
 def readpipe(file, tmout = 0.001):
