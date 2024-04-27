@@ -1,0 +1,28 @@
+# https://docs.github.com/actions/automating-builds-and-tests/building-and-testing-python
+
+name: CI
+
+on:
+  push:
+    branches: '*'
+  pull_request:
+    branches: '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+        cache: pip
+
+    - run: pip install --progress-bar off ruff build
+
+    - name: ruff
+      run: ruff check --output-format=github dool
+
+    - name: check package builds successfully
+      run: mv dool dool.py && python -m build
