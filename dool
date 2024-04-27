@@ -146,14 +146,14 @@ class Options:
             elif opt in ['-D']:
                 self.disklist = arg.split(',')
             elif opt in ['--diskset']:
-                parts   = arg.split(":", 1)
-                name    = list_item_default(parts, 0, "Unknown")
-                members = list_item_default(parts, 1, "").split(",")
+                parts   = arg.split(':', 1)
+                name    = list_item_default(parts, 0, 'Unknown')
+                members = list_item_default(parts, 1, '').split(',')
 
                 if (len(parts) < 2 or len(members) < 1):
-                    print("Error parsing diskset...\n")
-                    print("Format : diskset_name:dev1,dev2,dev3,etc...")
-                    print("Example: --diskset os_drives:sda,sdb")
+                    print('Error parsing diskset...\n')
+                    print('Format : diskset_name:dev1,dev2,dev3,etc...')
+                    print('Example: --diskset os_drives:sda,sdb')
 
                 # We convert /dev/sda and symlinks to their raw device name that is
                 # found in /proc/diskstats
@@ -294,10 +294,10 @@ class Options:
         if not self.plugins:
             self.plugins    = default_plugins
             plugin_defaults = 1
-            print("Using default plugins: " + ", ".join(self.plugins) + "")
+            print('Using default plugins: ' + ', '.join(self.plugins) + '')
 
         # Append the 'time' plugin to the end for 'more' and 'all'
-        needs_time_added = ('time' not in self.plugins) and (("--more" in opt_keys) or ("--all" in opt_keys) or (plugin_defaults))
+        needs_time_added = ('time' not in self.plugins) and (('--more' in opt_keys) or ('--all' in opt_keys) or (plugin_defaults))
 
         if needs_time_added:
             self.plugins.append('time');
@@ -324,7 +324,7 @@ class Options:
     # the plugins themselves are able to read the params manually from the
     # op.opt_params dictionary
     def optional_params(self, args):
-        optional_arguments = ["freespace"]
+        optional_arguments = ['freespace']
         to_remove          = []
 
         # Loop through each of the args
@@ -332,12 +332,12 @@ class Options:
             item      = args[x]
             # Remove leading "--"
             item      = re.sub(r'^--', '', item)
-            next_item = list_item_default(args, x + 1, "")
+            next_item = list_item_default(args, x + 1, '')
 
             # If the item is one of the ones we flagged as optional
             # check to see if it has optional params
             if item in optional_arguments:
-                if not re.match(r"^--", next_item):
+                if not re.match(r'^--', next_item):
                     #print("Removing %s" % next_item)
                     to_remove.append(next_item)
                     self.opt_params[item] = next_item
@@ -361,17 +361,17 @@ class Options:
             ptype  = plugin_details[name]['type']   # builtin or exteral
 
             if params:
-                param_str = "yes"
+                param_str = 'yes'
 
                 # For getopt we need to add the '=' to the end to indicate
                 # that we need a param
                 if ptype == 'builtin':
-                    builtin.append(name + "=")
+                    builtin.append(name + '=')
                 else:
-                    external.append(name + "=")
+                    external.append(name + '=')
 
             else:
-                param_str = "no"
+                param_str = 'no'
 
                 if ptype == 'builtin':
                     builtin.append(name)
@@ -396,9 +396,9 @@ class Options:
         print('Python %s' % sys.version)
         print()
 
-        color = ""
+        color = ''
         if not get_term_color():
-            color = "no "
+            color = 'no '
         print('Terminal type: %s (%scolor support)' % (os.getenv('TERM'), color))
         rows, cols = get_term_size()
         print('Terminal size: %d lines, %d columns' % (rows, cols))
@@ -922,7 +922,7 @@ class dool_disk(dool):
             ret.append(name)
         for item in objlist: ret.append(item)
         if not ret:
-            raise Exception("No suitable block devices found to monitor")
+            raise Exception('No suitable block devices found to monitor')
 
         return ret
 
@@ -954,7 +954,7 @@ class dool_disk(dool):
         for name in self.vars:
             # Shorten the device name to 5 chars
             short = dev_short_name(name, 5)
-            full  = "dsk/" + short
+            full  = 'dsk/' + short
 
             ret.append(full)
 
@@ -1110,7 +1110,7 @@ class dool_io(dool):
             ret.append(name)
         for item in objlist: ret.append(item)
         if not ret:
-            raise Exception("No suitable block devices found to monitor")
+            raise Exception('No suitable block devices found to monitor')
         return ret
 
     def vars(self):
@@ -1277,7 +1277,7 @@ class dool_net(dool):
             if name in self.discover + ['total', 'lo']:
                 ret.append(name)
         if not ret:
-            raise Exception("No suitable network interfaces found to monitor")
+            raise Exception('No suitable network interfaces found to monitor')
         return ret
 
     def name(self):
@@ -1426,7 +1426,7 @@ class dool_swap(dool):
             if name in self.discover + ['total']:
                 ret.append(name)
         if not ret:
-            raise Exception("No suitable swap devices found to monitor")
+            raise Exception('No suitable swap devices found to monitor')
         return ret
 
     def name(self):
@@ -1434,7 +1434,7 @@ class dool_swap(dool):
 
         # If it's just ONE swap the name is simple: 'swap'
         if (num_swaps == 1):
-            ret = "swap"
+            ret = 'swap'
         # If we have more than one we break them out
         else:
             ret = []
@@ -1518,7 +1518,7 @@ class dool_time(dool):
         self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime))
 
         if op.debug:
-            self.val['time'] += ".%03d" % (round(starttime * 1000 % 1000))
+            self.val['time'] += '.%03d' % (round(starttime * 1000 % 1000))
 
 class dool_udp(dool):
     def __init__(self):
@@ -1635,10 +1635,10 @@ def signal_handler(signum, frame):
     # If we're outputting to the display
     if op.display:
         # Print a couple of spaces to cover up the "^C" that gets printed
-        sys.stdout.write("\b\b        ")
+        sys.stdout.write('\b\b        ')
         # Reset the ANSI colors just in case
         sys.stdout.write(ansi['reset'])
-        sys.stdout.write("\n")
+        sys.stdout.write('\n')
         sys.stdout.flush()
 
     sys.exit(0)
@@ -1655,19 +1655,19 @@ def init_signal_handling():
 
 # Set the ANSI foreground color
 def fg_color(num):
-   ret = "\033[38;5;" + str(num) + "m"
+   ret = '\033[38;5;' + str(num) + 'm'
 
    return ret
 
 # Set the ANSI background color
 def bg_color(num):
-   ret = "\033[48;5;" + str(num) + "m"
+   ret = '\033[48;5;' + str(num) + 'm'
 
    return ret
 
 # Wrap some text in a color and then a reset
 def text_color(num, mystr):
-   ret = "\033[38;5;" + str(num) + "m" + mystr +  "\033[0m"
+   ret = '\033[38;5;' + str(num) + 'm' + mystr +  '\033[0m'
 
    return ret
 
@@ -2089,16 +2089,16 @@ def devel_log(msg):
 
     # If the filehandle isn't already open, we open it
     if not DEBUG_FH:
-        log_file = "/tmp/dool-devel.log"
+        log_file = '/tmp/dool-devel.log'
         print("Writing devel log: '%s'" % log_file)
-        DEBUG_FH = open(log_file, "w", 1)
+        DEBUG_FH = open(log_file, 'w', 1)
 
     xtime    = time.time()
     time_fmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
     time_str = time.strftime(time_fmt, time.localtime())
 
     # Append MS the ghetto way
-    time_ms  = "." + str(round(xtime * 1000 % 1000))
+    time_ms  = '.' + str(round(xtime * 1000 % 1000))
     time_str += time_ms
 
     # Calculate the ms since the previous call
@@ -2107,7 +2107,7 @@ def devel_log(msg):
     else:
        time_diff = 0
 
-    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg.strip())
+    log_line = '%s %4d ms: %s\n' % (time_str, time_diff, msg.strip())
     DEBUG_FH.write(log_line);
 
     # Save the time of this call for the next call
@@ -2376,17 +2376,17 @@ def getnamebypid(pid, name):
             ret = basename(cmdline[-2])
             if ret.startswith('-'): raise
 
-        is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
+        is_vm = 'kvm' in cmdline[0] or 'qemu' in cmdline[0]
         if is_vm:
             # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
             # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
 
-            cmd_str = " ".join(cmdline)
-            xmatch  = re.search("-name (.+?),", cmd_str)
+            cmd_str = ' '.join(cmdline)
+            xmatch  = re.search('-name (.+?),', cmd_str)
 
             if xmatch:
                 ret = xmatch.group(1)
-                ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+                ret = ret.replace('guest=', '') # Hack to remove guest= for LibVirt+KVM
 
         if not ret: raise
     except:
@@ -2399,7 +2399,7 @@ def getcpunr():
 
     # POSIX
     try:
-        return os.sysconf("SC_NPROCESSORS_ONLN")
+        return os.sysconf('SC_NPROCESSORS_ONLN')
     except ValueError:
         pass
 
@@ -2428,7 +2428,7 @@ def getcpunr():
         if cpunr > 0:
             return cpunr
     except:
-        raise Exception("Problem finding number of CPUs in system.")
+        raise Exception('Problem finding number of CPUs in system.')
 
 # Find all the block devices in /sys/block
 def blockdevices():
@@ -2514,7 +2514,7 @@ def get_plugin_details():
             name        = plugin_name.replace('_', '-')
 
             # If the function name is dool__ that means it needs params
-            needs_params = function_name.startswith("dool__")
+            needs_params = function_name.startswith('dool__')
 
             obj           = {}
             obj['file']   = function_name
@@ -2535,7 +2535,7 @@ def get_plugin_details():
 
             # If the filename has 'dool__' in it that means it needs params
             basename     = os.path.basename(filename)
-            needs_params = basename.startswith("dool__")
+            needs_params = basename.startswith('dool__')
 
             obj           = {}
             obj['file']   = filename
@@ -2588,7 +2588,7 @@ def show_plugins():
         plugins = []
         for name in external:
             pfile = plugin_details[name]['file']
-            pdir  = os.path.dirname(pfile) + "/"
+            pdir  = os.path.dirname(pfile) + '/'
 
             #print("%s = %s" % (pdir,path))
 
@@ -2621,14 +2621,14 @@ def main():
     global totlist, inittime
     global update, missed
 
-    devel_log("Dool startup")
+    devel_log('Dool startup')
 
     # Handle signals like CTRL+C
     init_signal_handling()
 
     cpunr  = getcpunr()
     hz     = os.sysconf('SC_CLK_TCK')
-    maxint = float("inf")
+    maxint = float('inf')
 
     ownpid   = str(os.getpid())
     pagesize = resource.getpagesize()
@@ -2665,7 +2665,7 @@ def main():
         header = ('"Host:"','"%s"' % hostname,'','','','"User:"','"%s"\n' % user)
         outputfile.write(char['sep'].join(header))
 
-        run_cmd = " ".join(sys.argv)
+        run_cmd = ' '.join(sys.argv)
 
         header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' % time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
         outputfile.write(char['sep'].join(header))
@@ -2762,7 +2762,7 @@ def main():
         # The time the next update will run
         update = update + interval
         linecache.clearcache()
-        devel_log("Loop #%d" % update)
+        devel_log('Loop #%d' % update)
 
     print()
 
@@ -2899,27 +2899,27 @@ def list_item_default(mylist, num, default):
         return mylist[num]
 
 # Krumo style debug printing
-def k(obj, prefix = "DEBUG"):
+def k(obj, prefix = 'DEBUG'):
     import inspect
 
     # https://stackoverflow.com/questions/6810999/how-to-determine-file-function-and-line-number
     x    = inspect.stack()[1]
     info = inspect.getframeinfo(x[0])
 
-    line_str = "#" + str(info.lineno)
+    line_str = '#' + str(info.lineno)
     myfile   = os.path.basename(__file__)
 
-    sys.stdout.write("%s %s @ %s: " % (prefix, text_color(228, myfile), text_color(117,line_str)))
+    sys.stdout.write('%s %s @ %s: ' % (prefix, text_color(228, myfile), text_color(117,line_str)))
     print(obj)
 
 # Krumo print and die
 def kd(obj):
-    k(obj, "DIED")
+    k(obj, 'DIED')
     sys.exit(99)
 
 # Read in a full file (or optional only X bytes)
 def file_slurp(filename, size = -1):
-    ret = ""
+    ret = ''
 
     try:
         fd  = open(filename)
@@ -2953,13 +2953,13 @@ def dev_short_name(xinput, xlen = 4):
         # This gets all the a-z chars up to the first digit
         # Then it gets any sequential digits followed by a
         # non-digit separator, and any remaining digits
-        x = re.match(r"([a-zA-Z]+).*?(\d+)(.*\D.*?(\d+))?", xinput)
+        x = re.match(r'([a-zA-Z]+).*?(\d+)(.*\D.*?(\d+))?', xinput)
 
         # If we match the regexp we build a shorter string
         if x:
             let  = x.group(1)
             num1 = x.group(2)
-            num2 = x.group(4) or ""
+            num2 = x.group(4) or ''
 
             # Concate the two number parts together
             num_part = num1 + num2
