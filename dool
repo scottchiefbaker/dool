@@ -193,7 +193,8 @@ class Options:
             elif opt in ['-m']:
                 self.plugins.append('mem')
             elif opt in ['-M', '--mods', '--modules']:
-                print('WARNING: Option %s is deprecated, please use --%s instead' % (opt, ' --'.join(arg.split(','))), file=sys.stderr)
+                print('WARNING: Option %s is deprecated, please use --%s instead' %
+                        (opt, ' --'.join(arg.split(','))), file=sys.stderr)
                 self.plugins += arg.split(',')
             elif opt in ['-n']:
                 self.plugins.append('net')
@@ -838,12 +839,14 @@ class dool_cpu(dool):
             if len(l) < 9: continue
             for name in self.vars:
                 if l[0] == 'cpu' + name or ( l[0] == 'cpu' and name == 'total' ):
-                    self.set2[name] = ( int(l[1]) + int(l[2]) + int(l[6]) + int(l[7]), int(l[3]), int(l[4]), int(l[5]), int(l[8]) )
+                    self.set2[name] = (int(l[1]) + int(l[2]) + int(l[6]) + int(l[7]),
+                            int(l[3]), int(l[4]), int(l[5]), int(l[8]))
 
         for name in self.vars:
             for i in list(range(self.cols)):
                 if sum(self.set2[name]) > sum(self.set1[name]):
-                    self.val[name][i] = 100.0 * (self.set2[name][i] - self.set1[name][i]) / (sum(self.set2[name]) - sum(self.set1[name]))
+                    self.val[name][i] = (100.0 * (self.set2[name][i] - self.set1[name][i]) /
+                            (sum(self.set2[name]) - sum(self.set1[name])))
                 else:
                     self.val[name][i] = 0
 #                    print("Error: tick problem detected, this should never happen !", file=sys.stderr)
@@ -871,7 +874,8 @@ class dool_cpu_use(dool_cpu):
 
         for name in self.vars:
             if sum(self.set2[name]) > sum(self.set1[name]):
-                self.val[name] = 100.0 - 100.0 * (self.set2[name][2] - self.set1[name][2]) / (sum(self.set2[name]) - sum(self.set1[name]))
+                self.val[name] = (100.0 - 100.0 * (self.set2[name][2] - self.set1[name][2]) / 
+                    (sum(self.set2[name]) - sum(self.set1[name])))
             else:
                 self.val[name] = 0
 #                    print("Error: tick problem detected, this should never happen !", file=sys.stderr)
@@ -898,7 +902,8 @@ class dool_cpu_adv(dool_cpu):
         for name in self.vars:
             for i in list(range(self.cols)):
                 if sum(self.set2[name]) > sum(self.set1[name]):
-                    self.val[name][i] = 100.0 * (self.set2[name][i] - self.set1[name][i]) / (sum(self.set2[name]) - sum(self.set1[name]))
+                    self.val[name][i] = (100.0 * (self.set2[name][i] - self.set1[name][i]) /
+                        (sum(self.set2[name]) - sum(self.set1[name])))
                 else:
                     self.val[name][i] = 0
 #                    print("Error: tick problem detected, this should never happen !", file=sys.stderr)
@@ -1225,7 +1230,8 @@ class dool_mem(dool):
                 adv_val[name] = int(l[1]) * 1024.0
 
         # Original math
-        #self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
+        # self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - \
+        #     self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
 
         # New math that is closer to the `free` output
         self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Cached'] - adv_val['SReclaimable']
@@ -2641,7 +2647,8 @@ def main():
         shell = os.getenv('XTERM_SHELL')
         term = os.getenv('TERM')
         if shell == '/bin/bash' and term and re.compile('(screen*|xterm*)').match(term):
-            sys.stdout.write('\033]0;(%s@%s) %s %s\007' % (user, hostname.split('.')[0], os.path.basename(sys.argv[0]), ' '.join(op.args)))
+            sys.stdout.write('\033]0;(%s@%s) %s %s\007' %
+                    (user, hostname.split('.')[0], os.path.basename(sys.argv[0]), ' '.join(op.args)))
 
     ### Check terminal capabilities
     if op.color == None:
@@ -2667,7 +2674,8 @@ def main():
 
         run_cmd = ' '.join(sys.argv)
 
-        header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' % time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
+        header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' %
+                time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
         outputfile.write(char['sep'].join(header))
 
     ### Create pidfile
@@ -2882,9 +2890,11 @@ def perform(update):
             if op.debug == 1:
                 sys.stdout.write('%s%6.2fms%s' % (theme['roundtrip'], totaltime / step, theme['input']))
             elif op.debug == 2:
-                sys.stdout.write('%s%6.2f %s%d:%d%s' % (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, theme['input']))
+                sys.stdout.write('%s%6.2f %s%d:%d%s' %
+                        (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, theme['input']))
             elif op.debug > 2:
-                sys.stdout.write('%s%6.2f %s%d:%d:%d%s' % (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, update, theme['input']))
+                sys.stdout.write('%s%6.2f %s%d:%d:%d%s' %
+                        (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, update, theme['input']))
 
         if missed > 0:
 #            sys.stdout.write(' '+theme['error']+'= warn =')
