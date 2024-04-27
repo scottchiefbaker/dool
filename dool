@@ -302,7 +302,7 @@ class Options:
         needs_time_added = ('time' not in self.plugins) and (('--more' in opt_keys) or ('--all' in opt_keys) or (plugin_defaults))
 
         if needs_time_added:
-            self.plugins.append('time');
+            self.plugins.append('time')
 
         try:
             if len(args) > 0: self.delay = int(args[0])
@@ -756,7 +756,7 @@ class dool:
                 for j, val in enumerate(self.val[name]):
                     # If this is a bytes value and we have bits enabled we need to convert
                     if ctype == 'b' and op.bits:
-                        val *= 8.0;
+                        val *= 8.0
 
                     line = line + printcsv(val)
                     if j + 1 != len(self.val[name]):
@@ -782,7 +782,7 @@ class dool_aio(dool):
         self.nick  = ('#aio',)
         self.vars  = ('aio',)
         self.type  = 'd'
-        self.width = 5;
+        self.width = 5
         self.open('/proc/sys/fs/aio-nr')
 
     def extract(self):
@@ -1959,7 +1959,7 @@ def proc_readlines(filename):
     ### Implemented linecache (for top-plugins)
     i = 1
     while True:
-        line = linecache.getline(filename, i);
+        line = linecache.getline(filename, i)
         if not line: break
         yield line
         i += 1
@@ -1972,7 +1972,7 @@ def proc_splitlines(filename, sep=None):
     ### Implemented linecache (for top-plugins)
     i = 1
     while True:
-        line = linecache.getline(filename, i);
+        line = linecache.getline(filename, i)
         if not line: break
         yield line.split(sep)
         i += 1
@@ -2115,7 +2115,7 @@ def devel_log(msg):
        time_diff = 0
 
     log_line = '%s %4d ms: %s\n' % (time_str, time_diff, msg.strip())
-    DEBUG_FH.write(log_line);
+    DEBUG_FH.write(log_line)
 
     # Save the time of this call for the next call
     DEBUG_LAST = xtime
@@ -2854,7 +2854,7 @@ def perform(update):
                 newline = '\n' + ansi['reset'] + ansi['clearline']
             ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['clearline'] + ansi['column_zero'];
+                newline = ansi['clearline'] + ansi['column_zero']
 
         ### Display header
         if showheader:
