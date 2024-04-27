@@ -358,7 +358,7 @@ class Options:
         external = []
 
         for name in plugin_names:
-            path   = plugin_details[name]['file']   # Path to plugin file
+            path   = plugin_details[name]['file']   # Path to plugin file # noqa F841
             params = plugin_details[name]['params'] # Plugin needs CLI params
             ptype  = plugin_details[name]['type']   # builtin or exteral
 
@@ -373,7 +373,7 @@ class Options:
                     external.append(name + '=')
 
             else:
-                param_str = 'no'
+                param_str = 'no' # noqa F841
 
                 if ptype == 'builtin':
                     builtin.append(name)
@@ -2532,7 +2532,6 @@ def get_plugin_details():
 
     # The external `.py` plugins
     remod     = re.compile('.+/dool__?(.+).py$')
-    external  = []
     for path in pluginpath:
         for filename in glob.glob(path + '/dool_*.py'):
             plugin_name = remod.match(filename).group(1)
@@ -2564,7 +2563,6 @@ def show_plugins():
 
     for name in plugin_names:
         ptype    = plugin_details[name]['type']
-        params   = plugin_details[name]['params']
         filename = plugin_details[name]['file']
         path     = os.path.dirname(filename)
 
@@ -3056,7 +3054,7 @@ def __main():
             main()
 
     # This should handle catching CTRL + C and finalizing the output
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         if op.update:
             sys.stdout.write('\n')
 
