@@ -40,7 +40,7 @@ import sys
 import time
 import signal
 
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 
 __version__ = '1.3.2'
 
@@ -483,9 +483,9 @@ count is the number of updates to display before exiting (default: unlimited)
 
 ### START STATS DEFINITIONS ###
 class dool:
-    vars   = None
-    name   = None
-    nick   = None
+    vars: Collection[str] = None # type: ignore
+    name: str | list[str] = None # type: ignore
+    nick: Collection[str, ...] = None # type: ignore
     type   = 'f'
     types  = ()
     width  = 5
@@ -496,10 +496,12 @@ class dool:
     #val    = {}
     #set1   = {}
     #set2   = {}
+    fd: list[typing.TextIO]
+    discovered: list[str]
 
     def prepare(self):
         if callable(self.discover):
-            self.discover = self.discover()
+            self.discovered = self.discover() # type: ignore
         if callable(self.vars):
             self.vars = self.vars()
         if not self.vars:
@@ -513,6 +515,7 @@ class dool:
 
         self.val = {}; self.set1 = {}; self.set2 = {}
         if self.struct: ### Plugin API version 2
+            assert isinstance(self.vars, list)
             for name in self.vars + [ 'total', ]:
                 self.val[name] = self.struct
                 self.set1[name] = self.struct
@@ -521,6 +524,7 @@ class dool:
             for name in self.vars:
                 self.val[name] = self.set1[name] = self.set2[name] = 0
         else: ### Plugin API version 1
+            assert isinstance(self.vars, list)
             for name in self.vars + [ 'total', ]:
                 self.val[name] = list(range(self.cols))
                 self.set1[name] = list(range(self.cols))
@@ -539,10 +543,8 @@ class dool:
                 if fd:
                     self.file.append(filename)
                     self.fd.append(fd)
-            except:
-                pass
-        if not self.fd:
-            raise Exception('Cannot open file %s' % filename)
+            except Exception:
+                raise Exception('Cannot open file %s' % filename)
 
     def readlines(self):
         "Return lines from any file descriptor"
@@ -685,20 +687,20 @@ class dool:
 #            raise Exception, 'File %s does not exist' % self.fd
         if not self.vars:
             raise Exception('No objects found, no stats available')
-        if not self.discover:
+        if not self.discovered:
             raise Exception('No objects discovered, no stats available')
         if self.colwidth():
             return True
         raise Exception('Unknown problem, please report')
 
-    def discover(self, *objlist):
-        return True
+    def discover(self, *objlist) -> list[str]:
+        return True # type: ignore
 
     def show(self):
         "Display stat results"
         line = ''
         if hasattr(self, 'output'):
-            return cprint(self.output, self.type, self.width, self.scale)
+            return cprint(self.output, self.type, self.width, self.scale) # type: ignore
 
         for i, name in enumerate(self.vars):
             if i < len(self.types):
@@ -806,7 +808,7 @@ class dool_cpu(dool):
         for item in objlist: ret.append(item)
         return ret
 
-    def vars(self):
+    def vars(self) -> list[str]:
         ret = []
         if op.cpulist and 'all' in op.cpulist:
             varlist = []
@@ -820,7 +822,7 @@ class dool_cpu(dool):
         else:
             varlist = ('total',)
         for name in varlist:
-            if name in self.discover + ['total']:
+            if name in self.discovered + ['total']:
                 ret.append(name)
         return ret
 
@@ -926,7 +928,7 @@ class dool_disk(dool):
 
         return ret
 
-    def vars(self):
+    def vars(self) -> list[str]:
         ret = []
 
         if op.disklist:
@@ -938,14 +940,14 @@ class dool_disk(dool):
             varlist = ('total',)
         else:
             varlist = []
-            for name in self.discover:
+            for name in self.discovered:
                 if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices(): continue
                 varlist.append(name)
 #           if len(varlist) > 2: varlist = varlist[0:2]
             varlist.sort()
         for name in varlist:
-            if name in self.discover + ['total'] or name in op.diskset:
+            if name in self.discovered + ['total'] or name in op.diskset:
                 ret.append(name)
         return ret
 
@@ -1061,18 +1063,18 @@ class dool_int(dool):
 #               return True
 #       return False
 
-    def vars(self):
+    def vars(self) -> list[str]:
         ret = []
         if op.intlist:
             varlist = op.intlist
         else:
-            varlist = self.discover
+            varlist = self.discovered
             for name in varlist:
                 if name in ('0', '1', '2', '8', 'NMI', 'LOC', 'MIS', 'CPU0'):
                     varlist.remove(name)
             if not op.full and len(varlist) > 3: varlist = varlist[-3:]
         for name in varlist:
-            if name in self.discover + ['total',]:
+            if name in self.discovered + ['total',]:
                 ret.append(name)
             elif name.lower() in self.intmap:
                 ret.append(self.intmap[name.lower()])
@@ -1113,7 +1115,7 @@ class dool_io(dool):
             raise Exception("No suitable block devices found to monitor")
         return ret
 
-    def vars(self):
+    def vars(self) -> list[str]:
         ret = []
         if op.disklist:
             varlist = op.disklist
@@ -1121,14 +1123,14 @@ class dool_io(dool):
             varlist = ('total',)
         else:
             varlist = []
-            for name in self.discover:
+            for name in self.discovered:
                 if DOOL_DISKFILTER.match(name): continue
                 if name not in blockdevices(): continue
                 varlist.append(name)
 #           if len(varlist) > 2: varlist = varlist[0:2]
             varlist.sort()
         for name in varlist:
-            if name in self.discover + ['total'] or name in op.diskset:
+            if name in self.discovered + ['total'] or name in op.diskset:
                 ret.append(name)
         return ret
 
@@ -1263,18 +1265,18 @@ class dool_net(dool):
         for item in objlist: ret.append(item)
         return ret
 
-    def vars(self):
+    def vars(self) -> list[str]:
         ret = []
         if op.netlist:
             varlist = op.netlist
         elif not op.full:
             varlist = ('total',)
         else:
-            varlist = self.discover
+            varlist = self.discovered
 #           if len(varlist) > 2: varlist = varlist[0:2]
             varlist.sort()
         for name in varlist:
-            if name in self.discover + ['total', 'lo']:
+            if name in self.discovered + ['total', 'lo']:
                 ret.append(name)
         if not ret:
             raise Exception("No suitable network interfaces found to monitor")
@@ -1412,18 +1414,18 @@ class dool_swap(dool):
         for item in objlist: ret.append(item)
         return ret
 
-    def vars(self):
+    def vars(self) -> list[str]:
         ret = []
         if op.swaplist:
             varlist = op.swaplist
         elif not op.full:
             varlist = ('total',)
         else:
-            varlist = self.discover
+            varlist = self.discovered
 #           if len(varlist) > 2: varlist = varlist[0:2]
             varlist.sort()
         for name in varlist:
-            if name in self.discover + ['total']:
+            if name in self.discovered + ['total']:
                 ret.append(name)
         if not ret:
             raise Exception("No suitable swap devices found to monitor")
