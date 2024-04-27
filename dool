@@ -1865,7 +1865,7 @@ def dopen(filename) -> typing.TextIO:
 def dclose(filename):
     "Close an open file and remove file descriptor from list"
     global fds
-    if not 'fds' in globals(): fds = {}
+    if 'fds' not in globals(): fds = {}
     if filename in fds:
         fds[filename].close()
         del(fds[filename])
@@ -2305,7 +2305,7 @@ def init_term():
     termsize = None, 0
     try:
         global fcntl, struct, termios
-        import fcntl, struct, termios
+        import fcntl, struct, termios # noqa E401
         termios.TIOCGWINSZ
     except (ImportError, AttributeError):
         try:
@@ -2650,7 +2650,7 @@ def main():
                     (user, hostname.split('.')[0], os.path.basename(sys.argv[0]), ' '.join(op.args)))
 
     ### Check terminal capabilities
-    if op.color == None:
+    if op.color is None:
         op.color = get_term_color()
 
     if not op.use_ascii:
