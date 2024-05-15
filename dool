@@ -38,6 +38,7 @@ import resource
 import sched
 import sys
 import time
+import typing
 import signal
 
 from collections.abc import Sequence
@@ -113,7 +114,7 @@ class Options:
         ]
 
         param_opts = [
-            'diskset=' , 'output='    , 'pidfile='
+            'diskset=' , 'output='    , 'pidfile=',
         ]
 
         all_opts = (long_opts + param_opts + plugin_opt_list)
@@ -146,14 +147,14 @@ class Options:
             elif opt in ['-D']:
                 self.disklist = arg.split(',')
             elif opt in ['--diskset']:
-                parts   = arg.split(":", 1)
-                name    = list_item_default(parts, 0, "Unknown")
-                members = list_item_default(parts, 1, "").split(",")
+                parts   = arg.split(':', 1)
+                name    = list_item_default(parts, 0, 'Unknown')
+                members = list_item_default(parts, 1, '').split(',')
 
                 if (len(parts) < 2 or len(members) < 1):
-                    print("Error parsing diskset...\n")
-                    print("Format : diskset_name:dev1,dev2,dev3,etc...")
-                    print("Example: --diskset os_drives:sda,sdb")
+                    print('Error parsing diskset...\n')
+                    print('Format : diskset_name:dev1,dev2,dev3,etc...')
+                    print('Example: --diskset os_drives:sda,sdb')
 
                 # We convert /dev/sda and symlinks to their raw device name that is
                 # found in /proc/diskstats
@@ -193,7 +194,8 @@ class Options:
             elif opt in ['-m']:
                 self.plugins.append('mem')
             elif opt in ['-M', '--mods', '--modules']:
-                print('WARNING: Option %s is deprecated, please use --%s instead' % (opt, ' --'.join(arg.split(','))), file=sys.stderr)
+                print('WARNING: Option %s is deprecated, please use --%s instead' %
+                        (opt, ' --'.join(arg.split(','))), file=sys.stderr)
                 self.plugins += arg.split(',')
             elif opt in ['-n']:
                 self.plugins.append('net')
@@ -294,18 +296,18 @@ class Options:
         if not self.plugins:
             self.plugins    = default_plugins
             plugin_defaults = 1
-            print("Using default plugins: " + ", ".join(self.plugins) + "")
+            print('Using default plugins: ' + ', '.join(self.plugins) + '')
 
         # Append the 'time' plugin to the end for 'more' and 'all'
-        needs_time_added = ('time' not in self.plugins) and (("--more" in opt_keys) or ("--all" in opt_keys) or (plugin_defaults))
+        needs_time_added = ('time' not in self.plugins) and (('--more' in opt_keys) or ('--all' in opt_keys) or (plugin_defaults))
 
         if needs_time_added:
-            self.plugins.append('time');
+            self.plugins.append('time')
 
         try:
             if len(args) > 0: self.delay = int(args[0])
             if len(args) > 1: self.count = int(args[1])
-        except:
+        except ValueError:
             print('dool: incorrect argument, try dool -h for the correct syntax')
             sys.exit(1)
 
@@ -324,7 +326,7 @@ class Options:
     # the plugins themselves are able to read the params manually from the
     # op.opt_params dictionary
     def optional_params(self, args):
-        optional_arguments = ["freespace"]
+        optional_arguments = ['freespace']
         to_remove          = []
 
         # Loop through each of the args
@@ -332,12 +334,12 @@ class Options:
             item      = args[x]
             # Remove leading "--"
             item      = re.sub(r'^--', '', item)
-            next_item = list_item_default(args, x + 1, "")
+            next_item = list_item_default(args, x + 1, '')
 
             # If the item is one of the ones we flagged as optional
             # check to see if it has optional params
             if item in optional_arguments:
-                if not re.match(r"^--", next_item):
+                if not re.match(r'^--', next_item):
                     #print("Removing %s" % next_item)
                     to_remove.append(next_item)
                     self.opt_params[item] = next_item
@@ -356,22 +358,22 @@ class Options:
         external = []
 
         for name in plugin_names:
-            path   = plugin_details[name]['file']   # Path to plugin file
+            path   = plugin_details[name]['file']   # Path to plugin file # noqa F841
             params = plugin_details[name]['params'] # Plugin needs CLI params
             ptype  = plugin_details[name]['type']   # builtin or exteral
 
             if params:
-                param_str = "yes"
+                param_str = 'yes'
 
                 # For getopt we need to add the '=' to the end to indicate
                 # that we need a param
                 if ptype == 'builtin':
-                    builtin.append(name + "=")
+                    builtin.append(name + '=')
                 else:
-                    external.append(name + "=")
+                    external.append(name + '=')
 
             else:
-                param_str = "no"
+                param_str = 'no' # noqa F841
 
                 if ptype == 'builtin':
                     builtin.append(name)
@@ -396,9 +398,9 @@ class Options:
         print('Python %s' % sys.version)
         print()
 
-        color = ""
+        color = ''
         if not get_term_color():
-            color = "no "
+            color = 'no '
         print('Terminal type: %s (%scolor support)' % (os.getenv('TERM'), color))
         rows, cols = get_term_size()
         print('Terminal size: %d lines, %d columns' % (rows, cols))
@@ -539,7 +541,7 @@ class dool:
                 if fd:
                     self.file.append(filename)
                     self.fd.append(fd)
-            except:
+            except Exception:
                 pass
         if not self.fd:
             raise Exception('Cannot open file %s' % filename)
@@ -754,7 +756,7 @@ class dool:
                 for j, val in enumerate(self.val[name]):
                     # If this is a bytes value and we have bits enabled we need to convert
                     if ctype == 'b' and op.bits:
-                        val *= 8.0;
+                        val *= 8.0
 
                     line = line + printcsv(val)
                     if j + 1 != len(self.val[name]):
@@ -780,7 +782,7 @@ class dool_aio(dool):
         self.nick  = ('#aio',)
         self.vars  = ('aio',)
         self.type  = 'd'
-        self.width = 5;
+        self.width = 5
         self.open('/proc/sys/fs/aio-nr')
 
     def extract(self):
@@ -838,12 +840,14 @@ class dool_cpu(dool):
             if len(l) < 9: continue
             for name in self.vars:
                 if l[0] == 'cpu' + name or ( l[0] == 'cpu' and name == 'total' ):
-                    self.set2[name] = ( int(l[1]) + int(l[2]) + int(l[6]) + int(l[7]), int(l[3]), int(l[4]), int(l[5]), int(l[8]) )
+                    self.set2[name] = (int(l[1]) + int(l[2]) + int(l[6]) + int(l[7]),
+                            int(l[3]), int(l[4]), int(l[5]), int(l[8]))
 
         for name in self.vars:
             for i in list(range(self.cols)):
                 if sum(self.set2[name]) > sum(self.set1[name]):
-                    self.val[name][i] = 100.0 * (self.set2[name][i] - self.set1[name][i]) / (sum(self.set2[name]) - sum(self.set1[name]))
+                    self.val[name][i] = (100.0 * (self.set2[name][i] - self.set1[name][i]) /
+                            (sum(self.set2[name]) - sum(self.set1[name])))
                 else:
                     self.val[name][i] = 0
 #                    print("Error: tick problem detected, this should never happen !", file=sys.stderr)
@@ -871,7 +875,8 @@ class dool_cpu_use(dool_cpu):
 
         for name in self.vars:
             if sum(self.set2[name]) > sum(self.set1[name]):
-                self.val[name] = 100.0 - 100.0 * (self.set2[name][2] - self.set1[name][2]) / (sum(self.set2[name]) - sum(self.set1[name]))
+                self.val[name] = (100.0 - 100.0 * (self.set2[name][2] - self.set1[name][2]) / 
+                    (sum(self.set2[name]) - sum(self.set1[name])))
             else:
                 self.val[name] = 0
 #                    print("Error: tick problem detected, this should never happen !", file=sys.stderr)
@@ -898,7 +903,8 @@ class dool_cpu_adv(dool_cpu):
         for name in self.vars:
             for i in list(range(self.cols)):
                 if sum(self.set2[name]) > sum(self.set1[name]):
-                    self.val[name][i] = 100.0 * (self.set2[name][i] - self.set1[name][i]) / (sum(self.set2[name]) - sum(self.set1[name]))
+                    self.val[name][i] = (100.0 * (self.set2[name][i] - self.set1[name][i]) /
+                        (sum(self.set2[name]) - sum(self.set1[name])))
                 else:
                     self.val[name][i] = 0
 #                    print("Error: tick problem detected, this should never happen !", file=sys.stderr)
@@ -922,7 +928,7 @@ class dool_disk(dool):
             ret.append(name)
         for item in objlist: ret.append(item)
         if not ret:
-            raise Exception("No suitable block devices found to monitor")
+            raise Exception('No suitable block devices found to monitor')
 
         return ret
 
@@ -954,7 +960,7 @@ class dool_disk(dool):
         for name in self.vars:
             # Shorten the device name to 5 chars
             short = dev_short_name(name, 5)
-            full  = "dsk/" + short
+            full  = 'dsk/' + short
 
             ret.append(full)
 
@@ -1110,7 +1116,7 @@ class dool_io(dool):
             ret.append(name)
         for item in objlist: ret.append(item)
         if not ret:
-            raise Exception("No suitable block devices found to monitor")
+            raise Exception('No suitable block devices found to monitor')
         return ret
 
     def vars(self):
@@ -1225,7 +1231,8 @@ class dool_mem(dool):
                 adv_val[name] = int(l[1]) * 1024.0
 
         # Original math
-        #self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
+        # self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - \
+        #     self.val['Buffers'] - self.val['Cached'] - adv_val['SReclaimable'] + adv_val['Shmem']
 
         # New math that is closer to the `free` output
         self.val['MemUsed'] = adv_val['MemTotal'] - self.val['MemFree'] - self.val['Cached'] - adv_val['SReclaimable']
@@ -1277,7 +1284,7 @@ class dool_net(dool):
             if name in self.discover + ['total', 'lo']:
                 ret.append(name)
         if not ret:
-            raise Exception("No suitable network interfaces found to monitor")
+            raise Exception('No suitable network interfaces found to monitor')
         return ret
 
     def name(self):
@@ -1404,7 +1411,7 @@ class dool_swap(dool):
             try:
                 int(l[2])
                 int(l[3])
-            except:
+            except ValueError:
                 continue
 #           ret.append(improve(l[0]))
             ret.append(l[0])
@@ -1426,7 +1433,7 @@ class dool_swap(dool):
             if name in self.discover + ['total']:
                 ret.append(name)
         if not ret:
-            raise Exception("No suitable swap devices found to monitor")
+            raise Exception('No suitable swap devices found to monitor')
         return ret
 
     def name(self):
@@ -1434,7 +1441,7 @@ class dool_swap(dool):
 
         # If it's just ONE swap the name is simple: 'swap'
         if (num_swaps == 1):
-            ret = "swap"
+            ret = 'swap'
         # If we have more than one we break them out
         else:
             ret = []
@@ -1518,7 +1525,7 @@ class dool_time(dool):
         self.val['time'] = time.strftime(self.timefmt, time.localtime(starttime))
 
         if op.debug:
-            self.val['time'] += ".%03d" % (round(starttime * 1000 % 1000))
+            self.val['time'] += '.%03d' % (round(starttime * 1000 % 1000))
 
 class dool_udp(dool):
     def __init__(self):
@@ -1635,10 +1642,10 @@ def signal_handler(signum, frame):
     # If we're outputting to the display
     if op.display:
         # Print a couple of spaces to cover up the "^C" that gets printed
-        sys.stdout.write("\b\b        ")
+        sys.stdout.write('\b\b        ')
         # Reset the ANSI colors just in case
         sys.stdout.write(ansi['reset'])
-        sys.stdout.write("\n")
+        sys.stdout.write('\n')
         sys.stdout.flush()
 
     sys.exit(0)
@@ -1655,19 +1662,19 @@ def init_signal_handling():
 
 # Set the ANSI foreground color
 def fg_color(num):
-   ret = "\033[38;5;" + str(num) + "m"
+   ret = '\033[38;5;' + str(num) + 'm'
 
    return ret
 
 # Set the ANSI background color
 def bg_color(num):
-   ret = "\033[48;5;" + str(num) + "m"
+   ret = '\033[48;5;' + str(num) + 'm'
 
    return ret
 
 # Wrap some text in a color and then a reset
 def text_color(num, mystr):
-   ret = "\033[38;5;" + str(num) + "m" + mystr +  "\033[0m"
+   ret = '\033[38;5;' + str(num) + 'm' + mystr +  '\033[0m'
 
    return ret
 
@@ -1835,14 +1842,14 @@ def ticks():
             l = line.split()
             if len(l) < 2: continue
             return float(l[0])
-    except:
+    except Exception:
         for line in dopen('/proc/stat').readlines():
             l = line.split()
             if len(l) < 2: continue
             if l[0] == 'btime':
                 return time.time() - int(l[1])
 
-def dopen(filename):
+def dopen(filename) -> typing.TextIO:
     "Open a file for reuse, if already opened, return file descriptor"
     global fds
     if not os.path.exists(filename):
@@ -1858,7 +1865,7 @@ def dopen(filename):
 def dclose(filename):
     "Close an open file and remove file descriptor from list"
     global fds
-    if not 'fds' in globals(): fds = {}
+    if 'fds' not in globals(): fds = {}
     if filename in fds:
         fds[filename].close()
         del(fds[filename])
@@ -1952,7 +1959,7 @@ def proc_readlines(filename):
     ### Implemented linecache (for top-plugins)
     i = 1
     while True:
-        line = linecache.getline(filename, i);
+        line = linecache.getline(filename, i)
         if not line: break
         yield line
         i += 1
@@ -1965,7 +1972,7 @@ def proc_splitlines(filename, sep=None):
     ### Implemented linecache (for top-plugins)
     i = 1
     while True:
-        line = linecache.getline(filename, i);
+        line = linecache.getline(filename, i)
         if not line: break
         yield line.split(sep)
         i += 1
@@ -2002,7 +2009,7 @@ def snmpget(server, community, oid):
     errorIndication, errorStatus, errorIndex, varBinds = cmdgen.CommandGenerator().getCmd(
         cmdgen.CommunityData('test-agent', community, 0),
         cmdgen.UdpTransportTarget((server, 161)),
-        oid
+        oid,
     )
 #    print('%s -> ind: %s, stat: %s, idx: %s' % (oid, errorIndication, errorStatus, errorIndex))
     for x in varBinds:
@@ -2014,7 +2021,7 @@ def snmpwalk(server, community, oid):
     errorIndication, errorStatus, errorIndex, varBindTable = cmdgen.CommandGenerator().nextCmd(
         cmdgen.CommunityData('test-agent', community, 0),
         cmdgen.UdpTransportTarget((server, 161)),
-        oid
+        oid,
     )
 #    print('%s -> ind: %s, stat: %s, idx: %s' % (oid, errorIndication, errorStatus, errorIndex))
     for x in varBindTable:
@@ -2089,16 +2096,16 @@ def devel_log(msg):
 
     # If the filehandle isn't already open, we open it
     if not DEBUG_FH:
-        log_file = "/tmp/dool-devel.log"
+        log_file = '/tmp/dool-devel.log'
         print("Writing devel log: '%s'" % log_file)
-        DEBUG_FH = open(log_file, "w", 1)
+        DEBUG_FH = open(log_file, 'w', 1)
 
     xtime    = time.time()
     time_fmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
     time_str = time.strftime(time_fmt, time.localtime())
 
     # Append MS the ghetto way
-    time_ms  = "." + str(round(xtime * 1000 % 1000))
+    time_ms  = '.' + str(round(xtime * 1000 % 1000))
     time_str += time_ms
 
     # Calculate the ms since the previous call
@@ -2107,8 +2114,8 @@ def devel_log(msg):
     else:
        time_diff = 0
 
-    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg.strip())
-    DEBUG_FH.write(log_line);
+    log_line = '%s %4d ms: %s\n' % (time_str, time_diff, msg.strip())
+    DEBUG_FH.write(log_line)
 
     # Save the time of this call for the next call
     DEBUG_LAST = xtime
@@ -2298,13 +2305,13 @@ def init_term():
     termsize = None, 0
     try:
         global fcntl, struct, termios
-        import fcntl, struct, termios
+        import fcntl, struct, termios # noqa E401
         termios.TIOCGWINSZ
-    except:
+    except (ImportError, AttributeError):
         try:
             curses.setupterm()
             curses.tigetnum('lines'), curses.tigetnum('cols')
-        except:
+        except Exception:
             pass
         else:
             termsize = None, 2
@@ -2327,7 +2334,7 @@ def get_term_size():
                 return curses.tigetnum('lines'), curses.tigetnum('cols')
             else:
                 termsize = (int(os.environ['LINES']), int(os.environ['COLUMNS']))
-        except:
+        except Exception:
             termsize = 25, 80
     return termsize
 
@@ -2343,7 +2350,7 @@ def get_term_color():
         except ImportError:
             print('Color support is disabled as python-curses is not installed.', file=sys.stderr)
             return False
-        except:
+        except Exception:
             print('Color support is disabled as curses does not find terminal "%s".' % os.getenv('TERM'), file=sys.stderr)
             return False
         if colors == 256:
@@ -2376,20 +2383,20 @@ def getnamebypid(pid, name):
             ret = basename(cmdline[-2])
             if ret.startswith('-'): raise
 
-        is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
+        is_vm = 'kvm' in cmdline[0] or 'qemu' in cmdline[0]
         if is_vm:
             # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
             # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
 
-            cmd_str = " ".join(cmdline)
-            xmatch  = re.search("-name (.+?),", cmd_str)
+            cmd_str = ' '.join(cmdline)
+            xmatch  = re.search('-name (.+?),', cmd_str)
 
             if xmatch:
                 ret = xmatch.group(1)
-                ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+                ret = ret.replace('guest=', '') # Hack to remove guest= for LibVirt+KVM
 
         if not ret: raise
-    except:
+    except Exception:
         ret = basename(name)
 
     return ret
@@ -2399,7 +2406,7 @@ def getcpunr():
 
     # POSIX
     try:
-        return os.sysconf("SC_NPROCESSORS_ONLN")
+        return os.sysconf('SC_NPROCESSORS_ONLN')
     except ValueError:
         pass
 
@@ -2427,8 +2434,8 @@ def getcpunr():
                 cpunr += 1
         if cpunr > 0:
             return cpunr
-    except:
-        raise Exception("Problem finding number of CPUs in system.")
+    except Exception:
+        raise Exception('Problem finding number of CPUs in system.')
 
 # Find all the block devices in /sys/block
 def blockdevices():
@@ -2514,7 +2521,7 @@ def get_plugin_details():
             name        = plugin_name.replace('_', '-')
 
             # If the function name is dool__ that means it needs params
-            needs_params = function_name.startswith("dool__")
+            needs_params = function_name.startswith('dool__')
 
             obj           = {}
             obj['file']   = function_name
@@ -2525,7 +2532,6 @@ def get_plugin_details():
 
     # The external `.py` plugins
     remod     = re.compile('.+/dool__?(.+).py$')
-    external  = []
     for path in pluginpath:
         for filename in glob.glob(path + '/dool_*.py'):
             plugin_name = remod.match(filename).group(1)
@@ -2535,7 +2541,7 @@ def get_plugin_details():
 
             # If the filename has 'dool__' in it that means it needs params
             basename     = os.path.basename(filename)
-            needs_params = basename.startswith("dool__")
+            needs_params = basename.startswith('dool__')
 
             obj           = {}
             obj['file']   = filename
@@ -2557,7 +2563,6 @@ def show_plugins():
 
     for name in plugin_names:
         ptype    = plugin_details[name]['type']
-        params   = plugin_details[name]['params']
         filename = plugin_details[name]['file']
         path     = os.path.dirname(filename)
 
@@ -2588,7 +2593,7 @@ def show_plugins():
         plugins = []
         for name in external:
             pfile = plugin_details[name]['file']
-            pdir  = os.path.dirname(pfile) + "/"
+            pdir  = os.path.dirname(pfile) + '/'
 
             #print("%s = %s" % (pdir,path))
 
@@ -2621,14 +2626,14 @@ def main():
     global totlist, inittime
     global update, missed
 
-    devel_log("Dool startup")
+    devel_log('Dool startup')
 
     # Handle signals like CTRL+C
     init_signal_handling()
 
     cpunr  = getcpunr()
     hz     = os.sysconf('SC_CLK_TCK')
-    maxint = float("inf")
+    maxint = float('inf')
 
     ownpid   = str(os.getpid())
     pagesize = resource.getpagesize()
@@ -2641,10 +2646,11 @@ def main():
         shell = os.getenv('XTERM_SHELL')
         term = os.getenv('TERM')
         if shell == '/bin/bash' and term and re.compile('(screen*|xterm*)').match(term):
-            sys.stdout.write('\033]0;(%s@%s) %s %s\007' % (user, hostname.split('.')[0], os.path.basename(sys.argv[0]), ' '.join(op.args)))
+            sys.stdout.write('\033]0;(%s@%s) %s %s\007' %
+                    (user, hostname.split('.')[0], os.path.basename(sys.argv[0]), ' '.join(op.args)))
 
     ### Check terminal capabilities
-    if op.color == None:
+    if op.color is None:
         op.color = get_term_color()
 
     if not op.use_ascii:
@@ -2665,9 +2671,10 @@ def main():
         header = ('"Host:"','"%s"' % hostname,'','','','"User:"','"%s"\n' % user)
         outputfile.write(char['sep'].join(header))
 
-        run_cmd = " ".join(sys.argv)
+        run_cmd = ' '.join(sys.argv)
 
-        header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' % time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
+        header = ('"Cmdline:"','"' + run_cmd + '"','','','','"Date:"','"%s"\n' %
+                time.strftime('%d %b %Y %H:%M:%S %Z', time.localtime()))
         outputfile.write(char['sep'].join(header))
 
     ### Create pidfile
@@ -2732,7 +2739,7 @@ def main():
 
             continue
 
-        except:
+        except Exception:
             print('Module %s caused unknown exception' % pluginfile, file=sys.stderr)
 
         linewidth = linewidth + plug.statwidth() + 1
@@ -2762,7 +2769,7 @@ def main():
         # The time the next update will run
         update = update + interval
         linecache.clearcache()
-        devel_log("Loop #%d" % update)
+        devel_log('Loop #%d' % update)
 
     print()
 
@@ -2845,7 +2852,7 @@ def perform(update):
                 newline = '\n' + ansi['reset'] + ansi['clearline']
             ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
-                newline = ansi['clearline'] + ansi['column_zero'];
+                newline = ansi['clearline'] + ansi['column_zero']
 
         ### Display header
         if showheader:
@@ -2882,9 +2889,11 @@ def perform(update):
             if op.debug == 1:
                 sys.stdout.write('%s%6.2fms%s' % (theme['roundtrip'], totaltime / step, theme['input']))
             elif op.debug == 2:
-                sys.stdout.write('%s%6.2f %s%d:%d%s' % (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, theme['input']))
+                sys.stdout.write('%s%6.2f %s%d:%d%s' %
+                        (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, theme['input']))
             elif op.debug > 2:
-                sys.stdout.write('%s%6.2f %s%d:%d:%d%s' % (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, update, theme['input']))
+                sys.stdout.write('%s%6.2f %s%d:%d:%d%s' %
+                        (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, update, theme['input']))
 
         if missed > 0:
 #            sys.stdout.write(' '+theme['error']+'= warn =')
@@ -2899,27 +2908,27 @@ def list_item_default(mylist, num, default):
         return mylist[num]
 
 # Krumo style debug printing
-def k(obj, prefix = "DEBUG"):
+def k(obj, prefix = 'DEBUG'):
     import inspect
 
     # https://stackoverflow.com/questions/6810999/how-to-determine-file-function-and-line-number
     x    = inspect.stack()[1]
     info = inspect.getframeinfo(x[0])
 
-    line_str = "#" + str(info.lineno)
+    line_str = '#' + str(info.lineno)
     myfile   = os.path.basename(__file__)
 
-    sys.stdout.write("%s %s @ %s: " % (prefix, text_color(228, myfile), text_color(117,line_str)))
+    sys.stdout.write('%s %s @ %s: ' % (prefix, text_color(228, myfile), text_color(117,line_str)))
     print(obj)
 
 # Krumo print and die
 def kd(obj):
-    k(obj, "DIED")
+    k(obj, 'DIED')
     sys.exit(99)
 
 # Read in a full file (or optional only X bytes)
 def file_slurp(filename, size = -1):
-    ret = ""
+    ret = ''
 
     try:
         fd  = open(filename)
@@ -2953,13 +2962,13 @@ def dev_short_name(xinput, xlen = 4):
         # This gets all the a-z chars up to the first digit
         # Then it gets any sequential digits followed by a
         # non-digit separator, and any remaining digits
-        x = re.match(r"([a-zA-Z]+).*?(\d+)(.*\D.*?(\d+))?", xinput)
+        x = re.match(r'([a-zA-Z]+).*?(\d+)(.*\D.*?(\d+))?', xinput)
 
         # If we match the regexp we build a shorter string
         if x:
             let  = x.group(1)
             num1 = x.group(2)
-            num2 = x.group(4) or ""
+            num2 = x.group(4) or ''
 
             # Concate the two number parts together
             num_part = num1 + num2
@@ -3045,7 +3054,7 @@ def __main():
             main()
 
     # This should handle catching CTRL + C and finalizing the output
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         if op.update:
             sys.stdout.write('\n')
 

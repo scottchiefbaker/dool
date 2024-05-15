@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 ### Example2: simple sub-second monitor (ministat)
 

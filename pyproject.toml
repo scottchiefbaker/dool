@@ -19,3 +19,27 @@ dool = "dool:__main"
 
 [tool.flit.sdist]
 exclude = [".github/*", ".gitignore", "docs/*", "examples/*", "install.py", "packaging/*", "Makefile"]
+
+[tool.ruff]
+line-length = 130
+[tool.ruff.lint]
+select = [
+    'E', 'F',
+    'YTT', 'COM', 'T10', 'ISC', 'G', 'PIE', 'Q', 'RSE',
+    'PLC', 'PLE',
+    'RUF',
+]
+ignore = [
+    'E701', # multiple-statements-on-one-line-colon
+    'E702', # multiple-statements-on-one-line-semicolon
+    'E741', # ambiguous-variable-name
+    'F821', # undefined-name
+    'COM819', # prohibited-trailing-comma
+    'RUF005', # collection-literal-concatenation
+]
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = 'double'
+inline-quotes = 'single'
+multiline-quotes = 'single'
+[tool.ruff.lint.isort]
+lines-after-imports = 1
