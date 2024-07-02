@@ -46,10 +46,11 @@ Dool ships with many plug-ins to configure the output to your taste.
 
 A list of available plug-ins are available when you run `dool --version`
 
-### 🗒️ Note:
+### 🎨 Colors:
 
-Dool requires a 256 color compatible terminal. Most modern terminal emulators
-support this automatically.
+Dool expects a 256 color compatible terminal. Most modern terminal emulators
+support this automatically. A `--color16` option is available if you only have
+a 16 color terminal.
 
 ### 📈 Bits vs Bytes:
 
