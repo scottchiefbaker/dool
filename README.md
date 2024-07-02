@@ -1,7 +1,6 @@
 # 💡 Dool
 
 Dool is a Python3 compatible fork of [Dstat](https://github.com/dagwieers/dstat).
-
 After Dag Wieers ceased development of Dstat I forked the project to continue
 development.
 
@@ -45,7 +44,7 @@ Dool ships with many plug-ins to configure the output to your taste.
 	dool --disk -D total,sda,sdd   # Show the total disk IO, and /dev/sda and /dev/sdd
 	dool --net -N eth0,eth1        # Show the network traffic for eth0 and eth1
 
-A list of available plug-ins are available if you run `dool --version`
+A list of available plug-ins are available when you run `dool --version`
 
 ### 🗒️ Note:
 
@@ -55,7 +54,7 @@ support this automatically.
 ### 📈 Bits vs Bytes:
 
 One of the changes in `dool` is measurement of network and disk bandwidth in
-*bits* instead of bytes. This can be confusing if you're used to seeing the
+*bits* instead of bytes. This can be confusing if you're used to seeing
 lower numbers in `dstat`. If you'd rather see bandwidth reported in bytes you
 can pass the `--bytes` option.
 
@@ -67,8 +66,8 @@ can pass the `--bytes` option.
 
 ### 🌿 Pull Requests and Branches
 
-The latest stable release (plus bugfixes) will live on the `master` branch,
-and development of new features will occur on the `next` branch. Please have
+The latest stable release (plus bugfixes) will live on the `master` branch.
+Development of new features will occur on the `next` branch. Please have
 pull requests target the `next` branch.
 
 Various feature/bug branches may come and go as we work on more complex
