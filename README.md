@@ -73,3 +73,11 @@ pull requests target the `next` branch.
 
 Various feature/bug branches may come and go as we work on more complex
 functionality, but those can be safely ignored.
+
+### 👨 Team
+
+| Username         | Role                    |
+| ---------------- | ----------------------- |
+| @scottchiefbaker | Primary author          |
+| @dagwieers       | Original `dstat` author |
+| @raylu           | Pip release manager     |
