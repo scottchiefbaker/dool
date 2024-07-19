@@ -21,7 +21,7 @@ jobs:
     
     # build the package with flit
     - name: Build package
-      run: pip install build && mv dool dool.py && python -m build
+      run: pip install build && packaging/pypi.py
 
     # publish with https://docs.pypi.org/trusted-publishers/
     - name: Publish package to PyPI

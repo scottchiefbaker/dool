@@ -15,7 +15,8 @@ dynamic = ["version", "description"]
 Home = "https://github.com/scottchiefbaker/dool"
 
 [project.scripts]
-dool = "dool:__main"
+dool = "dool:__main__.__main"
 
 [tool.flit.sdist]
+include = ["dool/*"]
 exclude = [".github/*", ".gitignore", "docs/*", "examples/*", "install.py", "packaging/*", "Makefile"]
