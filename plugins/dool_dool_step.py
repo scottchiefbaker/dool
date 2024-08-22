@@ -14,7 +14,7 @@ class dool_plugin(dool):
         self.scale = 10
 
     def extract(self):
-        self.val['stp']  = step
+        self.val['stp'] = step
         self.val['dly'] = op.delay
 
         if op.count == -1:
