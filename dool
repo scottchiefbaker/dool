@@ -2858,10 +2858,15 @@ def perform(update):
         ### Calculate all objects (visible, invisible)
         line = newline
         oline = ''
+
+        # Loop through each param section and build the output string
         for o in totlist:
             o.extract()
+
             if o in vislist:
                 line = line + o.show() + o.showend(totlist, vislist)
+
+            # Prep the line for the CSV file
             if op.output and step == op.delay:
                 oline = oline + o.showcsv() + o.showcsvend(totlist, vislist)
 
