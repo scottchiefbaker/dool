@@ -103,7 +103,6 @@ class Options:
         if not sys.stdout.isatty():
             self.color  = False
             self.header = False
-            self.update = False
 
         long_opts = [
             'all'      , 'all-plugins', 'ascii'   , 'bits'   , 'bw'     , 'bytes'  , 'black-on-white', 'color'  ,
