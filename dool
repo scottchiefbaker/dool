@@ -2892,7 +2892,7 @@ def perform(update):
                 sys.stdout.write('%s%6.2f %s%d:%d:%d%s' % (theme['roundtrip'], totaltime / step, theme['debug'], loop, step, update, theme['input']))
 
         if missed > 0:
-#            sys.stdout.write(' '+theme['error']+'= warn =')
+            # sys.stdout.write(' '+theme['error']+'= warn =')
             sys.stdout.write(' ' + theme['error'] + 'missed ' + str(missed+1) + ' ticks' + theme['input'])
             missed = 0
 
