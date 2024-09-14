@@ -103,6 +103,7 @@ class Options:
         if not sys.stdout.isatty():
             self.color  = False
             self.header = False
+            self.update = False
 
         long_opts = [
             'all'      , 'all-plugins', 'ascii'   , 'bits'   , 'bw'     , 'bytes'  , 'black-on-white', 'color'  ,
@@ -2845,6 +2846,8 @@ def perform(update):
             ### If we're in a delay we just go to column 0 and overwrite what's there
             elif loop != 0:
                 newline = ansi['clearline'] + ansi['column_zero'];
+        elif not op.update:
+            newline = "\n"
 
         ### Display header
         if showheader:
