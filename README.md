@@ -32,7 +32,7 @@ Dark mode (default)
 Light mode
 ![Dool Light](https://user-images.githubusercontent.com/3429760/192389235-9cf5e4a5-cec2-42d9-a116-bcd9dd4e688d.png)
 
-### 🧩 Plugins:
+### 🔌 Plugins:
 
 Dool ships with many plug-ins to configure the output to your taste.
 
