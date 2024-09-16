@@ -1,14 +1,10 @@
-# 💡 Dool
-
-Dool is a Python3 compatible fork of [Dstat](https://github.com/dagwieers/dstat).
-After Dag Wieers ceased development of Dstat I forked the project to continue
-development.
-
 ## 🔍 What is Dool?
 
-Dool is a command line tool to monitor many aspects of your system: CPU,
+Dool is a command line tool to monitor many aspects of your Linux system: CPU,
 Memory, Network, Load Average, etc.  It also includes a robust plug-in
 architecture to allow monitoring other system metrics.
+
+Dool is a Python3 compatible fork of [Dstat](https://github.com/dagwieers/dstat).
 
 ### 📦 Installation:
 
