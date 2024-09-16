@@ -52,8 +52,8 @@ a 16 color terminal.
 
 One of the changes in `dool` is measurement of network and disk bandwidth in
 *bits* instead of bytes. This can be confusing if you're used to seeing
-lower numbers in `dstat`. If you'd rather see bandwidth reported in bytes you
-can pass the `--bytes` option.
+lower numbers in `dstat`. If you would rather see bandwidth reported in bytes
+you can use the `--bytes` option.
 
 ### 🧰 Other tools similar to Dool:
 
