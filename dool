@@ -1116,7 +1116,11 @@ class dool_io(dool):
     def vars(self):
         ret = []
         if op.disklist:
-            varlist = op.disklist
+            varlist = []
+            for x in op.disklist:
+                dev = get_dev_name(x)
+                varlist.append(dev)
+
         elif not op.full:
             varlist = ('total',)
         else:
