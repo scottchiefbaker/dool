@@ -201,7 +201,7 @@ class Options:
                 self.netlist = arg.split(',')
             elif opt in ['-p']:
                 self.plugins.append('proc')
-            elif opt in ['-r']:
+            elif opt in ['-r', '--io']:
                 self.plugins.append('io')
             elif opt in ['-s']:
                 self.plugins.append('swap')
