@@ -33,6 +33,7 @@ import sched
 import sys
 import time
 import signal
+import sysconfig
 
 from collections.abc import Sequence
 
@@ -41,6 +42,7 @@ theme = { 'default': '' }
 pluginpath = [
     os.path.expanduser('~/.dool/'),                              # home + /.dool/
     os.path.abspath(os.path.dirname(sys.argv[0])) + '/plugins/', # binary path + /plugins/
+    sysconfig.get_path('purelib') + '/dool/plugins/',
     '/usr/share/dool/',
     '/usr/local/share/dool/',
 ]
