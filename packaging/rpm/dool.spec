@@ -48,7 +48,7 @@ never expected.
 
 %files
 %defattr(-, root, root, 0755)
-%doc AUTHORS ChangeLog LICENSE README.md docs/*.html docs/*.adoc examples/
+%doc AUTHORS ChangeLog LICENSE README.md docs/*.html docs/*.adoc
 %doc %{_mandir}/man1/dool.1*
 %{_bindir}/dool
 %{_datadir}/dool/
