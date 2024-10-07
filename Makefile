@@ -56,4 +56,4 @@ snap:
 	cd packaging/snap/; snapcraft
 
 deb:
-	dpkg-buildpackage -us -uc
+	cd packaging/; dpkg-buildpackage -us -uc
