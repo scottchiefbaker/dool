@@ -1,6 +1,6 @@
 = dool(1)
 Scott Baker <scott@perturb.org>
-v1.1.0, June 2023
+v1.3.0, October 2024
 
 == NAME
 dool - versatile tool for generating system resource statistics
