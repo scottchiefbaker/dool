@@ -16,13 +16,10 @@ docs:
 	$(MAKE) -C docs docs
 
 install:
-#	-[ ! -f $(DESTDIR)$(sysconfdir)/dool.conf ] && install -D -m0644 dool.conf $(DESTDIR)$(sysconfdir)/dool.conf
 	install -Dp -m0755 dool $(DESTDIR)$(bindir)/dool
 	install -d  -m0755 $(DESTDIR)$(datadir)/dool/
 	install -Dp -m0755 dool $(DESTDIR)$(datadir)/dool/dool.py
 	install -Dp -m0644 plugins/dool_*.py $(DESTDIR)$(datadir)/dool/
-#	install -d  -m0755 $(DESTDIR)$(datadir)/dool/examples/
-#	install -Dp -m0755 examples/*.py $(DESTDIR)$(datadir)/dool/examples/
 	install -Dp -m0644 docs/dool.1 $(DESTDIR)$(mandir)/man1/dool.1
 
 docs-install:
