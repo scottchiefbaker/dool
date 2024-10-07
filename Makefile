@@ -54,3 +54,6 @@ srpm: dist
 
 snap:
 	cd packaging/snap/; snapcraft
+
+deb:
+	dpkg-buildpackage -us -uc

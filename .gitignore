@@ -1,2 +1,11 @@
 *.pyc
 /dist
+
+/debian/*
+!/debian/changelog
+!/debian/control
+!/debian/dirs
+!/debian/install
+!/debian/manpages
+!/debian/rules
+!/debian/copyright
