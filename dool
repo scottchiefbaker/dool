@@ -1760,23 +1760,25 @@ ansi = {
 
 # Characters we use to draw the boxes
 char = {
-    'pipe'       : '|',
-    'colon'      : ':',
-    'gt'         : '>',
-    'space'      : ' ',
-    'dash'       : '-',
-    'plus'       : '+',
-    'underscore' : '_',
-    'sep'        : ',',
-    'title_sep'  : '|',
+    'pipe'           : '|',
+    'colon'          : ':',
+    'gt'             : '>',
+    'space'          : ' ',
+    'dash'           : '-',
+    'plus'           : '+',
+    'underscore'     : '_',
+    'sep'            : ',',
+    'title_sep'      : '|',
+    'title_sep_first': '|',
 }
 
 # Unicode chars we use to override the defaults to get cleaner boxes
 char_box_draw = {
-    'pipe'       : u'\u2502',
-    'dash'       : u'\u2504',
-    'title_sep'  : u'\u252c',
-    'colon'      : u'\u250a',
+    'pipe'           : u'\u2502',
+    'dash'           : u'\u2504',
+    'title_sep_first': u'\u252c', # T
+    'title_sep'      : u'\u253c', # +
+    'colon'          : u'\u250a',
 }
 
 # Build a theme based on the color choice 16/256
@@ -2229,14 +2231,28 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
 def header(totlist, vislist):
     "Return the header for a set of module counters"
     line = ''
+
+    # If it's the FIRST header we have outputted
+    first_header = (update == 0)
+
     ### Process title
     for o in vislist:
         line += o.title()
         if o is not vislist[-1]:
-            line += theme['frame'] + char['title_sep']
+
+            # First header gets T
+            if (first_header):
+                sep = char['title_sep_first']
+            # All other headers get +
+            else:
+                sep = char['title_sep']
+
+            line += theme['frame'] + sep
         elif totlist != vislist:
             line += theme['title'] + char['gt']
+
     line += '\n'
+
     ### Process subtitle
     for o in vislist:
         line += o.subtitle()
@@ -2244,6 +2260,7 @@ def header(totlist, vislist):
             line += theme['frame'] + char['pipe']
         elif totlist != vislist:
             line += theme['title'] + char['gt']
+
     return line + '\n'
 
 def csv_header(totlist):
@@ -2651,6 +2668,8 @@ def main():
     if op.color == None:
         op.color = get_term_color()
 
+    ### If we're *not* doing ASCII then we are using the
+    ### Unicode chars so we overwrite the ASCII ones
     if not op.use_ascii:
         for key in char_box_draw:
             char[key] = char_box_draw[key]
