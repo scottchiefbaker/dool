@@ -2746,7 +2746,7 @@ def main():
                 plug.prepare()
 
         except Exception as e:
-            if mod == mods[-1]:
+            if plugin == op.plugins[-1]:
                 print('Module %s failed to load. (%s)' % (pluginfile, e), file=sys.stderr)
             elif op.debug:
                 print('Module %s failed to load, trying another. (%s)' % (pluginfile, e), file=sys.stderr)
