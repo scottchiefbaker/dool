@@ -2735,13 +2735,14 @@ def main():
 
         try:
             if pluginfile not in globals():
-                exec(open(pluginfile).read())
-                exec('global plug; plug = dool_plugin(); del(dool_plugin)')
+                scope = {}
+                exec(open(pluginfile).read(), globals(), scope)
+                plug = scope['dool_plugin']()
                 plug.filename = pluginfile
                 plug.check()
                 plug.prepare()
             else:
-                exec('global plug; plug = %s()' % pluginfile)
+                plug = globals()[pluginfile]()
                 plug.check()
                 plug.prepare()
 
