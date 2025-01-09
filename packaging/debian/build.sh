@@ -1,6 +1,9 @@
 #!/usr/bin/bash
 
 START_DIR=$(pwd)
+red="\033[1;31m"
+white="\033[1;37m"
+reset="\033[0m"
 
 # Find and change to the build script dir so the rest of our
 # commands can use relative paths
@@ -19,7 +22,7 @@ else
 	echo "Found dool version $VERSION"
 fi
 
-TMP_DIR=/var/tmp/dool-$VERSION/
+TMP_DIR=/var/tmp/dool-$VERSION
 echo "Setting up build environment in $TMP_DIR"
 echo
 
@@ -37,8 +40,8 @@ cd /var/tmp/
 
 dpkg-deb --build dool-$VERSION
 
-echo
-echo "Built:"
+echo -e $white
+echo -e "* Debian build successful: $reset"
 ls --color --human --size -l /var/tmp/dool-$VERSION.deb
 
 # Change back to the original directory
