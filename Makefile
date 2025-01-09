@@ -51,6 +51,12 @@ rpm:
 srpm: dist
 	rpmbuild -ts --clean --rmspec --define "_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm" --define "_srcrpmdir ../" ../$(name)-$(version).tar.bz2
 
+release: dist deb rpm
+	@echo
+	@echo
+	@echo -e "\033[1;38;5;15mBuilt packages:\033[0m"
+	@ls --color --human -l $(tmpdir)/dool-$(version)*
+
 snap:
 	cd packaging/snap/; snapcraft
 
