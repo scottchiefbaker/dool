@@ -23,6 +23,9 @@ TMP_DIR=/var/tmp/dool-$VERSION/
 echo "Setting up build environment in $TMP_DIR"
 echo
 
+# Set the version string in the control file
+sed -i "s/Version: .*/Version: $VERSION/g" control
+
 # Build a temporary build directory and copy files to it appropriately
 rm -Rf $TMP_DIR
 mkdir $TMP_DIR
