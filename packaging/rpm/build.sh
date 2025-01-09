@@ -34,7 +34,7 @@ if [[ $? -eq 0 ]]
 then
 	echo -e $white
 	echo -e "\n* Build successful\n"
-	ls -lsah ~/rpmbuild/RPMS/noarch/dool-$VERSION-1.noarch.rpm
+	ls --color -lsah ~/rpmbuild/RPMS/noarch/dool-$VERSION-1.noarch.rpm
 else
 	echo -e $red
 	echo "Error building RPM... exit code $?"
