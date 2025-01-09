@@ -6,6 +6,7 @@ sysconfdir = /etc
 bindir     = $(prefix)/bin
 datadir    = $(prefix)/share
 mandir     = $(datadir)/man
+tmpdir     = /var/tmp
 
 .PHONY: all install docs clean
 
@@ -36,11 +37,11 @@ test:
 
 dist: clean
 	$(MAKE) -C docs dist
-	git ls-files | tar --files-from=- -cvpaf /tmp/dool-$(version).tar.gz
+	git ls-files | tar --files-from=- -cvpaf $(tmpdir)/dool-$(version).tar.gz
 
 	@echo
 	@echo -e "\033[1;38;5;15mBuilt:\033[0m"
-	@ls --color --human -l /tmp/dool-$(version).tar.gz
+	@ls --color --human -l $(tmpdir)/dool-$(version).tar.gz
 
 tardist: dist
 
