@@ -48,4 +48,4 @@ snap:
 	cd packaging/snap/; snapcraft
 
 deb:
-	cd packaging/; dpkg-buildpackage -us -uc
+	cd packaging/debian/; ./build.sh ; cd -
