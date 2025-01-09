@@ -45,7 +45,7 @@ dist: clean
 tardist: dist
 
 rpm:
-	cd packaging/rpm/; ./build.sh; cd -
+	cd packaging/rpm/; ./build.sh; cd - > /dev/null
 
 srpm: dist
 	rpmbuild -ts --clean --rmspec --define "_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm" --define "_srcrpmdir ../" ../$(name)-$(version).tar.bz2
@@ -54,7 +54,7 @@ snap:
 	cd packaging/snap/; snapcraft
 
 deb:
-	cd packaging/debian/; ./build.sh ; cd -
+	cd packaging/debian/; ./build.sh ; cd - > /dev/null
 
 display_config:
 	@echo Displaying config
