@@ -28,7 +28,7 @@ docs-install:
 
 clean:
 	rm -f examples/*.pyc plugins/*.pyc
-	$(MAKE) -C docs clean
+	rm -f $(tmpdir)/dool-$(version)*.*
 
 test:
 	./dool --version
@@ -55,7 +55,7 @@ release: dist deb rpm
 	@echo
 	@echo
 	@echo -e "\033[1;38;5;15mBuilt packages:\033[0m"
-	@ls --color --human -l $(tmpdir)/dool-$(version)*
+	@ls --color --human -l $(tmpdir)/dool-$(version)*.*
 
 snap:
 	cd packaging/snap/; snapcraft
