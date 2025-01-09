@@ -41,8 +41,9 @@ rpmbuild --target noarch -bb dool.spec
 if [[ $? -eq 0 ]]
 then
 	echo -e $white
-	echo -e "\n* Build successful\n"
-	ls --color -lsah ~/rpmbuild/RPMS/noarch/dool-$VERSION-1.noarch.rpm
+	echo -e "\n* RPM Build successful:$reset\n"
+	mv ~/rpmbuild/RPMS/noarch/dool-$VERSION-1.noarch.rpm /var/tmp/
+	ls --color -lsah /var/tmp/dool-$VERSION-1.noarch.rpm
 else
 	echo -e $red
 	echo "Error building RPM... exit code $?"
