@@ -1,5 +1,5 @@
 name    = dool
-version = $(shell awk '/^Version: / {print $$2}' $(name).spec)
+version = $(shell perl -nE 'if (/__version__ = .*?([\.\d]+)/) { print $$1; }' dool)
 
 prefix     = /usr
 sysconfdir = /etc
