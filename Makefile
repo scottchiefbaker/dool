@@ -38,7 +38,7 @@ dist: clean
 	$(MAKE) -C docs dist
 	git ls-files | pax -d -w -x ustar -s ,^,$(name)-$(version)/, | bzip2 >../$(name)-$(version).tar.bz2
 
-rpm: dist
+rpm:
 	cd packaging/rpm/; ./build.sh; cd -
 
 srpm: dist
