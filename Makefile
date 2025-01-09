@@ -49,3 +49,7 @@ snap:
 
 deb:
 	cd packaging/debian/; ./build.sh ; cd -
+
+display_config:
+	@echo Displaying config
+	@echo "Version: $(version)"
