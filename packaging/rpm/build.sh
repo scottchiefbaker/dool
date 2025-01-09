@@ -1,5 +1,13 @@
 #!/usr/bin/bash
 
+START_DIR=$(pwd)
+
+# Find and change to the build script dir so the rest of our
+# commands can use relative paths
+BUILD_SCRIPT_FILE=$(realpath $0)
+BUILD_SCRIPT_PATH=$(dirname $BUILD_SCRIPT_FILE=)
+cd $BUILD_SCRIPT_PATH
+
 red="\033[1;31m"
 white="\033[1;37m"
 reset="\033[0m"
@@ -41,3 +49,5 @@ else
 fi
 
 echo -e $reset
+
+cd $START_DIR
