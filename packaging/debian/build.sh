@@ -43,3 +43,5 @@ ls --color --human --size -l /var/tmp/dool-$VERSION.deb
 
 # Change back to the original directory
 cd $START_DIR
+
+rm --preserve-root -Rf $TMP_DIR
