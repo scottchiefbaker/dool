@@ -36,7 +36,13 @@ test:
 
 dist: clean
 	$(MAKE) -C docs dist
-	git ls-files | pax -d -w -x ustar -s ,^,$(name)-$(version)/, | bzip2 >../$(name)-$(version).tar.bz2
+	git ls-files | tar --files-from=- -cvpaf /tmp/dool-$(version).tar.gz
+
+	@echo
+	@echo -e "\033[1;38;5;15mBuilt:\033[0m"
+	@ls --color --human -l /tmp/dool-$(version).tar.gz
+
+tardist: dist
 
 rpm:
 	cd packaging/rpm/; ./build.sh; cd -
