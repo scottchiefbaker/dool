@@ -9,7 +9,7 @@ class dool_plugin(dool):
         self.width = 3
         self.scale = 10
 
-    def check(self): 
+    def check(self):
         try:
             global utmp
             import utmp

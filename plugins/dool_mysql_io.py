@@ -7,7 +7,7 @@ class dool_plugin(dool):
         self.nick = ('recv', 'sent')
         self.vars = ('Bytes_received', 'Bytes_sent')
 
-    def check(self): 
+    def check(self):
         if not os.access('/usr/bin/mysql', os.X_OK):
             raise Exception('Needs MySQL binary')
         try:

@@ -72,3 +72,5 @@ class dool_plugin(dool):
                 stats[parts[1]] = parts[2]
 
         return stats
+
+# vim:ts=4:sw=4:et

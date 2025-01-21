@@ -8,15 +8,15 @@ class dool_plugin(dool):
         self.vars = ('read', 'write', 'readdir', 'commit', 'getattr', 'create', 'link','remove')
         self.nick = ('read', 'writ', 'rdir', 'cmmt', 'gatr','crt','link','rmv')
         # this is every possible variable if you're into that
-        #self.vars = ("read", "write", "commit", "open", "open_conf", "open_noat", "open_dgrd", "close", 
-        #        "setattr", "fsinfo", "renew", "setclntid", "confirm", "lock", "lockt", "locku", 
-        #        "access", "getattr", "lookup", "lookup_root", "remove", "rename", "link", "symlink", 
-        #        "create", "pathconf", "statfs", "readlink", "readdir", "server_caps", "delegreturn", 
+        #self.vars = ("read", "write", "commit", "open", "open_conf", "open_noat", "open_dgrd", "close",
+        #        "setattr", "fsinfo", "renew", "setclntid", "confirm", "lock", "lockt", "locku",
+        #        "access", "getattr", "lookup", "lookup_root", "remove", "rename", "link", "symlink",
+        #        "create", "pathconf", "statfs", "readlink", "readdir", "server_caps", "delegreturn",
         #        "getacl", "setacl", "fs_locations", "rel_lkowner", "secinfo")
         # these are terrible shortnames for every possible variable
-        #self.nick = ("read", "writ", "comt", "open", "opnc", "opnn", "opnd", "clse", "seta", "fnfo", 
-        #        "renw", "stcd", "cnfm", "lock", "lckt", "lcku", "accs", "gatr", "lkup", "lkp_r", 
-        #        "rem", "ren", "lnk", "slnk", "crte", "pthc", "stfs", "rdlk", "rdir", "scps", "delr", 
+        #self.nick = ("read", "writ", "comt", "open", "opnc", "opnn", "opnd", "clse", "seta", "fnfo",
+        #        "renw", "stcd", "cnfm", "lock", "lckt", "lcku", "accs", "gatr", "lkup", "lkp_r",
+        #        "rem", "ren", "lnk", "slnk", "crte", "pthc", "stfs", "rdlk", "rdir", "scps", "delr",
         #        "gacl", "sacl", "fslo", "relo", "seco")
         self.type = 'd'
         self.width = 5
@@ -28,7 +28,7 @@ class dool_plugin(dool):
         info(1, 'Module %s is still experimental.' % self.filename)
 
     def extract(self):
-        # list of fields from nfsstat, in order of output from cat /proc/net/rpc/nfs 
+        # list of fields from nfsstat, in order of output from cat /proc/net/rpc/nfs
         nfs4_names = ("version", "fieldcount", "null", "read", "write", "commit", "open", "open_conf",
                 "open_noat", "open_dgrd", "close", "setattr", "fsinfo", "renew", "setclntid",
                 "confirm", "lock", "lockt", "locku", "access", "getattr", "lookup", "lookup_root",

@@ -10,7 +10,7 @@ class dool_plugin(dool):
         self.width = 4
         self.scale = 1000
 
-    def check(self): 
+    def check(self):
         if not os.access('/usr/bin/mysql', os.X_OK):
             raise Exception('Needs MySQL binary')
         try:

@@ -13,7 +13,7 @@ class dool_plugin(dool):
         self.width = 5
         self.scale = 1000
 
-    def check(self): 
+    def check(self):
         if os.access('/usr/lpp/mmfs/bin/mmpmon', os.X_OK):
             try:
                 self.stdin, self.stdout, self.stderr = dpopen('/usr/lpp/mmfs/bin/mmpmon -p -s')

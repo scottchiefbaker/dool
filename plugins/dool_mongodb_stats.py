@@ -69,3 +69,5 @@ class dool_plugin(dool):
       for name in self.vars:
         self.set[name] += int(stats.get(name)) / (1024 * 1024)
     self.val = self.set
+
+# vim:ts=4:sw=4:et

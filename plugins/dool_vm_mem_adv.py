@@ -34,4 +34,4 @@ class dool_plugin(dool):
         self.val['targetsize'] = self.gl.GetMemTargetSizeMB() * 1024 ** 2
         self.val['used'] = self.gl.GetMemUsedMB() * 1024 ** 2
 
-# vim:ts=4:sw=4
+# vim:ts=4:sw=4:et

@@ -43,3 +43,5 @@ class dool_plugin(dool):
     self.val['aw'] = int(alock['writers'])
     self.val['qr'] = int(qlock['readers'])
     self.val['qw'] = int(qlock['writers'])
+
+# vim:ts=4:sw=4:et

@@ -28,7 +28,7 @@ class dool_plugin(dool):
         self.width = 4
         self.scale = 1
 
-    def check(self): 
+    def check(self):
         global MySQLdb
         import MySQLdb
         try:

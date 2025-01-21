@@ -4,7 +4,7 @@
 ### Displays kernel interrupt statistics on VMware ESX servers
 
 # NOTE TO USERS: command-line plugin configuration is not yet possible, so I've
-# "borrowed" the -I argument. 
+# "borrowed" the -I argument.
 # EXAMPLES:
 # # dstat --vmkint -I 0x46,0x5a
 # You can even combine the Linux and VMkernel interrupt stats
@@ -38,7 +38,7 @@ class dool_plugin(dool):
         # default cpu number is 2
         ret = 2
         for l in self.fd[0].splitlines():
-            if l[0] == 'Vector': 
+            if l[0] == 'Vector':
                 ret = int( int( l[-1] ) + 1 )
         return ret
 
@@ -71,7 +71,7 @@ class dool_plugin(dool):
 #               ret.append(self.intmap[name.lower()])
         return ret
 
-    def check(self): 
+    def check(self):
         try:
             os.listdir('/proc/vmware')
         except:
@@ -95,4 +95,4 @@ class dool_plugin(dool):
         if step == op.delay:
             self.set1.update(self.set2)
 
-# vim:ts=4:sw=4
+# vim:ts=4:sw=4:et

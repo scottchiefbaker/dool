@@ -1,6 +1,6 @@
 ### Author: Jihyun Yu <yjh0502@gmail.com>
 
-global redis_host 
+global redis_host
 redis_host = os.getenv('DOOL_REDIS_HOST') or "127.0.0.1"
 
 global redis_port

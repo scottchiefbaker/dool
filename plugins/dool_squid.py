@@ -5,10 +5,10 @@
 # - CentOS release 5.4 (Final)
 # - Python 2.4.3
 # - Squid 2.6 and 2.7
- 
+
 global squidclient_options
 squidclient_options = os.getenv('DOOL_SQUID_OPTS') # -p 8080
- 
+
 class dool_plugin(dool):
     '''
     Provides various Squid statistics.
@@ -34,7 +34,7 @@ class dool_plugin(dool):
             raise Exception('Needs squidclient binary')
         cmd_test('/usr/sbin/squidclient %s mgr:info' % squidclient_options)
         return True
- 
+
     def extract(self):
         try:
             for l in cmd_splitlines('/usr/sbin/squidclient %s mgr:info' % squidclient_options, ':'):

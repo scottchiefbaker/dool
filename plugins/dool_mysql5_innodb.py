@@ -120,3 +120,5 @@ class dstat_plugin(dstat):
             if op.debug > 1: print('%s: exception' % (self.filename, e))
             for name in self.vars: self.val[name] = -1
 
+
+# vim:ts=4:sw=4:et

@@ -65,3 +65,5 @@ class dool_plugin(dool):
       sdic = sdic.get(p)
 
     return sdic
+
+# vim:ts=4:sw=4:et

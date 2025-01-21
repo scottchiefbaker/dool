@@ -4,7 +4,7 @@
 ### Displays kernel vmhba statistics on VMware ESX servers
 
 # NOTE TO USERS: command-line plugin configuration is not yet possible, so I've
-# "borrowed" the -D argument. 
+# "borrowed" the -D argument.
 # EXAMPLES:
 # # dstat --vmkhba -D vmhba1,vmhba2,total
 # # dstat --vmkhba -D vmhba0
@@ -50,7 +50,7 @@ class dool_plugin(dool):
                 ret.append(name)
         return ret
 
-    def check(self): 
+    def check(self):
         try:
             os.listdir('/proc/vmware')
         except:
@@ -77,3 +77,5 @@ class dool_plugin(dool):
 
         if step == op.delay:
             self.set1.update(self.set2)
+
+# vim:ts=4:sw=4:et

@@ -34,9 +34,9 @@ class dool_plugin(dool):
         ret = []
         if not op.full:
             list = ('total', )
-        else: 
+        else:
             list = self.discover
-        for name in list: 
+        for name in list:
             if name in self.discover + ['total']:
                 ret.append(name)
         return ret
