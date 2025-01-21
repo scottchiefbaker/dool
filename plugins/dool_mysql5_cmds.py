@@ -27,7 +27,7 @@ class dool_plugin(dool):
         self.width = 5
         self.scale = 1
 
-    def check(self): 
+    def check(self):
         global MySQLdb
         import MySQLdb
         try:
@@ -67,3 +67,5 @@ class dool_plugin(dool):
         except Exception as e:
             for name in self.vars:
                 self.val[name] = -1
+
+# vim:ts=4:sw=4:et

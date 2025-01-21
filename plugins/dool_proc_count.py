@@ -13,3 +13,5 @@ class dool_plugin(dool):
 
     def extract(self):
         self.val['total'] = len([pid for pid in proc_pidlist()])
+
+# vim:ts=4:sw=4:et

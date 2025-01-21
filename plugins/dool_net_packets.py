@@ -63,3 +63,5 @@ class dool_plugin(dool):
 
         if step == op.delay:
             self.set1.update(self.set2)
+
+# vim:ts=4:sw=4:et

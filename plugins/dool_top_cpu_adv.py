@@ -72,3 +72,5 @@ class dool_plugin(dool):
 
     def showcsv(self):
         return 'Top: %s\t%s\t%s\t%s' % (self.val['name'][0:self.width-20], self.val['cpu_usage'], self.val['read_usage'], self.val['write_usage'])
+
+# vim:ts=4:sw=4:et

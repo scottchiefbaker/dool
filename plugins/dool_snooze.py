@@ -32,3 +32,5 @@ class dool_plugin(dool):
         snoze, c = fchg(self.val['snooze'], 6, 1000)
 
         return color[textcolor] + snoze
+
+# vim:ts=4:sw=4:et

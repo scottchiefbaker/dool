@@ -67,3 +67,5 @@ class dool_plugin(dool):
         self.val['Cached'] = self.num_fmt % cached
 
 
+
+# vim:ts=4:sw=4:et

@@ -43,7 +43,7 @@ class dool_plugin(dool):
         info(1, 'Module %s is still experimental.' % self.filename)
 
     def extract(self):
-        # list of fields from /proc/net/rpc/nfsd, in order of output 
+        # list of fields from /proc/net/rpc/nfsd, in order of output
         # taken from include/linux/nfs4.h in kernel source
         nfsd4_names = ('label', 'fieldcount', 'op0-unused', 'op1-unused', 'op2-future' , 'access',
                 'close', 'commit', 'create', 'delegpurge', 'delegreturn', 'getattr', 'getfh',

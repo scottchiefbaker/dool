@@ -25,7 +25,7 @@ class dool_plugin(dool):
         self.nick = ('recv', 'sent')
         self.vars = ('Bytes_received', 'Bytes_sent')
 
-    def check(self): 
+    def check(self):
         global MySQLdb
         import MySQLdb
         try:

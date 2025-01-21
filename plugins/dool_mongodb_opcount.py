@@ -44,3 +44,5 @@ class dool_plugin(dool):
 
         self.val[name]     = (int(opct.get(name)) - self.lastVal[name]) / elapsed
         self.lastVal[name] = opct.get(name)
+
+# vim:ts=4:sw=4:et

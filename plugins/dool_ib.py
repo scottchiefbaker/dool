@@ -82,9 +82,11 @@ class dool_plugin(dool):
             for name in self.set2:
                 self.val[name] = [
                     (self.set2[name][0] - self.set1[name][0]) * factor[name] / elapsed,
-                    (self.set2[name][1] - self.set1[name][1]) * factor[name] / elapsed,                    
+                    (self.set2[name][1] - self.set1[name][1]) * factor[name] / elapsed,
                 ]
                 if self.val[name][0] < 0: self.val[name][0] += maxint + 1
                 if self.val[name][1] < 0: self.val[name][1] += maxint + 1
         if step == op.delay:
             self.set1.update(self.set2)
+
+# vim:ts=4:sw=4:et

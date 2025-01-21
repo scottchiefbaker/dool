@@ -10,7 +10,7 @@ class dool_plugin(dool):
     This plugin gathers jvm stats via jcmd.
 
     Usage:
-       JVM_PID=15123 dstat --jvm-full 
+       JVM_PID=15123 dstat --jvm-full
 
     Minimize the impacts of jcmd and consider using:
 
