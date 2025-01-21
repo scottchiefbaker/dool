@@ -26,9 +26,9 @@ class dool_plugin(dool):
             try:
                 ### Reset values
                 if pid not in self.pidset2:
-                    self.pidset2[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
+                    self.pidset2[pid] = {'rchar:': 0, 'wchar:': 0}
                 if pid not in self.pidset1:
-                    self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
+                    self.pidset1[pid] = {'rchar:': 0, 'wchar:': 0}
 
                 ### Extract name
                 name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
@@ -47,8 +47,9 @@ class dool_plugin(dool):
             else:
                 factor = 1
 
-            read_usage  = (self.pidset2[pid]['read_bytes:']  - self.pidset1[pid]['read_bytes:'])  * factor / elapsed
-            write_usage = (self.pidset2[pid]['write_bytes:'] - self.pidset1[pid]['write_bytes:']) * factor / elapsed
+            ### 'rchar' counts bytes read from the task POV, e.g. open files which may be read from page cache, reading from a socket or pipe
+            read_usage  = (self.pidset2[pid]['rchar:']  - self.pidset1[pid]['rchar:'])  * factor / elapsed
+            write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * factor / elapsed
             usage       = read_usage + write_usage
 
             ### Get the process that spends the most jiffies

@@ -52,8 +52,16 @@ class dool_plugin(dool):
 			except IndexError:
 				continue
 
-			read_usage  = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * 1.0 / elapsed
-			write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * 1.0 / elapsed
+            ### 'rchar' counts bytes read from the task POV, e.g. open files which may be read from page cache, reading from a socket or pipe
+			io_read_usage  = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * 1.0 / elapsed
+			io_write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * 1.0 / elapsed
+
+            ### 'read_bytes' counts bytes read from the storage layer, i.e. when the block device driver is used
+            bio_read_usage  = (self.pidset2[pid]['read_bytes:'] - self.pidset1[pid]['read_bytes:']) * 1.0 / elapsed
+            bio_write_usage = (self.pidset2[pid]['write_bytes:'] - self.pidset1[pid]['write_bytes:']) * 1.0 / elapsed
+
+			read_usage  = io_read_usage + bio_read_usage
+			write_usage = io_write_usage + bio_write_usage
 			usage       = read_usage + write_usage
 
 			# Make sure the name isn't too long
