@@ -42,9 +42,12 @@ class dool_plugin(dool):
             except IndexError:
                 continue
 
-            read_usage = (self.pidset2[pid]['read_bytes:'] - self.pidset1[pid]['read_bytes:']) * 1.0 / elapsed
+            # INFO: https://www.kernel.org/doc/html/latest/filesystems/proc.html#proc-pid-io-display-the-io-accounting-fields
+            #
+            ### 'read_bytes' counts bytes read from the storage layer, i.e. when the block device driver is used
+            read_usage  = (self.pidset2[pid]['read_bytes:']  - self.pidset1[pid]['read_bytes:'])  * 1.0 / elapsed
             write_usage = (self.pidset2[pid]['write_bytes:'] - self.pidset1[pid]['write_bytes:']) * 1.0 / elapsed
-            usage = read_usage + write_usage
+            usage       = read_usage + write_usage
 
             ### Get the process that spends the most jiffies
             if usage > self.val['usage']:
