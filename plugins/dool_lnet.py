@@ -5,7 +5,6 @@ class dool_plugin(dool):
         self.name = 'lnet'
         self.vars = ['recv', 'send']
         self.type = 'b'
-        self.cols = 1
         self.scale = 1000
         self.open('/sys/kernel/debug/lnet/stats')
 
@@ -17,11 +16,11 @@ class dool_plugin(dool):
     def extract(self):
         l = self.splitline()
 
-        self.set2['send'] = [int(l[7])]
-        self.set2['recv'] = [int(l[8])]
+        self.set2['send'] = int(l[7])
+        self.set2['recv'] = int(l[8])
 
         for name in self.vars:
-            self.val[name] = [(self.set2[name][0] - self.set1[name][0]) * 1.0 / elapsed]
+            self.val[name] = (self.set2[name] - self.set1[name]) * 1.0 / elapsed
 
         if step == op.delay:
             self.set1.update(self.set2)
