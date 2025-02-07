@@ -279,6 +279,9 @@ Here is an overview of the plugins dool ships with:
 --lustre::
     show lustre I/O throughput
 
+--lnet::
+    show lustre network I/O stats
+
 --md-status::
     show software raid (md) progress and speed
 
