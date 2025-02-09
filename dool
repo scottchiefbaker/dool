@@ -342,9 +342,10 @@ class Options:
                     to_remove.append(next_item)
                     self.opt_params[item] = next_item
 
-        # If we found optional params we remove them from the array
-        for x in to_remove:
-            args.remove(x)
+
+        # If an item has an option argument and we've consumed it
+        # we remove it from the args list
+        args = remove_array_items(args, to_remove)
 
         return args
 
