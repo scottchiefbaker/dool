@@ -1,7 +1,15 @@
 ### Author: Dag Wieers <dag$wieers,com>
 
-### FIXME: This module needs infrastructure to provide a list of mountpoints
-### FIXME: Would be nice to have a total by default (half implemented)
+# Syntax:
+#    list all mount points in /etc/mtab:
+#       dool --freespace
+#
+#    list specific mount points:
+#       dool --freespace /mnt/disk1,/mnt/vault
+#
+#    list specific mount points alternate:
+#       export DOOL_FREESPACE_MOUNT_POINTS=/mnt/disk1,/mnt/vault
+#       dool --freespace
 
 class dool_plugin(dool):
     """
