@@ -3043,6 +3043,22 @@ def array_diff(first, second):
     second = set(second)
     return [item for item in first if item not in second]
 
+# Safely remove items from a list while handling edge cases and maintaining the original list order.
+def remove_array_items(source_list, items_to_remove):
+    # Convert items_to_remove to a set for O(1) lookup
+    remove_set = set(items_to_remove)
+
+    # Initialize the result list
+    filtered_list = []
+
+    # Iterate through the source list
+    for item in source_list:
+        # Only keep items that are not in the remove set
+        if item not in remove_set:
+            filtered_list.append(item)
+
+    return filtered_list
+
 # Start performance profiling
 def start_profiling():
     import profile
