@@ -60,6 +60,12 @@ class dool_plugin(dool):
             elif (fs_type not in include_fs_types):
                 continue
 
+            is_readable = os.access(mount_point, os.R_OK)
+
+            if (not is_readable):
+                # print("Warning: Skipping %s because it is not readable" % [mount_point]);
+                continue
+
             res = os.statvfs(mount_point)
 
             if res[0] == 0: continue ### Skip zero block filesystems
