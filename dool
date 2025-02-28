@@ -1894,7 +1894,7 @@ def readpipe(fileobj, tmout = 0.001):
     while not select.select([fileobj.fileno()], [], [], tmout)[0]:
         pass
     while select.select([fileobj.fileno()], [], [], tmout)[0]:
-        ret = ret + fileobj.read(1)
+        ret = ret + fileobj.read(1).decode("utf-8")
     return ret.split('\n')
 
 def greppipe(fileobj, str, tmout = 0.001):
