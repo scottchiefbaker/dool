@@ -1,4 +1,4 @@
-### Author: HIROSE Masaaki <hirose31 _at_ gmail.com>
+### Author: HIROSE Masaaki <hirose31 _at_ gmail.com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
 mysql_options = os.getenv('DSTAT_MYSQL') or ''
@@ -91,7 +91,7 @@ class dstat_plugin(dstat):
 
     def extract(self):
         try:
-            self.stdin.write('show global status;\n')
+            self.stdin.write(b'show global status;\n')
             for line in readpipe(self.stdout):
                 if line == '':
                     break

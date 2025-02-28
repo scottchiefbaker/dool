@@ -1,3 +1,5 @@
+### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
+
 global mysql_options
 mysql_options = os.getenv('DOOL_MYSQL')
 
@@ -17,7 +19,7 @@ class dool_plugin(dool):
 
     def extract(self):
         try:
-            self.stdin.write("show status like 'Bytes_%';\n")
+            self.stdin.write(b"show status like 'Bytes_%';\n")
             for line in readpipe(self.stdout):
                 l = line.split()
                 if len(l) < 2: continue
