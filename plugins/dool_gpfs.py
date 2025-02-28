@@ -1,4 +1,4 @@
-### Author: Dag Wieers <dag$wieers,com>
+### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 class dool_plugin(dool):
     """
@@ -14,7 +14,7 @@ class dool_plugin(dool):
         if os.access('/usr/lpp/mmfs/bin/mmpmon', os.X_OK):
             try:
                 self.stdin, self.stdout, self.stderr = dpopen('/usr/lpp/mmfs/bin/mmpmon -p -s')
-                self.stdin.write('reset\n')
+                self.stdin.write(b'reset\n')
                 readpipe(self.stdout)
             except IOError:
                 raise Exception('Cannot interface with gpfs mmpmon binary')
@@ -23,8 +23,7 @@ class dool_plugin(dool):
 
     def extract(self):
         try:
-            self.stdin.write('io_s\n')
-#           readpipe(self.stderr)
+            self.stdin.write(b'io_s\n')
             for line in readpipe(self.stdout):
                 if not line: continue
                 l = line.split()
