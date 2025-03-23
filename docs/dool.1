@@ -864,12 +864,14 @@ Paths that may contain external dool_*\&.py plugins:
 .nf
 ~/\&.dool/
 (path of binary)/plugins/
-/usr/share/dool/
 /usr/local/share/dool/
+/usr/share/dool/
 .fi
 .if n \{\
 .RE
 .\}
+.sp
+Plugins found in earlier directories take precedence, plugins with the same filename in later directories are ignored\&.
 .SH "ENVIRONMENT VARIABLES"
 .sp
 Dool will read additional command line arguments from the environment variable \fBDOOL_OPTS\fR\&. You can use this to configure Dool\(cqs default behavior, e\&.g\&. if you have a black\-on\-white terminal:

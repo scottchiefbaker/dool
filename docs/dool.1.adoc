@@ -532,8 +532,11 @@ Paths that may contain external dool_*.py plugins:
 
     ~/.dool/
     (path of binary)/plugins/
-    /usr/share/dool/
     /usr/local/share/dool/
+    /usr/share/dool/
+
+Plugins found in earlier directories take precedence, plugins with the same
+filename in later directories are ignored.
 
 == ENVIRONMENT VARIABLES
 

@@ -49,8 +49,8 @@ theme = { 'default': '' }
 pluginpath = [
     os.path.expanduser('~/.dool/'),                           # home + /.dool/
     os.path.dirname(os.path.abspath(__file__)) + '/plugins/', # binary path + /plugins/
-    '/usr/share/dool/',
     '/usr/local/share/dool/',
+    '/usr/share/dool/',
 ]
 
 # Global variable to match drives in /proc/
@@ -2551,6 +2551,10 @@ def get_plugin_details():
         for filename in glob.glob(path + '/dool_*.py'):
             plugin_name = remod.match(filename).group(1)
             name        = plugin_name.replace('_', '-')
+
+            # Plugin was already loaded from another directory, ignore.
+            if name in ret:
+                continue
 
             ret[name] = filename
 
