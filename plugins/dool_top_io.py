@@ -26,9 +26,9 @@ class dool_plugin(dool):
             try:
                 ### Reset values
                 if pid not in self.pidset2:
-                    self.pidset2[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
+                    self.pidset2[pid] = {'rchar:': 0, 'wchar:': 0}
                 if pid not in self.pidset1:
-                    self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
+                    self.pidset1[pid] = {'rchar:': 0, 'wchar:': 0}
 
                 ### Extract name
                 name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
