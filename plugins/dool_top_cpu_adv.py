@@ -6,9 +6,9 @@
 class dool_plugin(dool):
     def __init__(self):
         self.name = 'most expensive cpu process'
-        self.vars = ('process              pid  cpu read write',)
+        self.vars = ('process                 pid cpu  read write',)
         self.type = 's'
-        self.width = 40
+        self.width = 43
         self.scale = 0
         self.pidset1 = {}
 
@@ -29,8 +29,10 @@ class dool_plugin(dool):
                 if pid not in self.pidset1:
                     self.pidset1[pid] = {'rchar:': 0, 'wchar:': 0, 'cputime:': 0, 'cpuper:': 0}
 
-                ### Extract name
-                name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                # Read the pid name
+                mystr     = proc_readline('/proc/%s/stat' % pid)
+                stat_name = extract_between_parens(mystr)
+                name      = getnamebypid(pid, stat_name)
 
                 ### Extract counters
                 for l in proc_splitlines('/proc/%s/io' % pid):
@@ -67,7 +69,20 @@ class dool_plugin(dool):
             self.pidset1 = self.pidset2
 
         if self.val['cpu_usage'] != 0.0:
-            self.output = '%-*s%s%-5s%s%s%%%s%s' % (self.width-14-len(pid), self.val['name'][0:self.width-14-len(pid)], color['darkblue'], self.val['pid'], cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'],cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
+            # Test long/short names for alignment
+            # self.val['name'] = '01234567890123456789BBBBBBBBB'
+            # self.val['name'] = 'foo'
+
+            # devel_log("PID/NAME: %s => '%s'"  % (self.val['pid'], self.val['name']))
+
+            name     = self.val['name']
+            name_fmt = f"{name[:19]:<19}"  # First truncate, then pad if needed
+
+            column_fmt = '%s %s%-7s %s%s %s %s'
+            # Debug print the format so we can see the columns
+            # column_fmt = column_fmt.replace(" ", "|");
+
+            self.output = column_fmt % (name_fmt, color['darkblue'], self.val['pid'], cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'],cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
 
 
     def showcsv(self):
