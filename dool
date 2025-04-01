@@ -2928,6 +2928,10 @@ def perform(update):
 
 # Get an item from a list, or a default value if the array isn't big enough (null coalesce)
 def list_item_default(mylist, num, default):
+    # If it's not a list, just return the default
+    if not isinstance(mylist, list):
+        return default
+
     if num > len(mylist) - 1:
         return default
     else:
