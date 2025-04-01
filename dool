@@ -2397,12 +2397,16 @@ def getnamebypid(pid, name):
         first     = list_item_default(parts, 0, "")
         ret       = basename(first)
 
+        # devel_log("CMDLINE/PID: %s => '%s'" % (pid, ret));
+
         # For low PID numbers there is no `cmdline` so we fallback to `comm`
         if ret == "":
             proc_file = ('/proc/%s/comm' % pid);
             parts   = linecache.getline(proc_file, 1).split('\0')
             first   = list_item_default(parts, 0, "").strip()
             ret     = basename(first)
+
+            # devel_log("COMM/PID: %s => '%s'" % (pid, ret));
 
         # Strip off any scripting language name
         if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
@@ -2426,6 +2430,7 @@ def getnamebypid(pid, name):
         if not ret: raise
     except:
         ret = basename(name)
+        # devel_log("EXCEPTION/NAME/PID: %s (%s) => '%s'" % (pid, name, ret));
 
     return ret
 
