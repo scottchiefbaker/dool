@@ -6,9 +6,9 @@
 class dool_plugin(dool):
     def __init__(self):
         self.name = 'most expensive block i/o process'
-        self.vars = ('process              pid  read write cpu',)
+        self.vars = ('process              pid     read write  cpu',)
         self.type = 's'
-        self.width = 40
+        self.width = 44
         self.scale = 0
         self.pidset1 = {}
 
@@ -30,7 +30,8 @@ class dool_plugin(dool):
                     self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0, 'cputime:': 0, 'cpuper:': 0}
 
                 ### Extract name
-                name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                mystr  = proc_readline('/proc/%s/stat' % pid)
+                name   = extract_between_parens(mystr)
 
                 ### Extract counters
                 for l in proc_splitlines('/proc/%s/io' % pid):
@@ -58,18 +59,27 @@ class dool_plugin(dool):
 
             ### Get the process that spends the most jiffies
             if usage > self.val['usage']:
-                self.val['usage'] = usage
-                self.val['read_usage'] = read_usage
+                self.val['usage']       = usage
+                self.val['read_usage']  = read_usage
                 self.val['write_usage'] = write_usage
-                self.val['pid'] = pid
-                self.val['name'] = getnamebypid(pid, name)
-                self.val['cpu_usage'] = cpu_usage
+                self.val['pid']         = pid
+                self.val['name']        = getnamebypid(pid, name)
+                self.val['cpu_usage']   = cpu_usage
 
         if step == op.delay:
             self.pidset1 = self.pidset2
 
         if self.val['usage'] != 0.0:
-            self.output = '%-*s%s%-5s%s%s%s%s%%' % (self.width-14-len(pid), self.val['name'][0:self.width-14-len(pid)], color['darkblue'], self.val['pid'], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024), cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'])
+            # Test long/short names for alignment
+            # self.val['name'] = '01234567890123456789BBBBBBBBB'
+            # self.val['name'] = 'foio'
+
+            # devel_log("PID/NAME: %s => '%s'"  % (self.val['pid'], self.val['name']))
+
+            name     = self.val['name']
+            name_fmt = f"{name[:19]:<19}"  # First truncate, then pad if needed
+
+            self.output = '%s %s%-7s %s %s %s%s%%' % (name_fmt, color['darkblue'], self.val['pid'], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024), cprint(self.val['cpu_usage'], 'f', 3, 34), color['darkgray'])
 
     def showcsv(self):
         return 'Top: %s\t%s\t%s\t%s' % (self.val['name'][0:self.width-20], self.val['read_usage'], self.val['write_usage'], self.val['cpu_usage'])
