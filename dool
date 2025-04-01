@@ -2375,6 +2375,9 @@ def get_term_color():
 
 ### We only want to filter out paths, not ksoftirqd/1
 def basename(name):
+    if name == "":
+        return ""
+
     "Perform basename on paths only"
     if name[0] in ('/', '.'):
         return os.path.basename(name)
