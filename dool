@@ -3092,6 +3092,19 @@ def start_profiling():
 
     profile.run('main()', op.profile)
 
+def extract_between_parens(text, start_delim = '(', end_delim = ')'):
+    start_index = text.find(start_delim)
+    if start_index == -1:
+        return ""
+
+    end_index = text.find(end_delim, start_index)
+    if end_index == -1:
+        return ""
+
+    # Add 1 to start_index to exclude the opening parenthesis
+    ret = text[start_index + 1:end_index]
+    return ret
+
 # Main ingress point
 def __main():
     global op
