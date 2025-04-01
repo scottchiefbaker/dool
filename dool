@@ -2381,6 +2381,7 @@ def basename(name):
     "Perform basename on paths only"
     if name[0] in ('/', '.'):
         return os.path.basename(name)
+
     return name
 
 def getnamebypid(pid, name):
@@ -2392,7 +2393,7 @@ def getnamebypid(pid, name):
         # cmdline = open('/proc/%s/cmdline' % pid).read().split(('\0', ' '))
 
         cmdline = linecache.getline('/proc/%s/cmdline' % pid, 1).split('\0')
-        ret     = basename(cmdline[0])
+        ret     = basename(list_item_default(0, cmdline, ""))
 
         # Strip off any scripting language name
         if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
@@ -2412,6 +2413,10 @@ def getnamebypid(pid, name):
             if xmatch:
                 ret = xmatch.group(1)
                 ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+
+        # For low PID numbers there is no `cmdline` so we fallback to `comm`
+        cmdline = linecache.getline('/proc/%s/comm' % pid, 1).split('\0')
+        ret     = basename(cmdline[0])
 
         if not ret: raise
     except:
