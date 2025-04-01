@@ -6,9 +6,9 @@
 class dool_plugin(dool):
 	def __init__(self):
 		self.name    = 'most expensive i/o process'
-		self.vars    = ('process                  pid  read  writ   cpu',)
+		self.vars    = ('process                 pid  read write  cpu',)
 		self.type    = 's'
-		self.width   = 46
+		self.width   = 44
 		self.scale   = 0
 		self.pidset1 = {}
 
@@ -29,8 +29,10 @@ class dool_plugin(dool):
 				if pid not in self.pidset1:
 					self.pidset1[pid] = {'rchar:': 0, 'wchar:': 0, 'cputime:': 0, 'cpuper:': 0}
 
-				### Extract name
-				name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                # Read the pid name
+				mystr     = proc_readline('/proc/%s/stat' % pid)
+				stat_name = extract_between_parens(mystr)
+				name      = getnamebypid(pid, stat_name)
 
 				### Extract counters
 				for l in proc_splitlines('/proc/%s/io' % pid):
@@ -78,9 +80,20 @@ class dool_plugin(dool):
 			pid_str   = color['darkblue'] + ("%7s" % self.val['pid']) + ansi['reset']
 			read_str  = cprint(self.val['read_usage'] , 'd', 5, 1024)
 			write_str = cprint(self.val['write_usage'], 'd', 5, 1024)
-			cpu_str   = cprint(self.val['cpu_usage']  , 'f', 4, 34)
+			cpu_str   = cprint(self.val['cpu_usage']  , 'f', 3, 34)
 
-			self.output = '%-20s %s %s %s %s%%' % (self.val['name'], pid_str, read_str, write_str, cpu_str)
+			# Test long/short names for alignment
+			# self.val['name'] = '01234567890123456789BBBBBBBBB'
+			# self.val['name'] = 'foo'
+
+			name     = self.val['name']
+			name_fmt = f"{name[:19]:<19}"  # First truncate, then pad if needed
+
+			column_fmt = '%-19s %s %s %s %s%%'
+			# Debug print the format so we can see the columns
+			# column_fmt = column_fmt.replace(" ", "|");
+
+			self.output = column_fmt % (name_fmt, pid_str, read_str, write_str, cpu_str)
 
 	def showcsv(self):
 		return 'Top: %s\t%s\t%s\t%s' % (self.val['name'][0:self.width-20], self.val['read_usage'], self.val['write_usage'], self.val['cpu_usage'])
