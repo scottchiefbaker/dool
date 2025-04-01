@@ -7,10 +7,10 @@ class dool_plugin(dool):
     Displays the name of the most expensive block I/O process.
     """
     def __init__(self):
-        self.name = 'most expensive'
-        self.vars = ('block i/o process',)
+        self.name = 'top block-io'
+        self.vars = ('name         read write',)
         self.type = 's'
-        self.width = 22
+        self.width = 23
         self.scale = 0
         self.pidset1 = {}
 
@@ -31,7 +31,8 @@ class dool_plugin(dool):
                     self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
 
                 ### Extract name
-                name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                mystr  = proc_readline('/proc/%s/stat' % pid)
+                name   = extract_between_parens(mystr)
 
                 ### Extract counters
                 for l in proc_splitlines('/proc/%s/io' % pid):
@@ -62,7 +63,16 @@ class dool_plugin(dool):
             self.pidset1 = self.pidset2
 
         if self.val['usage'] != 0.0:
-            self.output = '%-*s%s %s' % (self.width-11, self.val['name'][0:self.width-11], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
+            # Test long/short names for alignment
+            # self.val['name'] = '01234567890123456789BBBBBBBBB'
+            # self.val['name'] = 'foo'
+
+            # devel_log("PID/NAME: %s => '%s'"  % (self.val['pid'], self.val['name']))
+
+            name     = self.val['name']
+            name_fmt = f"{name[:11]:<11}"  # First truncate, then pad if needed
+
+            self.output = '%-11s %s %s' % (name_fmt, cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
 
         ### Debug (show PID)
 #        self.output = '%*s %-*s%s %s' % (5, self.val['pid'], self.width-17, self.val['name'][0:self.width-17], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
