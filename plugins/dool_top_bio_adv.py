@@ -30,8 +30,9 @@ class dool_plugin(dool):
                     self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0, 'cputime:': 0, 'cpuper:': 0}
 
                 ### Extract name
-                mystr  = proc_readline('/proc/%s/stat' % pid)
-                name   = extract_between_parens(mystr)
+                mystr     = proc_readline('/proc/%s/stat' % pid)
+                stat_name = extract_between_parens(mystr)
+                name      = getnamebypid(pid, stat_name)
 
                 ### Extract counters
                 for l in proc_splitlines('/proc/%s/io' % pid):

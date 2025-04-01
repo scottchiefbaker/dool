@@ -39,7 +39,10 @@ class dool_plugin(dool):
             ### Is it a new topper ?
             if usage < self.val['max']: continue
 
-            name = l[1][1:-1]
+            # Read the pid name
+            mystr     = proc_readline('/proc/%s/stat' % pid)
+            stat_name = extract_between_parens(mystr)
+            name      = getnamebypid(pid, stat_name)
 
             self.val['max'] = usage
             self.val['pid'] = pid
