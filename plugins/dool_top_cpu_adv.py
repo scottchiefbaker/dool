@@ -76,7 +76,7 @@ class dool_plugin(dool):
             name     = self.val['name']
             name_fmt = f"{name[:19]:<19}"  # First truncate, then pad if needed
 
-            column_fmt = '%s %s%-7s %s%s %s %s'
+            column_fmt = '%s %s%7s %s%s %s %s'
             # Debug print the format so we can see the columns
             # column_fmt = column_fmt.replace(" ", "|");
 
