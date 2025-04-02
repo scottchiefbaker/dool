@@ -2384,53 +2384,83 @@ def basename(name):
 
     return name
 
-def getnamebypid(pid, name):
-    "Return the name of a process by taking best guesses and exclusion"
+def get_name_by_proc_cmdline(pid):
     ret = None
 
     try:
-        #### man proc tells me there should be nulls in here, but sometimes it seems like spaces (esp google chrome)
-        # cmdline = open('/proc/%s/cmdline' % pid).read().split(('\0', ' '))
-
         proc_file = ('/proc/%s/cmdline' % pid);
         parts     = linecache.getline(proc_file, 1).split('\0')
         first     = list_item_default(parts, 0, "")
         ret       = basename(first)
-
         # devel_log("CMDLINE/PID: %s => '%s'" % (pid, ret));
-
-        # For low PID numbers there is no `cmdline` so we fallback to `comm`
-        if ret == "":
-            proc_file = ('/proc/%s/comm' % pid);
-            parts   = linecache.getline(proc_file, 1).split('\0')
-            first   = list_item_default(parts, 0, "").strip()
-            ret     = basename(first)
-
-            # devel_log("COMM/PID: %s => '%s'" % (pid, ret));
-
-        # Strip off any scripting language name
-        if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
-            ret = basename(cmdline[1])
-        if ret.startswith('-'):
-            ret = basename(cmdline[-2])
-            if ret.startswith('-'): raise
-
-        is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
-        if is_vm:
-            # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
-            # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
-
-            cmd_str = " ".join(cmdline)
-            xmatch  = re.search("-name (.+?),", cmd_str)
-
-            if xmatch:
-                ret = xmatch.group(1)
-                ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
-
-        if not ret: raise
     except:
-        ret = basename(name)
-        # devel_log("EXCEPTION/NAME/PID: %s (%s) => '%s'" % (pid, name, ret));
+        pass # Do nothing
+
+    return ret
+
+def get_name_by_proc_comm(pid):
+    ret = None
+
+    try:
+        proc_file = ('/proc/%s/comm' % pid);
+        parts   = linecache.getline(proc_file, 1).split('\0')
+        first   = list_item_default(parts, 0, "").strip()
+        ret     = basename(first)
+
+        # devel_log("COMM/PID: %s => '%s'" % (pid, ret));
+    except:
+        pass # Do nothing
+
+    return ret
+
+def get_name_by_stat(pid):
+    ret = None
+
+    try:
+        mystr     = proc_readline('/proc/%s/stat' % pid)
+        stat_name = extract_between_parens(mystr)
+
+        # devel_log("STAT/PID: %s => '%s'" % (pid, ret));
+    except:
+        pass # Do nothing
+
+    return ret
+
+def getnamebypid(pid):
+    "Return the name of a process by taking best guesses and exclusion"
+
+    # There are three possible places PID name can live we check them in order
+    ret = get_name_by_proc_cmdline(pid)
+
+    if not ret:
+        ret = get_name_by_proc_comm(pid)
+
+    if not ret:
+        ret = get_name_by_proc_stat(pid)
+
+    cmd_raw = linecache.getline('/proc/%s/cmdline' % pid, 1).strip()
+    parts   = cmd_raw.split('\0')
+    cmdline = " ".join(parts);
+
+    # Strip off any scripting language name
+    if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
+        ret = basename(cmdline[1])
+    if ret.startswith('-'):
+        ret = basename(cmdline[-2])
+        if ret.startswith('-'): raise
+
+    # If it's a VM hypervisor we strip it down to get the VM name
+    is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
+    if is_vm:
+        # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
+        # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
+
+        cmd_str = " ".join(cmdline)
+        xmatch  = re.search("-name (.+?),", cmd_str)
+
+        if xmatch:
+            ret = xmatch.group(1)
+            ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
 
     return ret
 
