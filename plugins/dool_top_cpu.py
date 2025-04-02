@@ -42,11 +42,11 @@ class dool_plugin(dool):
             # Read the pid name
             mystr     = proc_readline('/proc/%s/stat' % pid)
             stat_name = extract_between_parens(mystr)
-            name      = getnamebypid(pid, stat_name)
+            name      = get_name_by_pid(pid)
 
             self.val['max'] = usage
             self.val['pid'] = pid
-            self.val['name'] = getnamebypid(pid, name)
+            self.val['name'] = get_name_by_pid(pid)
 #            self.val['name'] = name
 
         if self.val['max'] != 0.0:

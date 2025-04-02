@@ -40,7 +40,7 @@ class dool_plugin(dool):
             if oom_score <= self.val['max']: continue
 
             self.val['max'] = oom_score
-            self.val['name'] = getnamebypid(pid, name)
+            self.val['name'] = get_name_by_pid(pid)
             self.val['pid'] = pid
 
         if self.val['max'] != 0.0:

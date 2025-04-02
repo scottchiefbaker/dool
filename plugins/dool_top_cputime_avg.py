@@ -58,7 +58,7 @@ class dool_plugin(dool):
             if avgrun > self.val['result']:
                 self.val['result'] = avgrun
                 self.val['pid'] = pid
-                self.val['name'] = getnamebypid(pid, name)
+                self.val['name'] = get_name_by_pid(pid)
 
         if step == op.delay:
             self.pidset1 = self.pidset2

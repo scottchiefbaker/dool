@@ -32,7 +32,7 @@ class dool_plugin(dool):
                 # Read the pid name
                 mystr     = proc_readline('/proc/%s/stat' % pid)
                 stat_name = extract_between_parens(mystr)
-                name      = getnamebypid(pid, stat_name)
+                name      = get_name_by_pid(pid)
 
                 ### Extract counters
                 for l in proc_splitlines('/proc/%s/io' % pid):
@@ -62,7 +62,7 @@ class dool_plugin(dool):
                 self.val['read_usage'] = read_usage
                 self.val['write_usage'] = write_usage
                 self.val['pid'] = pid
-                self.val['name'] = getnamebypid(pid, name)
+                self.val['name'] = get_name_by_pid(pid)
                 self.val['cpu_usage'] = cpu_usage
 
         if step == op.delay:

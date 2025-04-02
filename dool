@@ -2426,7 +2426,7 @@ def get_name_by_stat(pid):
 
     return ret
 
-def getnamebypid(pid):
+def get_name_by_pid(pid):
     "Return the name of a process by taking best guesses and exclusion"
 
     # There are three possible places PID name can live we check them in order

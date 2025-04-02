@@ -24,7 +24,7 @@ class dool_plugin(dool):
 			msg = 'pid-detail: %d is not an active pid' % (pid)
 			raise Exception(msg)
 
-		name = getnamebypid(pid, 'unknown')
+		name = get_name_by_pid(pid)
 
 		# Set the plugin title at the top of the column
 		self.name = "pid info: %s" % name

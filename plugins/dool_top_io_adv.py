@@ -32,7 +32,7 @@ class dool_plugin(dool):
                 # Read the pid name
 				mystr     = proc_readline('/proc/%s/stat' % pid)
 				stat_name = extract_between_parens(mystr)
-				name      = getnamebypid(pid, stat_name)
+				name      = get_name_by_pid(pid)
 
 				### Extract counters
 				for l in proc_splitlines('/proc/%s/io' % pid):
@@ -59,7 +59,7 @@ class dool_plugin(dool):
 			usage       = read_usage + write_usage
 
 			# Make sure the name isn't too long
-			pid_name = getnamebypid(pid, name)
+			pid_name = get_name_by_pid(pid)
 			pid_name = pid_name[0:20]
 
 			### Get the process that spends the most jiffies
