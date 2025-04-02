@@ -23,6 +23,8 @@ class dool_plugin(dool):
         self.pidset2      = {}
         self.val['usage'] = 0.0
         for pid in proc_pidlist():
+            proc_file = ('/proc/%s/io' % (pid))
+
             try:
                 ### Reset values
                 if pid not in self.pidset2:
@@ -31,10 +33,10 @@ class dool_plugin(dool):
                     self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
 
                 ### Extract name
-                name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                name = get_name_by_pid(pid)
 
                 ### Extract counters
-                for l in proc_splitlines('/proc/%s/io' % pid):
+                for l in proc_splitlines(proc_file):
                     if len(l) != 2: continue
                     self.pidset2[pid][l[0]] = int(l[1])
             except IOError:
@@ -46,6 +48,11 @@ class dool_plugin(dool):
                 factor = 8
             else:
                 factor = 1
+
+            has_rchar = self.pidset1[pid].get("rchar:", False)
+
+            if not has_rchar:
+                continue
 
             # INFO: https://www.kernel.org/doc/html/latest/filesystems/proc.html#proc-pid-io-display-the-io-accounting-fields
             #
