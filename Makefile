@@ -61,6 +61,7 @@ snap:
 	cd packaging/snap/; snapcraft
 
 deb:
+	$(MAKE) install DESTDIR=packaging/debian/build
 	cd packaging/debian/; ./build.sh ; cd - > /dev/null
 
 display_config:
