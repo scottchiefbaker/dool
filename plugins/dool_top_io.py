@@ -8,7 +8,7 @@ class dool_plugin(dool):
     """
     def __init__(self):
         self.name = 'top-io'
-        self.vars = ('    name    read  writ',)
+        self.vars = ('name        read write',)
         self.type = 's'
         self.width = 22
         self.scale = 0
@@ -73,7 +73,18 @@ class dool_plugin(dool):
             self.pidset1 = self.pidset2
 
         if self.val['usage'] != 0.0:
-            self.output = '%-*s%s %s' % (self.width-11, self.val['name'][0:self.width-11], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
+            # Test long/short names for alignment
+            # self.val['name'] = '01234567890123456789BBBBBBBBB'
+            # self.val['name'] = 'foo'
+
+            name       = self.val['name']
+            name_fmt   = f"{name[:10]:<10}"  # First truncate, then pad if needed
+            column_fmt = '%s %s %s'
+
+            # Debug print the format so we can see the columns
+            # column_fmt = column_fmt.replace(" ", "|");
+
+            self.output = column_fmt % (name_fmt, cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
 
         ### Debug (show PID)
 #        self.output = '%*s %-*s%s %s' % (5, self.val['pid'], self.width-17, self.val['name'][0:self.width-17], cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
