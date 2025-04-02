@@ -2426,6 +2426,19 @@ def get_name_by_proc_stat(pid):
 
     return ret
 
+def getnamebypid(pid, default):
+    "Fallback/Deprecated wrapper for old plugins"
+
+    # Poor mans static variable
+    if not hasattr(getnamebypid, "first"):
+        getnamebypid.first = 1;
+
+    if getnamebypid.first:
+        print(text_color(214, "Warning: ") + "You are using old/deprecated Dool plugins. Please upgrade")
+        getnamebypid.first = 0
+
+    return get_name_by_pid(pid)
+
 def get_name_by_pid(pid):
     "Return the name of a process by taking best guesses and exclusion"
 
