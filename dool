@@ -2439,15 +2439,14 @@ def get_name_by_pid(pid):
         ret = get_name_by_proc_stat(pid)
 
     cmd_raw = linecache.getline('/proc/%s/cmdline' % pid, 1).strip()
-    parts   = cmd_raw.split('\0')
-    cmdline = " ".join(parts);
+    cmdline = cmd_raw.split('\0')
 
     # Strip off any scripting language name
     if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
         ret = basename(cmdline[1])
+    # I'm not sure what this does... needs more testing/documentation
     if ret.startswith('-'):
         ret = basename(cmdline[-2])
-        if ret.startswith('-'): raise
 
     # If it's a VM hypervisor we strip it down to get the VM name
     is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
