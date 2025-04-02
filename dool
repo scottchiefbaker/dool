@@ -2413,7 +2413,7 @@ def get_name_by_proc_comm(pid):
 
     return ret
 
-def get_name_by_stat(pid):
+def get_name_by_proc_stat(pid):
     ret = None
 
     try:
