@@ -40,9 +40,7 @@ class dool_plugin(dool):
             if usage < self.val['max']: continue
 
             # Read the pid name
-            mystr     = proc_readline('/proc/%s/stat' % pid)
-            stat_name = extract_between_parens(mystr)
-            name      = get_name_by_pid(pid)
+            name = get_name_by_pid(pid)
 
             self.val['max'] = usage
             self.val['pid'] = pid
