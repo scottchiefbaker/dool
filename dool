@@ -2385,7 +2385,7 @@ def basename(name):
     return name
 
 def get_name_by_proc_cmdline(pid):
-    ret = None
+    ret = ""
 
     try:
         proc_file = ('/proc/%s/cmdline' % pid);
@@ -2399,7 +2399,7 @@ def get_name_by_proc_cmdline(pid):
     return ret
 
 def get_name_by_proc_comm(pid):
-    ret = None
+    ret = ""
 
     try:
         proc_file = ('/proc/%s/comm' % pid);
@@ -2414,7 +2414,7 @@ def get_name_by_proc_comm(pid):
     return ret
 
 def get_name_by_proc_stat(pid):
-    ret = None
+    ret = ""
 
     try:
         mystr     = proc_readline('/proc/%s/stat' % pid)
