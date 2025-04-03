@@ -6,7 +6,7 @@
 class dool_plugin(dool):
     def __init__(self):
         self.name = 'most expensive block i/o process'
-        self.vars = ('process              pid     read write  cpu',)
+        self.vars = ('process                 pid  read write  cpu',)
         self.type = 's'
         self.width = 44
         self.scale = 0
@@ -52,9 +52,14 @@ class dool_plugin(dool):
             except IndexError:
                 continue
 
-            read_usage = (self.pidset2[pid]['read_bytes:'] - self.pidset1[pid]['read_bytes:']) * 1.0 / elapsed
-            write_usage = (self.pidset2[pid]['write_bytes:'] - self.pidset1[pid]['write_bytes:']) * 1.0 / elapsed
-            usage = read_usage + write_usage
+            if (op.bits):
+                factor = 8
+            else:
+                factor = 1
+
+            read_usage  = (self.pidset2[pid]['read_bytes:'] - self.pidset1[pid]['read_bytes:'])   * factor / elapsed
+            write_usage = (self.pidset2[pid]['write_bytes:'] - self.pidset1[pid]['write_bytes:']) * factor / elapsed
+            usage       = read_usage + write_usage
 
             ### Get the process that spends the most jiffies
             if usage > self.val['usage']:
