@@ -22,37 +22,32 @@ class dool_plugin(dool):
         self.output       = ''
         self.pidset2      = {}
         self.val['usage'] = 0.0
+        empty_counters = {'rchar:': 0, 'wchar:': 0}
+        mandatory_fields = empty_counters.keys()
         for pid in proc_pidlist():
-            proc_file = ('/proc/%s/io' % (pid))
-
-            try:
-                ### Reset values
-                if pid not in self.pidset2:
-                    self.pidset2[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
-                if pid not in self.pidset1:
-                    self.pidset1[pid] = {'read_bytes:': 0, 'write_bytes:': 0}
-
-                ### Extract name
-                name = get_name_by_pid(pid)
-
-                ### Extract counters
-                for l in proc_splitlines(proc_file):
-                    if len(l) != 2: continue
-                    self.pidset2[pid][l[0]] = int(l[1])
-            except IOError:
+            ### Extract counters
+            newdata = {}
+            proc_file = f'/proc/{pid}/io'
+            for l in proc_splitlines(proc_file):
+                if len(l) != 2: continue
+                if l[0] not in mandatory_fields: continue
+                newdata[l[0]] = int(l[1])
+            # Output can be missing when reading process info for other users.
+            if len(newdata) != len(mandatory_fields):
                 continue
-            except IndexError:
-                continue
+
+            ### Extract name
+            name = get_name_by_pid(pid)
+
+            # New process? Pretend the counters started at zero.
+            if pid not in self.pidset1:
+                self.pidset1[pid] = empty_counters
+            self.pidset2[pid] = newdata
 
             if (op.bits):
                 factor = 8
             else:
                 factor = 1
-
-            has_rchar = self.pidset1[pid].get("rchar:", False)
-
-            if not has_rchar:
-                continue
 
             # INFO: https://www.kernel.org/doc/html/latest/filesystems/proc.html#proc-pid-io-display-the-io-accounting-fields
             #
