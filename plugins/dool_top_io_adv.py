@@ -52,8 +52,13 @@ class dool_plugin(dool):
 			except IndexError:
 				continue
 
-			read_usage  = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * 1.0 / elapsed
-			write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * 1.0 / elapsed
+			if (op.bits):
+				factor = 8
+			else:
+				factor = 1
+
+			read_usage  = (self.pidset2[pid]['rchar:'] - self.pidset1[pid]['rchar:']) * factor / elapsed
+			write_usage = (self.pidset2[pid]['wchar:'] - self.pidset1[pid]['wchar:']) * factor / elapsed
 			usage       = read_usage + write_usage
 
 			# Make sure the name isn't too long
