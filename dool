@@ -2797,7 +2797,8 @@ def main():
         try:
             if pluginfile not in globals():
                 scope = {}
-                exec(open(pluginfile).read(), globals(), scope)
+                code = compile(open(pluginfile).read(), pluginfile, 'exec')
+                exec(code, globals(), scope)
                 plug = scope['dool_plugin']()
                 plug.filename = pluginfile
                 plug.check()
