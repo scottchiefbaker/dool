@@ -23,8 +23,8 @@ class dool_plugin(dool):
         self.val['max'] = 0.0
         for pid in proc_pidlist():
             try:
-                ### Extract name
-                name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                # Read the pid name
+                name = get_name_by_pid(pid)
 
                 ### Using dopen() will cause too many open files
                 l = proc_splitline('/proc/%s/oom_score' % pid)
