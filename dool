@@ -2445,17 +2445,20 @@ def getnamebypid(pid, default):
 
     return get_name_by_pid(pid)
 
-def get_name_by_pid(pid):
+def get_name_by_pid(pid, debug=0):
     "Return the name of a process by taking best guesses and exclusion"
 
     # There are three possible places PID name can live we check them in order
     ret = get_name_by_proc_cmdline(pid)
+    method = "cmdline"
 
     if not ret:
         ret = get_name_by_proc_comm(pid)
+        method = "comm"
 
     if not ret:
         ret = get_name_by_proc_stat(pid)
+        method = "stat"
 
     cmd_raw = linecache.getline('/proc/%s/cmdline' % pid, 1).strip()
     cmdline = cmd_raw.split('\0')
@@ -2479,6 +2482,9 @@ def get_name_by_pid(pid):
         if xmatch:
             ret = xmatch.group(1)
             ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+
+    if debug:
+        ret = method + ":" + ret
 
     return ret
 
