@@ -2396,6 +2396,8 @@ def get_name_by_proc_cmdline(pid):
     except:
         pass # Do nothing
 
+    ret = ret.strip()
+
     return ret
 
 def get_name_by_proc_comm(pid):
@@ -2411,6 +2413,8 @@ def get_name_by_proc_comm(pid):
     except:
         pass # Do nothing
 
+    ret = ret.strip()
+
     return ret
 
 def get_name_by_proc_stat(pid):
@@ -2423,6 +2427,8 @@ def get_name_by_proc_stat(pid):
         # devel_log("STAT/PID: %s => '%s'" % (pid, ret));
     except:
         pass # Do nothing
+
+    ret = ret.strip()
 
     return ret
 
