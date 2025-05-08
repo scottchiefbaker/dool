@@ -29,7 +29,7 @@ class dool_plugin(dool):
 				if pid not in self.pidset1:
 					self.pidset1[pid] = {'rchar:': 0, 'wchar:': 0, 'cputime:': 0, 'cpuper:': 0}
 
-                # Read the pid name
+				# Read the pid name
 				name = get_name_by_pid(pid)
 
 				### Extract counters
