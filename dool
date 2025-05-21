@@ -3012,6 +3012,29 @@ def list_item_default(mylist, num, default):
     else:
         return mylist[num]
 
+def truncate_pad(input_string, length):
+    """
+    Truncates a string if it's longer than the specified length,
+    or pads it with spaces on the right if it's shorter.
+
+    Args:
+        input_string (str): The string to truncate or pad
+        length (int): The desired final length of the string
+
+    Returns:
+        str: The truncated or padded string of exactly 'length' characters
+    """
+
+    ret = ""
+    if len(input_string) > length:
+        # Truncate if longer
+        ret = input_string[:length]
+    else:
+        # Pad with spaces if shorter
+        ret = input_string.ljust(length)
+
+    return ret
+
 # Krumo style debug printing
 def k(obj, prefix = "DEBUG"):
     import inspect
