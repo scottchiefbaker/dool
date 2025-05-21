@@ -74,7 +74,7 @@ class dool_plugin(dool):
             # devel_log("PID/NAME: %s => '%s'"  % (self.val['pid'], self.val['name']))
 
             name     = self.val['name']
-            name_fmt = f"{name[:11]:<11}"  # First truncate, then pad if needed
+            name_fmt = truncate_pad(name, 11)
 
             self.output = '%-11s %s %s' % (name_fmt, cprint(self.val['read_usage'], 'd', 5, 1024), cprint(self.val['write_usage'], 'd', 5, 1024))
 

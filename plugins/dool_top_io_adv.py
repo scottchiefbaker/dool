@@ -88,7 +88,7 @@ class dool_plugin(dool):
 			# self.val['name'] = 'foo'
 
 			name     = self.val['name']
-			name_fmt = f"{name[:19]:<19}"  # First truncate, then pad if needed
+			name_fmt = truncate_pad(name, 19)
 
 			column_fmt = '%-19s %s %s %s %s%%'
 			# Debug print the format so we can see the columns
