@@ -42,7 +42,7 @@ import signal
 
 from collections.abc import Sequence
 
-__version__ = '1.3.4'
+__version__ = '1.3.6'
 
 theme = { 'default': '' }
 
@@ -342,9 +342,10 @@ class Options:
                     to_remove.append(next_item)
                     self.opt_params[item] = next_item
 
-        # If we found optional params we remove them from the array
-        for x in to_remove:
-            args.remove(x)
+
+        # If an item has an option argument and we've consumed it
+        # we remove it from the args list
+        args = remove_array_items(args, to_remove)
 
         return args
 
@@ -1894,7 +1895,7 @@ def readpipe(fileobj, tmout = 0.001):
     while not select.select([fileobj.fileno()], [], [], tmout)[0]:
         pass
     while select.select([fileobj.fileno()], [], [], tmout)[0]:
-        ret = ret + fileobj.read(1)
+        ret = ret + fileobj.read(1).decode("utf-8")
     return ret.split('\n')
 
 def greppipe(fileobj, str, tmout = 0.001):
@@ -2374,44 +2375,116 @@ def get_term_color():
 
 ### We only want to filter out paths, not ksoftirqd/1
 def basename(name):
+    if name == "":
+        return ""
+
     "Perform basename on paths only"
     if name[0] in ('/', '.'):
         return os.path.basename(name)
+
     return name
 
-def getnamebypid(pid, name):
-    "Return the name of a process by taking best guesses and exclusion"
-    ret = None
+def get_name_by_proc_cmdline(pid):
+    ret = ""
 
     try:
-        #### man proc tells me there should be nulls in here, but sometimes it seems like spaces (esp google chrome)
-        # cmdline = open('/proc/%s/cmdline' % pid).read().split(('\0', ' '))
-
-        cmdline = linecache.getline('/proc/%s/cmdline' % pid, 1).split('\0')
-        ret     = basename(cmdline[0])
-
-        # Strip off any scripting language name
-        if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
-            ret = basename(cmdline[1])
-        if ret.startswith('-'):
-            ret = basename(cmdline[-2])
-            if ret.startswith('-'): raise
-
-        is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
-        if is_vm:
-            # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
-            # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
-
-            cmd_str = " ".join(cmdline)
-            xmatch  = re.search("-name (.+?),", cmd_str)
-
-            if xmatch:
-                ret = xmatch.group(1)
-                ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
-
-        if not ret: raise
+        proc_file = ('/proc/%s/cmdline' % pid);
+        parts     = linecache.getline(proc_file, 1).split('\0')
+        first     = list_item_default(parts, 0, "")
+        ret       = basename(first)
+        # devel_log("CMDLINE/PID: %s => '%s'" % (pid, ret));
     except:
-        ret = basename(name)
+        pass # Do nothing
+
+    ret = ret.strip()
+
+    return ret
+
+def get_name_by_proc_comm(pid):
+    ret = ""
+
+    try:
+        proc_file = ('/proc/%s/comm' % pid);
+        parts   = linecache.getline(proc_file, 1).split('\0')
+        first   = list_item_default(parts, 0, "").strip()
+        ret     = basename(first)
+
+        # devel_log("COMM/PID: %s => '%s'" % (pid, ret));
+    except:
+        pass # Do nothing
+
+    ret = ret.strip()
+
+    return ret
+
+def get_name_by_proc_stat(pid):
+    ret = ""
+
+    try:
+        mystr     = proc_readline('/proc/%s/stat' % pid)
+        stat_name = extract_between_parens(mystr)
+
+        # devel_log("STAT/PID: %s => '%s'" % (pid, ret));
+    except:
+        pass # Do nothing
+
+    ret = ret.strip()
+
+    return ret
+
+def getnamebypid(pid, default):
+    "Fallback/Deprecated wrapper for old plugins"
+
+    # Poor mans static variable
+    if not hasattr(getnamebypid, "first"):
+        getnamebypid.first = 1;
+
+    if getnamebypid.first:
+        print(text_color(214, "Warning: ") + "You are using old/deprecated Dool plugins. Please upgrade")
+        getnamebypid.first = 0
+
+    return get_name_by_pid(pid)
+
+def get_name_by_pid(pid, debug=0):
+    "Return the name of a process by taking best guesses and exclusion"
+
+    # There are three possible places PID name can live we check them in order
+    ret = get_name_by_proc_cmdline(pid)
+    method = "cmdline"
+
+    if not ret:
+        ret = get_name_by_proc_comm(pid)
+        method = "comm"
+
+    if not ret:
+        ret = get_name_by_proc_stat(pid)
+        method = "stat"
+
+    cmd_raw = linecache.getline('/proc/%s/cmdline' % pid, 1).strip()
+    cmdline = cmd_raw.split('\0')
+
+    # Strip off any scripting language name
+    if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
+        ret = basename(list_item_default(cmdline, 1, ""))
+    # I'm not sure what this does... needs more testing/documentation
+    if ret.startswith('-'):
+        ret = basename(list_item_default(cmdline, -2, ""))
+
+    # If it's a VM hypervisor we strip it down to get the VM name
+    is_vm = "kvm" in cmdline[0] or "qemu" in cmdline[0]
+    if is_vm:
+        # Proxmox    : /usr/bin/kvm -id 210 -name TestDHCPServer,debug-threads=on ...
+        # LibVirt+KVM: /usr/libexec/qemu-kvm -name guest=test.ewheeler.net,debug-threads=on ...
+
+        cmd_str = " ".join(cmdline)
+        xmatch  = re.search("-name (.+?),", cmd_str)
+
+        if xmatch:
+            ret = xmatch.group(1)
+            ret = ret.replace("guest=", "") # Hack to remove guest= for LibVirt+KVM
+
+    if debug:
+        ret = method + ":" + ret
 
     return ret
 
@@ -2736,7 +2809,13 @@ def main():
         try:
             if pluginfile not in globals():
                 scope = {}
-                exec(open(pluginfile).read(), globals(), scope)
+
+                # Load the plugin body into a string and then 'exec' the code
+                # into the global namespace
+                plugin_str = open(pluginfile).read()
+                code       = compile(plugin_str, pluginfile, 'exec')
+                exec(code, globals(), scope)
+
                 plug = scope['dool_plugin']()
                 plug.filename = pluginfile
                 plug.check()
@@ -2924,10 +3003,37 @@ def perform(update):
 
 # Get an item from a list, or a default value if the array isn't big enough (null coalesce)
 def list_item_default(mylist, num, default):
+    # If it's not a list, just return the default
+    if not isinstance(mylist, list):
+        return default
+
     if num > len(mylist) - 1:
         return default
     else:
         return mylist[num]
+
+def truncate_pad(input_string, length):
+    """
+    Truncates a string if it's longer than the specified length,
+    or pads it with spaces on the right if it's shorter.
+
+    Args:
+        input_string (str): The string to truncate or pad
+        length (int): The desired final length of the string
+
+    Returns:
+        str: The truncated or padded string of exactly 'length' characters
+    """
+
+    ret = ""
+    if len(input_string) > length:
+        # Truncate if longer
+        ret = input_string[:length]
+    else:
+        # Pad with spaces if shorter
+        ret = input_string.ljust(length)
+
+    return ret
 
 # Krumo style debug printing
 def k(obj, prefix = "DEBUG"):
@@ -3043,6 +3149,22 @@ def array_diff(first, second):
     second = set(second)
     return [item for item in first if item not in second]
 
+# Safely remove items from a list while handling edge cases and maintaining the original list order.
+def remove_array_items(source_list, items_to_remove):
+    # Convert items_to_remove to a set for O(1) lookup
+    remove_set = set(items_to_remove)
+
+    # Initialize the result list
+    filtered_list = []
+
+    # Iterate through the source list
+    for item in source_list:
+        # Only keep items that are not in the remove set
+        if item not in remove_set:
+            filtered_list.append(item)
+
+    return filtered_list
+
 # Start performance profiling
 def start_profiling():
     import profile
@@ -3052,6 +3174,19 @@ def start_profiling():
         os.remove(op.profile)
 
     profile.run('main()', op.profile)
+
+def extract_between_parens(text, start_delim = '(', end_delim = ')'):
+    start_index = text.find(start_delim)
+    if start_index == -1:
+        return ""
+
+    end_index = text.find(end_delim, start_index)
+    if end_index == -1:
+        return ""
+
+    # Add 1 to start_index to exclude the opening parenthesis
+    ret = text[start_index + 1:end_index]
+    return ret
 
 # Main ingress point
 def __main():

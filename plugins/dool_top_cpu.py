@@ -39,11 +39,12 @@ class dool_plugin(dool):
             ### Is it a new topper ?
             if usage < self.val['max']: continue
 
-            name = l[1][1:-1]
+            # Read the pid name
+            name = get_name_by_pid(pid)
 
             self.val['max'] = usage
             self.val['pid'] = pid
-            self.val['name'] = getnamebypid(pid, name)
+            self.val['name'] = get_name_by_pid(pid)
 #            self.val['name'] = name
 
         if self.val['max'] != 0.0:

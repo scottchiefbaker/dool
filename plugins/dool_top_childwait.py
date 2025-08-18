@@ -36,7 +36,7 @@ class dool_plugin(dool):
             if usage <= self.val['max']: continue
 
             self.val['max'] = usage
-            self.val['name'] = getnamebypid(pid, l[1][1:-1])
+            self.val['name'] = get_name_by_pid(pid)
             self.val['pid'] = pid
 
         ### Debug (show PID)

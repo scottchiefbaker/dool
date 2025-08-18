@@ -1,4 +1,4 @@
-### Author: Dag Wieers <dag$wieers,com>
+### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
 mysql_options = os.getenv('DOOL_MYSQL')
@@ -22,7 +22,7 @@ class dool_plugin(dool):
 
     def extract(self):
         try:
-            self.stdin.write('show engine innodb status\G\n')
+            self.stdin.write(b'show engine innodb status\G\n')
             line = greppipe(self.stdout, 'Pages read ')
 
             if line:

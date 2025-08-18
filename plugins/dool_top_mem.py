@@ -30,9 +30,9 @@ class dool_plugin(dool):
             ### Is it a new topper ?
             if usage <= self.val['max']: continue
 
-            self.val['max'] = usage
-            self.val['name'] = getnamebypid(pid, proc_splitline('/proc/%s/comm' % pid)[0:-1])
-            self.val['pid'] = pid
+            self.val['max']  = usage
+            self.val['name'] = get_name_by_pid(pid)
+            self.val['pid']  = pid
 
         self.output = '%-*s%s' % (self.width-5, self.val['name'][0:self.width-5], cprint(self.val['max'], 'f', 5, 1024))
 

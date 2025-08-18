@@ -1,7 +1,15 @@
 ### Author: Dag Wieers <dag$wieers,com>
 
-### FIXME: This module needs infrastructure to provide a list of mountpoints
-### FIXME: Would be nice to have a total by default (half implemented)
+# Syntax:
+#    list all mount points in /etc/mtab:
+#       dool --freespace
+#
+#    list specific mount points:
+#       dool --freespace /mnt/disk1,/mnt/vault
+#
+#    list specific mount points alternate:
+#       export DOOL_FREESPACE_MOUNT_POINTS=/mnt/disk1,/mnt/vault
+#       dool --freespace
 
 class dool_plugin(dool):
     """
@@ -50,6 +58,12 @@ class dool_plugin(dool):
             # If there is NOT an array of mount points check it against a
             # whitelisted array of fs_types
             elif (fs_type not in include_fs_types):
+                continue
+
+            is_readable = os.access(mount_point, os.R_OK)
+
+            if (not is_readable):
+                # print("Warning: Skipping %s because it is not readable" % [mount_point]);
                 continue
 
             res = os.statvfs(mount_point)

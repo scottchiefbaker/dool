@@ -34,8 +34,8 @@ class dool_plugin(dool):
                 if pid not in self.pidset1:
                     self.pidset1[pid] = {'run_ticks': 0}
 
-                ### Extract name
-                name = proc_splitline('/proc/%s/stat' % pid)[1][1:-1]
+                # Read the pid name
+                name = get_name_by_pid(pid)
 
                 ### Extract counters
                 l = proc_splitline('/proc/%s/schedstat' % pid)
@@ -54,7 +54,7 @@ class dool_plugin(dool):
             if totrun > self.val['result']:
                 self.val['result'] = totrun
                 self.val['pid'] = pid
-                self.val['name'] = getnamebypid(pid, name)
+                self.val['name'] = get_name_by_pid(pid)
 
         if step == op.delay:
             self.pidset1 = self.pidset2
