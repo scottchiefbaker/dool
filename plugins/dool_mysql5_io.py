@@ -1,7 +1,7 @@
 ### Author: <lefred$inuits,be>
 
 global mysql_user
-mysql_user = os.getenv('DOOL_MYSQL_USER') or os.getenv('USER')
+mysql_user = os.getenv('DOOL_MYSQL_USER')
 
 global mysql_pwd
 mysql_pwd = os.getenv('DOOL_MYSQL_PWD')
@@ -14,6 +14,12 @@ mysql_port = os.getenv('DOOL_MYSQL_PORT')
 
 global mysql_socket
 mysql_socket = os.getenv('DOOL_MYSQL_SOCKET')
+
+global read_default_file
+read_default_file = os.getenv('DOOL_MYSQL_DEFAULTS_FILE')
+
+global read_default_group
+read_default_group = os.getenv('DOOL_MYSQL_DEFAULTS_GROUP')
 
 class dool_plugin(dool):
     """
@@ -29,7 +35,10 @@ class dool_plugin(dool):
         global MySQLdb
         import MySQLdb
         try:
-            args = {}
+            args = {
+                    'read_default_group': 'client',
+                    'read_default_file': os.path.expanduser('~/.my.cnf'),
+                    }
             if mysql_user:
                 args['user'] = mysql_user
             if mysql_pwd:
@@ -40,10 +49,14 @@ class dool_plugin(dool):
                 args['port'] = mysql_port
             if mysql_socket:
                 args['unix_socket'] = mysql_socket
+            if read_default_file:
+                args['read_default_file'] = read_default_file
+            if read_default_group:
+                args['read_default_group'] = read_default_group
 
             self.db = MySQLdb.connect(**args)
-        except:
-            raise Exception('Cannot interface with MySQL server')
+        except Exception as e:
+            raise Exception('Cannot interface with MySQL server: %s' % e)
 
     def extract(self):
         try:
