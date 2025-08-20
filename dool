@@ -2850,13 +2850,11 @@ def main():
                 plug.check()
                 plug.prepare()
 
-        except Exception as e:
-            if plugin == op.plugins[-1]:
-                print('Module %s failed to load. (%s)' % (pluginfile, e), file=sys.stderr)
-            elif op.debug:
-                print('Module %s failed to load, trying another. (%s)' % (pluginfile, e), file=sys.stderr)
+        except Exception as err_str:
             if op.debug >= 3:
                 raise
+            else:
+                print('%sPlugin %s failed to load. (%s)' % (text_color(208, "Warning: "), text_color(15, pluginfile), err_str), file=sys.stderr)
 
             continue
 
