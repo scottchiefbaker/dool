@@ -70,7 +70,10 @@ class dool_plugin(dool):
 	################################################################################
 	def nick(self):
 		if (self.vars[0] == "HDD"):
-			return ('SSD', self.vars[1], self.vars[2])
+			new    = list(self.vars) # Tuple to array
+			new[0] = 'SSD'
+
+			return new
 
 	################################################################################
 	# Go out and get the actual data needed for the columns. Data must be returned
