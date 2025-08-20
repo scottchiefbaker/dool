@@ -2636,8 +2636,6 @@ def get_plugin_details():
             plugin_name = remod.match(filename).group(1)
             name        = plugin_name.replace('_', '-')
 
-            ret[name] = filename
-
             # If the filename has 'dool__' in it that means it needs params
             basename     = os.path.basename(filename)
             needs_params = basename.startswith("dool__")
