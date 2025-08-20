@@ -34,6 +34,8 @@ class dool_plugin(dool):
 
         if (len(mystr) > 0):
             mp = mystr.split(',')
+            # Remove all trailing `/` from any paths
+            mp = [x.rstrip("/") for x in mp]
         else:
             mp = []
 
