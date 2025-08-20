@@ -37,7 +37,7 @@ class dool_plugin(dool):
             for name in self.vars: self.val[name] = -1
 
         except Exception as e:
-            if op.debug > 1: print('dstat_innodb_buffer: exception', e)
+            if op.debug > 1: print('dool_mysql_io: exception', e)
             for name in self.vars: self.val[name] = -1
 
 # vim:ts=4:sw=4:et
