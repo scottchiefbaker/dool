@@ -48,7 +48,7 @@ theme = { 'default': '' }
 
 XDG_PATH = os.getenv('XDG_DATA_HOME') or os.path.expanduser('~/.local/share')
 
-pluginpath = [
+DOOL_PLUGIN_PATH = [
     os.path.expanduser('~/.dool/'),                           # ~/.dool/
     XDG_PATH + '/dool/plugins/',                              # ~/.local/share/dool/plugins
     os.path.dirname(os.path.abspath(__file__)) + '/plugins/', # binary path + /plugins/
@@ -2631,7 +2631,7 @@ def get_plugin_details():
     # The external `.py` plugins
     remod     = re.compile('.+/dool__?(.+).py$')
     external  = []
-    for path in pluginpath:
+    for path in DOOL_PLUGIN_PATH:
         for filename in glob.glob(path + '/dool_*.py'):
             plugin_name = remod.match(filename).group(1)
             name        = plugin_name.replace('_', '-')
@@ -2689,7 +2689,7 @@ def show_plugins():
     ######################################################################
 
     # Print the external plugins sorted by path
-    for path in pluginpath:
+    for path in DOOL_PLUGIN_PATH:
         plugins = []
         for name in external:
             pfile = plugin_details[name]['file']
