@@ -23,7 +23,7 @@ class dool_plugin(dool):
 
     def extract(self):
         try:
-            self.stdin.write(b'show engine innodb status\G\n')
+            self.stdin.write(b'show engine innodb status\\G\n')
             line = matchpipe(self.stdout, '.*OS file reads,.*')
 
             if line:
