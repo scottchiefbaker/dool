@@ -1843,6 +1843,13 @@ def set_theme():
 
 def ticks():
     "Return the number of 'ticks' since bootup"
+    if os.uname().sysname in ['Darwin', 'FreeBSD']:
+        import subprocess
+        boottime = subprocess.check_output(['sysctl', '-n', 'kern.boottime'])
+        boottime = boottime.decode().split()[3:7]
+        boottime = float(f'{boottime[0].rstrip(",")}.{boottime[3]}')
+        return time.time() - boottime
+
     try:
         for line in open('/proc/uptime', 'r').readlines():
             l = line.split()
