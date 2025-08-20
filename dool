@@ -390,7 +390,7 @@ class Options:
         return ret
 
     def version(self):
-        print('Dool', __version__)
+        print(text_color(87, 'Dool ' + __version__))
         print('Written by Scott Baker <scott@perturb.org>')
         print('Forked from Dstat written by Dag Wieers <dag@wieers.com>')
         print('Homepage at https://github.com/scottchiefbaker/dool/')
@@ -407,9 +407,9 @@ class Options:
         rows, cols = get_term_size()
         print('Terminal size: %d lines, %d columns' % (rows, cols))
         print()
-        print('Processors: %d' % getcpunr())
-        print('Pagesize: %d' % resource.getpagesize())
-        print('Clock ticks per secs: %d' % os.sysconf('SC_CLK_TCK'))
+        print('Processors   : %d' % getcpunr())
+        print('Pagesize     : %d' % resource.getpagesize())
+        print('Ticks per sec: %d' % os.sysconf('SC_CLK_TCK'))
         print()
 
         global op
@@ -2670,6 +2670,21 @@ def show_plugins():
     builtin  = []
     external = []
 
+    rows, cols = get_term_size()
+    term_width = cols - 22;
+    indent     = "        "
+    # We parse this manually because op.debug isn't available yet
+    has_debug  = "--debug" in sys.argv
+
+    # In debug mode we show which directories are parsed when looking for plugins
+    if has_debug:
+        plugin_dir_str = ",".join(DOOL_PLUGIN_PATH)
+        lines          = text_wrap(plugin_dir_str, ',', term_width)
+        print("Plugin directories:")
+        for x in lines:
+            print(indent + x)
+
+    # Parse the plugins into a hash so we can print them out later
     for name in plugin_names:
         ptype    = plugin_details[name]['type']
         params   = plugin_details[name]['params']
@@ -2681,20 +2696,12 @@ def show_plugins():
         else:
             external.append(name)
 
-    # Print the builtin plugins
-    rows, cols = get_term_size()
-    print('internal:\n\t', end='')
-    cols2 = cols - 8
-
-    for mod in builtin:
-        cols2 = cols2 - len(mod) - 2
-        if cols2 <= 0:
-            print('\n\t', end='')
-            cols2 = cols - len(mod) - 10
-        if mod != builtin[-1]:
-            print(mod, end=',')
-
-    print(mod)
+    # Print out the internal plugins
+    print(text_color(228, 'internal:'))
+    builtin_str = ",".join(builtin)
+    lines       = text_wrap(builtin_str, ',', term_width)
+    for x in lines:
+        print(indent + x)
 
     ######################################################################
 
@@ -2712,21 +2719,18 @@ def show_plugins():
             if (pdir == path):
                 plugins.append(name)
 
+        # If no plugins are found we skip this section/directory
         if not plugins: continue
+
         plugins.sort()
 
-        cols2 = cols - 8
-        print('%s:' % os.path.abspath(path), end='\n\t')
-
-        for mod in plugins:
-            cols2 = cols2 - len(mod) - 2
-            if cols2 <= 0:
-                print(end='\n\t')
-                cols2 = cols - len(mod) - 10
-            if mod != plugins[-1]:
-                print(mod, end=',')
-
-        print(mod)
+        # Print out the comma separated list of plugins in this external directory
+        dir_str = os.path.abspath(path) + ":"
+        print(text_color(15, dir_str))
+        plugin_str = ",".join(plugins)
+        lines      = text_wrap(plugin_str, ',', term_width)
+        for x in lines:
+            print(indent + x)
 
 # The main ingress point of the whole thing
 def main():
