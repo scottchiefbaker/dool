@@ -3083,22 +3083,34 @@ def text_wrap(text, delim, width=80):
     return lines
 
 # Krumo style debug printing
-def k(obj, prefix = "DEBUG"):
+def k(obj, prefix = "DEBUG", filename = "", line_num = 0):
     import inspect
 
-    # https://stackoverflow.com/questions/6810999/how-to-determine-file-function-and-line-number
-    x    = inspect.stack()[1]
-    info = inspect.getframeinfo(x[0])
+    if (filename):
+        myfile = filename
+    else:
+        # https://stackoverflow.com/questions/6810999/how-to-determine-file-function-and-line-number
+        stack    = inspect.stack()[1]
+        info     = inspect.getframeinfo(stack[0])
+        myfile   = os.path.basename(info.filename)
+        line_num = info.lineno
 
-    line_str = "#" + str(info.lineno)
-    myfile   = os.path.basename(__file__)
+    line_str = "#" + str(line_num)
 
     sys.stdout.write("%s %s @ %s: " % (prefix, text_color(228, myfile), text_color(117,line_str)))
     print(obj)
 
 # Krumo print and die
-def kd(obj):
-    k(obj, "DIED")
+def kd(obj, prefix = "DIED"):
+    import inspect
+
+    # We pass in the file/line_num because the kd() ends up in the call stack
+    stack    = inspect.stack()[1]
+    info     = inspect.getframeinfo(stack[0])
+    line_num = info.lineno
+    myfile   = os.path.basename(info.filename)
+
+    k(obj, prefix, myfile, line_num)
     sys.exit(99)
 
 # Read in a full file (or optional only X bytes)
