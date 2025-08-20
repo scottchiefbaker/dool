@@ -1904,7 +1904,7 @@ def greppipe(fileobj, str, tmout = 0.001):
     while not select.select([fileobj.fileno()], [], [], tmout)[0]:
         pass
     while select.select([fileobj.fileno()], [], [], tmout)[0]:
-        character = fileobj.read(1)
+        character = fileobj.read(1).decode("utf-8")
         if character != '\n':
             ret = ret + character
         elif ret.startswith(str):
@@ -1922,7 +1922,7 @@ def matchpipe(fileobj, string, tmout = 0.001):
     while not select.select([fileobj.fileno()], [], [], tmout)[0]:
         pass
     while select.select([fileobj.fileno()], [], [], tmout)[0]:
-        character = fileobj.read(1)
+        character = fileobj.read(1).decode("utf-8")
         if character != '\n':
             ret = ret + character
         elif regexp.match(ret):
