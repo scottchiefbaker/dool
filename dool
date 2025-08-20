@@ -3053,6 +3053,28 @@ def truncate_pad(input_string, length):
 
     return ret
 
+def text_wrap(text, delim, width=80):
+    parts        = text.split(delim)
+    lines        = []
+    current_line = ""
+
+    for part in parts:
+        # Add back the comma (except for the very last part)
+        segment = part + ","
+
+        # Check if adding this part would exceed width
+        if len(current_line) + len(segment) > width:
+            # Commit current line and start a new one
+            lines.append(current_line.rstrip(","))
+            current_line = segment
+        else:
+            current_line += segment
+
+    if current_line:
+        lines.append(current_line.rstrip(","))
+
+    return lines
+
 # Krumo style debug printing
 def k(obj, prefix = "DEBUG"):
     import inspect
