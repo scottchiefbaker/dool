@@ -1889,6 +1889,14 @@ def dpopen(cmd):
 
     return pipes[cmd]
 
+def checkerrpipe(fileobj, search, tmout = 0.05):
+    """Check available data from pipe in a non-blocking fashion
+    and raise if it matches given search string"""
+    if select.select([fileobj.fileno()], [], [], tmout)[0]:
+        err = matchpipe(fileobj, search, tmout)
+        if err:
+            raise Exception(err)
+
 def readpipe(fileobj, tmout = 0.001):
     "Read available data from pipe in a non-blocking fashion"
     ret = ''

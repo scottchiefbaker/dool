@@ -84,6 +84,7 @@ class dool_plugin(dool):
         if mysql_cmd:
             try:
                 self.stdin, self.stdout, self.stderr = dpopen('%s -n %s' % (mysql_cmd, mysql_options))
+                checkerrpipe(self.stderr, '.+')
             except IOError:
                 raise Exception('Cannot interface with MySQL binary')
             return True

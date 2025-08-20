@@ -16,6 +16,7 @@ class dool_plugin(dool):
         if os.access('/usr/bin/mysql', os.X_OK):
             try:
                 self.stdin, self.stdout, self.stderr = dpopen('/usr/bin/mysql -n %s' % mysql_options)
+                checkerrpipe(self.stderr, '.+')
             except IOError:
                 raise Exception('Cannot interface with MySQL binary')
             return True
