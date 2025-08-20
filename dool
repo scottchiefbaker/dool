@@ -3222,6 +3222,7 @@ def start_profiling():
 
     profile.run('main()', op.profile)
 
+# Find the text between two delimeters (defaults to parens)
 def extract_between_parens(text, start_delim = '(', end_delim = ')'):
     start_index = text.find(start_delim)
     if start_index == -1:
