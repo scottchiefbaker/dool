@@ -24,7 +24,7 @@ class dool_plugin(dool):
     def extract(self):
         try:
             self.stdin.write(b'show engine innodb status\\G\n')
-            line = matchpipe(self.stdout, '.*OS file reads,.*')
+            line = matchpipe(self.stdout, r'^\d+ OS file reads,')
 
             if line:
                 l = line.split()

@@ -23,7 +23,7 @@ class dool_plugin(dool):
     def extract(self):
         try:
             self.stdin.write(b'show engine innodb status\\G\n')
-            line = greppipe(self.stdout, 'Pages read ')
+            line = matchpipe(self.stdout, r'^Pages read \d+')
 
             if line:
                 l = line.split()
