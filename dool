@@ -1675,9 +1675,12 @@ def bg_color(num):
 
 # Wrap some text in a color and then a reset
 def text_color(num, mystr):
-   ret = "\033[38;5;" + str(num) + "m" + mystr +  "\033[0m"
+    if sys.stdout.isatty():
+        ret = "\033[38;5;" + str(num) + "m" + mystr +  "\033[0m"
+    else:
+        ret = mystr
 
-   return ret
+    return ret
 
 # Colors for a 256 color terminal
 color = {
