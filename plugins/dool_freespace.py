@@ -29,6 +29,13 @@ class dool_plugin(dool):
         # If there is NO string we default to showing all mount points
         global op
         mystr = op.opt_params.get('freespace', '')
+
+        # Sometimes the next param after --freespace is NOT a mountpoint
+        # i.e. dool --freespace 5
+        # This will fallback to "all" if the param doesn't look like a mountpoint
+        if (mystr == "all" or not mystr.startswith("/")):
+            mystr = ""
+
         if not mystr:
             mystr = os.environ.get('DOOL_FREESPACE_MOUNT_POINTS','').strip()
 
