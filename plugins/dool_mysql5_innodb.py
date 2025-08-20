@@ -92,7 +92,7 @@ class dool_plugin(dool):
 
     def extract(self):
         try:
-            self.stdin.write(b'show global status;\n')
+            self.stdin.write(b'SHOW GLOBAL STATUS;\n')
             for line in readpipe(self.stdout):
                 if line == '':
                     break

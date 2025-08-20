@@ -48,7 +48,7 @@ class dool_plugin(dool):
     def extract(self):
         try:
             c = self.db.cursor()
-            c.execute("""show global status like 'Bytes_%';""")
+            c.execute("SHOW GLOBAL STATUS LIKE 'Bytes_%'")
             lines = c.fetchall()
             for line in lines:
                 if len(line[1]) < 2: continue

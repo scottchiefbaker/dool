@@ -51,7 +51,7 @@ class dool_plugin(dool):
         try:
             c = self.db.cursor()
             for name in self.vars:
-                c.execute("""show global status like '%s';""" % name)
+                c.execute("SHOW GLOBAL STATUS LIKE '%s'" % name)
                 line = c.fetchone()
                 if line[0] in self.vars:
                     if line[0] + 'raw' in self.set2:

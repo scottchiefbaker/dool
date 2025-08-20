@@ -51,9 +51,9 @@ class dool_plugin(dool):
     def extract(self):
         try:
             c = self.db.cursor()
-            c.execute("""show global variables like 'max_connections';""")
+            c.execute("SHOW GLOBAL VARIABLES LIKE 'max_connections'")
             max = c.fetchone()
-            c.execute("""show global status like 'Threads_connected';""")
+            c.execute("SHOW GLOBAL STATUS LIKE 'Threads_connected'")
             thread = c.fetchone()
             if thread[0] in self.vars:
                 self.set2[thread[0]] = float(thread[1])
