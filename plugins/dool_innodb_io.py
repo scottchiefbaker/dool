@@ -1,7 +1,7 @@
 ### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
-mysql_options = os.getenv('DOOL_MYSQL')
+mysql_options = os.getenv('DOOL_MYSQL', '')
 
 class dool_plugin(dool):
     def __init__(self):

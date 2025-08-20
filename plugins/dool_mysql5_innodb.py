@@ -1,7 +1,7 @@
 ### Author: HIROSE Masaaki <hirose31 _at_ gmail.com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
-mysql_options = os.getenv('DOOL_MYSQL') or ''
+mysql_options = os.getenv('DOOL_MYSQL', '')
 
 global target_status
 global _basic_status
