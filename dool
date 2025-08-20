@@ -3109,6 +3109,7 @@ def kd(obj, prefix = "DIED"):
     myfile   = os.path.basename(info.filename)
 
     k(obj, prefix, myfile, line_num)
+    raise Exception("KRUMO_DIE")
     sys.exit(99)
 
 # Read in a full file (or optional only X bytes)
