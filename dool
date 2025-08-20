@@ -3235,6 +3235,16 @@ def extract_between_parens(text, start_delim = '(', end_delim = ')'):
     ret = text[start_index + 1:end_index]
     return ret
 
+# Loop through an array of files and return the first one on the filesystem
+def first_existing_file(files):
+    """
+    Return the first file from the array that exists on the filesystem.
+    Returns None if no files exist.
+    """
+    ret = next((f for f in files if os.path.exists(f)), None)
+
+    return ret
+
 # Main ingress point
 def __main():
     global op
