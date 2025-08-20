@@ -65,7 +65,7 @@ class dool_plugin(dool):
 		line = line.strip()
 
 		# Find the proc name that's between the ( )
-		x     = re.search("\((.*?)\)", line)
+		x     = re.search(r"\((.*?)\)", line)
 		paren = x.group(1)
 
 		# Replace any spaces in the parens part with underscores

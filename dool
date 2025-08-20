@@ -1889,6 +1889,14 @@ def dpopen(cmd):
 
     return pipes[cmd]
 
+def checkerrpipe(fileobj, search, tmout = 0.05):
+    """Check available data from pipe in a non-blocking fashion
+    and raise if it matches given search string"""
+    if select.select([fileobj.fileno()], [], [], tmout)[0]:
+        err = matchpipe(fileobj, search, tmout)
+        if err:
+            raise Exception(err)
+
 def readpipe(fileobj, tmout = 0.001):
     "Read available data from pipe in a non-blocking fashion"
     ret = ''
@@ -1904,7 +1912,7 @@ def greppipe(fileobj, str, tmout = 0.001):
     while not select.select([fileobj.fileno()], [], [], tmout)[0]:
         pass
     while select.select([fileobj.fileno()], [], [], tmout)[0]:
-        character = fileobj.read(1)
+        character = fileobj.read(1).decode("utf-8")
         if character != '\n':
             ret = ret + character
         elif ret.startswith(str):
@@ -1922,7 +1930,7 @@ def matchpipe(fileobj, string, tmout = 0.001):
     while not select.select([fileobj.fileno()], [], [], tmout)[0]:
         pass
     while select.select([fileobj.fileno()], [], [], tmout)[0]:
-        character = fileobj.read(1)
+        character = fileobj.read(1).decode("utf-8")
         if character != '\n':
             ret = ret + character
         elif regexp.match(ret):

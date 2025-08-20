@@ -1,7 +1,7 @@
 ### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
-mysql_options = os.getenv('DOOL_MYSQL')
+mysql_options = os.getenv('DOOL_MYSQL', '')
 
 class dool_plugin(dool):
     def __init__(self):
@@ -17,13 +17,14 @@ class dool_plugin(dool):
             raise Exception('Needs MySQL binary')
         try:
             self.stdin, self.stdout, self.stderr = dpopen('/usr/bin/mysql -n %s' % mysql_options)
+            checkerrpipe(self.stderr, '.+')
         except IOError as e:
             raise Exception('Cannot interface with MySQL binary (%s)' % e)
 
     def extract(self):
         try:
-            self.stdin.write(b'show engine innodb status\G\n')
-            line = greppipe(self.stdout, 'Pages read ')
+            self.stdin.write(b'SHOW ENGINE INNODB STATUS\\G\n')
+            line = matchpipe(self.stdout, r'^Pages read \d+')
 
             if line:
                 l = line.split()

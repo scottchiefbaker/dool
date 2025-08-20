@@ -1,7 +1,7 @@
 ### Author: HIROSE Masaaki <hirose31 _at_ gmail.com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
-mysql_options = os.getenv('DSTAT_MYSQL') or ''
+mysql_options = os.getenv('DOOL_MYSQL', '')
 
 global target_status
 global _basic_status
@@ -45,7 +45,7 @@ gauge = {
     'Threads_running'                 : 1,
     }
 
-class dstat_plugin(dstat):
+class dool_plugin(dool):
     """
     mysql5-innodb, mysql5-innodb-basic, mysql5-innodb-extra
 
@@ -84,6 +84,7 @@ class dstat_plugin(dstat):
         if mysql_cmd:
             try:
                 self.stdin, self.stdout, self.stderr = dpopen('%s -n %s' % (mysql_cmd, mysql_options))
+                checkerrpipe(self.stderr, '.+')
             except IOError:
                 raise Exception('Cannot interface with MySQL binary')
             return True
@@ -91,7 +92,7 @@ class dstat_plugin(dstat):
 
     def extract(self):
         try:
-            self.stdin.write(b'show global status;\n')
+            self.stdin.write(b'SHOW GLOBAL STATUS;\n')
             for line in readpipe(self.stdout):
                 if line == '':
                     break

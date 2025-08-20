@@ -1,7 +1,7 @@
 ### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
-mysql_options = os.getenv('DOOL_MYSQL')
+mysql_options = os.getenv('DOOL_MYSQL', '')
 
 class dool_plugin(dool):
     def __init__(self):
@@ -17,6 +17,7 @@ class dool_plugin(dool):
             raise Exception('Needs MySQL binary')
         try:
             self.stdin, self.stdout, self.stderr = dpopen('/usr/bin/mysql -n %s' % mysql_options)
+            checkerrpipe(self.stderr, '.+')
         except IOError:
             raise Exception('Cannot interface with MySQL binary')
 
