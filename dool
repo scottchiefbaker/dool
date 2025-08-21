@@ -2632,8 +2632,13 @@ def get_plugin_details():
             ret[name] = obj
 
     # The external `.py` plugins
-    remod     = re.compile('.+/dool__?(.+).py$')
-    external  = []
+    remod    = re.compile('.+/dool__?(.+).py$')
+    external = []
+
+    # We cheat here because we haven't parsed the options array so op.debug is not
+    # available yet
+    has_debug = "--debug" in sys.argv
+
     for path in DOOL_PLUGIN_PATH:
         for filename in glob.glob(path + '/dool_*.py'):
             plugin_name = remod.match(filename).group(1)
@@ -2650,10 +2655,6 @@ def get_plugin_details():
 
             # Add the plugin if it's not already in the list
             if (ret.get(name)):
-                # We cheat here because we haven't parsed the options array so op.debug is not
-                # available yet
-                has_debug = "--debug" in sys.argv
-
                 if has_debug:
                     k("Skipping adding %s: '%s' because it's a dupe name" % (name, filename))
             else:
