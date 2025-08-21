@@ -1,11 +1,33 @@
-### Author: Dag Wieers <dag$wieers,com>, Ming-Hung Chen <minghung.chen@gmail.com>
+### Author: <lefred$inuits,be>
 
-global mysql_options
-mysql_options = os.getenv('DOOL_MYSQL', '')
+global mysql_user
+mysql_user = os.getenv('DOOL_MYSQL_USER')
+
+global mysql_pwd
+mysql_pwd = os.getenv('DOOL_MYSQL_PWD') 
+
+global mysql_host
+mysql_host = os.getenv('DOOL_MYSQL_HOST')
+
+global mysql_port
+mysql_port = os.getenv('DOOL_MYSQL_PORT')
+
+global mysql_socket
+mysql_socket = os.getenv('DOOL_MYSQL_SOCKET')
+
+global read_default_file
+read_default_file = os.getenv('DOOL_MYSQL_DEFAULTS_FILE')
+
+global read_default_group
+read_default_group = os.getenv('DOOL_MYSQL_DEFAULTS_GROUP')
 
 class dool_plugin(dool):
+    """
+    Plugin for MySQL 5 Keys.
+    """
+
     def __init__(self):
-        self.name = 'mysql key status'
+        self.name = 'mysql5 key status'
         self.nick = ('used', 'read', 'writ', 'rreq', 'wreq')
         self.vars = ('Key_blocks_used', 'Key_reads', 'Key_writes', 'Key_read_requests', 'Key_write_requests')
         self.type = 'f'
@@ -13,35 +35,50 @@ class dool_plugin(dool):
         self.scale = 1000
 
     def check(self): 
-        if not os.access('/usr/bin/mysql', os.X_OK):
-            raise Exception('Needs MySQL binary')
+        global MySQLdb
+        import MySQLdb
         try:
-            self.stdin, self.stdout, self.stderr = dpopen('/usr/bin/mysql -n %s' % mysql_options)
-            checkerrpipe(self.stderr, '.+')
-        except IOError:
-            raise Exception('Cannot interface with MySQL binary')
+            args = {
+                    'read_default_group': 'client',
+                    'read_default_file': os.path.expanduser('~/.my.cnf'),
+                    }
+            if mysql_user:
+                args['user'] = mysql_user
+            if mysql_pwd:
+                args['passwd'] = mysql_pwd
+            if mysql_host:
+                args['host'] = mysql_host
+            if mysql_port:
+                args['port'] = mysql_port
+            if mysql_socket:
+                args['unix_socket'] = mysql_socket
+            if read_default_file:
+                args['read_default_file'] = read_default_file
+            if read_default_group:
+                args['read_default_group'] = read_default_group
+
+            self.db = MySQLdb.connect(**args)
+        except Exception as e:
+            raise Exception('Cannot interface with MySQL server: %s' % e)
 
     def extract(self):
         try:
-            self.stdin.write(b"show status like 'Key_%';\n")
-            for line in readpipe(self.stdout):
-                l = line.split()
-                if len(l) < 2: continue
-                if l[0] in self.vars:
-                    self.set2[l[0]] = float(l[1])
+            c = self.db.cursor()
+            c.execute("SHOW GLOBAL STATUS LIKE 'Key_%'")
+            lines = c.fetchall()
+            for line in lines:
+                if len(line[1]) < 2: continue
+                if line[0] in self.vars:
+                    self.set2[line[0]] = float(line[1])
 
             for name in self.vars:
-                self.val[name] = (self.set2[name] - self.set1[name]) * 1.0 / elapsed
+                self.val[name] = self.set2[name] * 1.0 / elapsed
 
             if step == op.delay:
                 self.set1.update(self.set2)
 
-        except IOError as e:
-            if op.debug > 1: print('%s: lost pipe to mysql, %s' % (self.filename, e))
-            for name in self.vars: self.val[name] = -1
-
         except Exception as e:
-            if op.debug > 1: print('%s: exception %s' % (self.filename, e))
-            for name in self.vars: self.val[name] = -1
+            for name in self.vars:
+                self.val[name] = -1
 
 # vim:ts=4:sw=4:et
