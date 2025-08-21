@@ -30,10 +30,10 @@ class dool_plugin(dool):
         self.nick  = ('sel', 'ins','upd','del')
         self.vars  = ('Com_select', 'Com_insert','Com_update','Com_delete')
         self.type  = 'd'
-        self.width = 5
-        self.scale = 1
+        self.width = 4
+        self.scale = 20
 
-    def check(self): 
+    def check(self):
         global MySQLdb
         import MySQLdb
         try:
@@ -66,12 +66,10 @@ class dool_plugin(dool):
             c.execute("SHOW GLOBAL STATUS WHERE Variable_name IN %s" % str(self.vars))
             for name, val in c.fetchall():
                 if name in self.vars:
-                    if name + 'raw' in self.set2:
-                        self.set2[name] = int(val) - self.set2[name + 'raw']
-                    self.set2[name + 'raw'] = int(val)
+                    self.set2[name] = int(val)
 
             for name in self.vars:
-                self.val[name] = self.set2[name] * 1.0 / elapsed
+                self.val[name] = (self.set2[name] - self.set1[name]) * 1.0 / elapsed
 
             if step == op.delay:
                 self.set1.update(self.set2)
