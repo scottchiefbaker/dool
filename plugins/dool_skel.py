@@ -107,8 +107,7 @@ class dool_plugin(dool):
 	# the preferred and supported method to set plugin parameters
 	#
 	# Options can be accessed via the `op` dictionary. This can be useful if you
-	# need access to --float (op.float), --integer (op.integer) or --bits
-	# (op.bits) when doing data conversions. op.debug can also be handy when testing
+	# need access to --debug (op.debug) when testing
 	################################################################################
 
 # vim: tabstop=4 shiftwidth=4 noexpandtab autoindent softtabstop=4
