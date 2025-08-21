@@ -70,6 +70,10 @@ pull requests target the `next` branch.
 Various feature/bug branches may come and go as we work on more complex
 functionality, but those can be safely ignored.
 
+Do you want to write your own plugin? Check out the
+[skel plugin](plugins/dool_skel.py) which should be well documented and
+serve as a good starting point.
+
 ### 👨 Team
 
 | Username         | Role                    |
