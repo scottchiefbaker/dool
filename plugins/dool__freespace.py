@@ -28,22 +28,20 @@ class dool_plugin(dool):
         # or fallback to the environment variable.
         # If there is NO string we default to showing all mount points
         global op
-        mystr = op.opt_params.get('freespace', '')
+        param = op.plugin_params['freespace']
 
         # Sometimes the next param after --freespace is NOT a mountpoint
         # i.e. dool --freespace 5
         # This will fallback to "all" if the param doesn't look like a mountpoint
-        if (mystr == "all" or not mystr.startswith("/")):
-            mystr = ""
+        if (param != "all" and not param.startswith("/")):
+            raise Exception("Freespace requires a comma separated list of mount points or \"all\"")
 
-        if not mystr:
-            mystr = os.environ.get('DOOL_FREESPACE_MOUNT_POINTS','').strip()
+        if (param != "all" and len(param) > 0):
+            mp = param.split(',')
 
-        if (len(mystr) > 0):
-            mp = mystr.split(',')
-            # Remove all trailing `/` from any paths
-            mp = [x.rstrip("/") for x in mp]
-        else:
+            # Remove any trailing `/` from any paths
+            mp = self.clean_mountpoints(mp)
+        elif (param == "all"):
             mp = []
 
         include_fs_types = (
@@ -57,7 +55,7 @@ class dool_plugin(dool):
             mount_point = l[1]
             fs_type     = l[2]
 
-            #print(device + " | " + mount_point + " | " + fs_type)
+            # k(device + " | " + mount_point + " | " + fs_type)
 
             # If there is an array of mount points (whitelist) and this
             # mount point is *NOT* in that list, skip it
@@ -98,5 +96,17 @@ class dool_plugin(dool):
             res = os.statvfs(name)
             self.val[name] = ( (float(res.f_blocks) - float(res.f_bavail)) * int(res.f_frsize), float(res.f_bavail) * float(res.f_frsize) )
             self.val['total'] = (self.val['total'][0] + self.val[name][0], self.val['total'][1] + self.val[name][1])
+
+    def clean_mountpoints(self, items):
+        ret = []
+
+        # Remove any trailing '/' from mount points
+        for x in items:
+            if (x != "/"):
+                x = x.rstrip("/")
+
+            ret.append(x);
+
+        return ret
 
 # vim:ts=4:sw=4:et
