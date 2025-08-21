@@ -2129,25 +2129,26 @@ def devel_log(msg):
         print("Writing devel log: '%s'" % log_file)
         DEBUG_FH = open(log_file, "w", 1)
 
-    xtime    = time.time()
+        # Print out the header line for the devel log
+        DEBUG_FH.write("|Time          |Since Prev |Description|\n");
+        DEBUG_FH.write("========================================\n");
+
     time_fmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
     time_str = time.strftime(time_fmt, time.localtime())
-
-    # Append MS the ghetto way
-    time_ms  = "." + str(round(xtime * 1000 % 1000))
-    time_str += time_ms
+    time_ns  = time.monotonic_ns()
 
     # Calculate the ms since the previous call
     if DEBUG_LAST > 0:
-       time_diff = (xtime - DEBUG_LAST) * 1000 # Milliseconds
+       time_diff = (time_ns - DEBUG_LAST) / 1000000.0 # NS -> Milliseconds
     else:
        time_diff = 0
 
-    log_line = "%s %4d ms: %s\n" % (time_str, time_diff, msg.strip())
+    # Print the formatted line to the log file
+    log_line = ("%s %7.2f ms: %s\n" % (time_str, time_diff, msg.strip()))
     DEBUG_FH.write(log_line);
 
     # Save the time of this call for the next call
-    DEBUG_LAST = xtime
+    DEBUG_LAST = time_ns
 
 def cprintlist(varlist, ctype, width, scale):
     "Return all columns color printed"
@@ -3003,9 +3004,12 @@ def perform(update):
         line = newline
         oline = ''
 
+        devel_log("Starting plugins")
         # Loop through each param section and build the output string
         for o in totlist:
             o.extract()
+
+            devel_log("Plugin: '%s'" % (plugin_obj_name(o)))
 
             if o in vislist:
                 line = line + o.show() + o.showend(totlist, vislist)
@@ -3039,6 +3043,15 @@ def perform(update):
             # sys.stdout.write(' '+theme['error']+'= warn =')
             sys.stdout.write(' ' + theme['error'] + 'missed ' + str(missed+1) + ' ticks' + theme['input'])
             missed = 0
+
+# Get the plugin name from the object. Could be an array or a string
+def plugin_obj_name(o):
+    if (isinstance(o.name, list)):
+        name = o.name[0]
+    else:
+        name = o.name
+
+    return name
 
 # Get an item from a list, or a default value if the array isn't big enough (null coalesce)
 def list_item_default(mylist, num, default):
