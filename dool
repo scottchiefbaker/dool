@@ -1354,12 +1354,20 @@ class dool_proc(dool):
             elif name == 'procs_blocked':
                 self.set2[name] = self.set2[name] + int(l[1])
 
+        # The number of new processes is the average number of processes since the last time
+        # we outputted the stats
         self.val['processes'] = (self.set2['processes'] - self.set1['processes']) * 1.0 / elapsed
+
+        # Convert to float
         for name in ('procs_running', 'procs_blocked'):
             self.val[name] = self.set2[name] * 1.0
 
+        # Triggers at the start of a new grouping of delay seconds
         if step == op.delay:
+            # Store set1 as the basis for the new averages
             self.set1.update(self.set2)
+
+            # Clear the set2 counters and start fresh
             for name in ('procs_running', 'procs_blocked'):
                 self.set2[name] = 0
 
