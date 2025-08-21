@@ -7,7 +7,7 @@ class dool_plugin(dool):
 	'''
 
 	def __init__(self):
-		# Type of data this plugin will display
+		# Type of data each column in this plugin will display
 		# f = float, s = string, b = bit/bytes, d = decimal, t = time, p = percent
 		# Default: f
 		self.type = 'd'
@@ -33,7 +33,7 @@ class dool_plugin(dool):
 		try:
 			list = os.listdir(self.file_source)
 		except:
-			raise Exception('Cannot read from /proc/net')
+			raise Exception('Cannot read from %s' %s (self.file_source))
 
 	################################################################################
 	# Go out an discover what data is available and store it in the object
@@ -70,7 +70,7 @@ class dool_plugin(dool):
 	################################################################################
 	def nick(self):
 		if (self.vars[0] == "HDD"):
-			new    = list(self.vars) # Tuple to array
+			new    = list(self.vars) # Tuple to list
 			new[0] = 'SSD'
 
 			return new
@@ -78,7 +78,8 @@ class dool_plugin(dool):
 	################################################################################
 	# Go out and get the actual data needed for the columns. Data must be returned
 	# as a dictionary with the keys that were used in vars(). Data must be stored
-	# in self.val and will be outputted automatically.
+	# in self.val and will be outputted automatically. Any keys in the dictionary
+	# that are NOT in vars() will be silently ignored.
 	#
 	# REQUIRED
 	################################################################################
@@ -87,6 +88,7 @@ class dool_plugin(dool):
 		data = {
 			'Rand': random.randint(1, 100),
 			'col2': 22,
+			'Sum' : 0,
 		}
 
 		data['Sum'] = data['Rand'] + data['col2']
