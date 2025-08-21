@@ -66,12 +66,10 @@ class dool_plugin(dool):
             for name, val in c.fetchall():
                 if len(val) < 2: continue
                 if name in self.vars:
-                    if name + 'raw' in self.set2:
-                        self.set2[name] = float(val) - self.set2[name + 'raw']
-                    self.set2[name + 'raw'] = float(val)
+                    self.set2[name] = int(val)
 
             for name in self.vars:
-                self.val[name] = self.set2[name] * 1.0 / elapsed
+                self.val[name] = (self.set2[name] - self.set1[name]) * 1.0 / elapsed
 
             if step == op.delay:
                 self.set1.update(self.set2)
