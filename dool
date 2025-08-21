@@ -396,7 +396,7 @@ class Options:
         print('Homepage at https://github.com/scottchiefbaker/dool/')
         print()
         print('Platform %s/%s' % (os.name, sys.platform))
-        print('Kernel %s' % os.uname()[2])
+        print('Kernel %s' % os.uname().release)
         print('Python %s' % sys.version)
         print()
 
@@ -1851,6 +1851,13 @@ def set_theme():
 
 def ticks():
     "Return the number of 'ticks' since bootup"
+    if os.uname().sysname in ['Darwin', 'FreeBSD']:
+        import subprocess
+        boottime = subprocess.check_output(['sysctl', '-n', 'kern.boottime'])
+        boottime = boottime.decode().split()[3:7]
+        boottime = float(f'{boottime[0].rstrip(",")}.{boottime[3]}')
+        return time.time() - boottime
+
     try:
         for line in open('/proc/uptime', 'r').readlines():
             l = line.split()
@@ -2762,7 +2769,7 @@ def main():
     pagesize = resource.getpagesize()
     interval = 1
     user     = getpass.getuser()
-    hostname = os.uname()[1]
+    hostname = os.uname().nodename
 
     ### Write term-title
     if sys.stdout.isatty():
