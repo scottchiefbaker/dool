@@ -27,10 +27,10 @@ class dool_plugin(dool):
     """
 
     def __init__(self):
-        self.name = 'mysql5 conn'
-        self.nick = ('ThCon', '%Con')
-        self.vars = ('Threads_connected', 'Threads')
-        self.type = 'f'
+        self.name  = 'mysql5 conn'
+        self.nick  = ('ThCon', 'ThRun', '%Con')
+        self.vars  = ('Threads_connected', 'Threads_running', 'Threads')
+        self.types = ('d', 'd', 'f')
         self.width = 4
         self.scale = 1
 
@@ -64,13 +64,16 @@ class dool_plugin(dool):
     def extract(self):
         try:
             c = self.db.cursor()
+
             c.execute("SHOW GLOBAL VARIABLES LIKE 'max_connections'")
             max = c.fetchone()
-            c.execute("SHOW GLOBAL STATUS LIKE 'Threads_connected'")
-            thread = c.fetchone()
-            if thread[0] in self.vars:
-                self.set2[thread[0]] = float(thread[1])
-                self.set2['Threads'] = float(thread[1]) / float(max[1]) * 100.0
+
+            c.execute("SHOW GLOBAL STATUS LIKE 'Threads%'")
+            for name, val in c.fetchall():
+                if name in self.vars:
+                    self.set2[name] = float(val)
+                    if name == 'Threads_connected':
+                        self.set2['Threads'] = float(val) / float(max[1]) * 100.0
 
             for name in self.vars:
                 self.val[name] = self.set2[name] * 1.0 / elapsed
