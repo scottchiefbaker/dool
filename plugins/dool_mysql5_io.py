@@ -29,6 +29,7 @@ class dool_plugin(dool):
     def __init__(self):
         self.name = 'mysql5 io'
         self.nick = ('recv', 'sent')
+        self.type = 'b'
         self.vars = ('Bytes_received', 'Bytes_sent')
 
     def check(self): 
@@ -62,13 +63,12 @@ class dool_plugin(dool):
         try:
             c = self.db.cursor()
             c.execute("SHOW GLOBAL STATUS LIKE 'Bytes_%'")
-            lines = c.fetchall()
-            for line in lines:
-                if len(line[1]) < 2: continue
-                if line[0] in self.vars:
-                    if line[0] + 'raw' in self.set2:
-                        self.set2[line[0]] = float(line[1]) - self.set2[line[0] + 'raw']
-                    self.set2[line[0] + 'raw'] = float(line[1])
+            for name, val in c.fetchall():
+                if len(val) < 2: continue
+                if name in self.vars:
+                    if name + 'raw' in self.set2:
+                        self.set2[name] = float(val) - self.set2[name + 'raw']
+                    self.set2[name + 'raw'] = float(val)
 
             for name in self.vars:
                 self.val[name] = self.set2[name] * 1.0 / elapsed
