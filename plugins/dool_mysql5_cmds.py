@@ -26,10 +26,10 @@ class dool_plugin(dool):
     Plugin for MySQL 5 commands.
     """
     def __init__(self):
-        self.name = 'mysql5 cmds'
-        self.nick = ('sel', 'ins','upd','del')
-        self.vars = ('Com_select', 'Com_insert','Com_update','Com_delete')
-        self.type = 'd'
+        self.name  = 'mysql5 cmds'
+        self.nick  = ('sel', 'ins','upd','del')
+        self.vars  = ('Com_select', 'Com_insert','Com_update','Com_delete')
+        self.type  = 'd'
         self.width = 5
         self.scale = 1
 
@@ -63,13 +63,12 @@ class dool_plugin(dool):
     def extract(self):
         try:
             c = self.db.cursor()
-            for name in self.vars:
-                c.execute("SHOW GLOBAL STATUS LIKE '%s'" % name)
-                line = c.fetchone()
-                if line[0] in self.vars:
-                    if line[0] + 'raw' in self.set2:
-                        self.set2[line[0]] = int(line[1]) - self.set2[line[0] + 'raw']
-                    self.set2[line[0] + 'raw'] = int(line[1])
+            c.execute("SHOW GLOBAL STATUS WHERE Variable_name IN %s" % str(self.vars))
+            for name, val in c.fetchall():
+                if name in self.vars:
+                    if name + 'raw' in self.set2:
+                        self.set2[name] = int(val) - self.set2[name + 'raw']
+                    self.set2[name + 'raw'] = int(val)
 
             for name in self.vars:
                 self.val[name] = self.set2[name] * 1.0 / elapsed
