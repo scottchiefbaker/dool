@@ -2,14 +2,10 @@
 
 # Syntax:
 #    list all mount points in /etc/mtab:
-#       dool --freespace
+#       dool --freespace all
 #
 #    list specific mount points:
 #       dool --freespace /mnt/disk1,/mnt/vault
-#
-#    list specific mount points alternate:
-#       export DOOL_FREESPACE_MOUNT_POINTS=/mnt/disk1,/mnt/vault
-#       dool --freespace
 
 class dool_plugin(dool):
     """
