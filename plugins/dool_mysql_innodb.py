@@ -47,29 +47,28 @@ gauge = {
 
 class dool_plugin(dool):
     """
-    mysql5-innodb, mysql5-innodb-basic, mysql5-innodb-extra
+    mysql-innodb
 
-    display various metircs on MySQL5 and InnoDB.
+    display various metircs on MySQL and InnoDB.
     """
     def __init__(self):
-        self.name = 'MySQL5 InnoDB '
+        self.name = 'MySQL InnoDB'
         self.type = 'd'
         self.width = 5
         self.scale = 1000
 
     def check(self):
-        if self.filename.find("basic") >= 0:
-            target_status = _basic_status
-            self.name += 'basic'
-        elif self.filename.find("extra") >= 0:
+        mode = os.environ.get('DOOL_INNODB_OPT', "basic")
+
+        if mode == "extra":
             target_status = _extra_status
-            self.name += 'extra'
-        elif self.filename.find("full") >= 0:
+            self.name += ' extra'
+        elif mode == "full":
             target_status = _basic_status + _extra_status
-            self.name += 'full'
+            self.name += ' full'
         else:
-            target_status = _basic_status + _extra_status
-            self.name += 'full'
+            target_status = _basic_status
+            self.name += ' basic'
 
         self.vars = tuple( map((lambda e: e[0]), target_status) )
         self.nick = tuple( map((lambda e: e[1]), target_status) )
