@@ -1,4 +1,5 @@
 ### Author: Dag Wieers <dag$wieers,com>
+# DOOL_OPTS: PARAM_REQUIRED
 
 # Syntax:
 #    list all mount points in /etc/mtab:

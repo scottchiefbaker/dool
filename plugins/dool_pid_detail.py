@@ -1,4 +1,5 @@
 ### Author: Scott Baker - <https://www.perturb.org/>
+# DOOL_OPTS: PARAM_REQUIRED
 
 class dool_plugin(dool):
 	"""
