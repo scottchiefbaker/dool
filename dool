@@ -2658,7 +2658,8 @@ def get_plugin_details():
     has_debug = "--debug" in sys.argv
 
     for path in DOOL_PLUGIN_PATH:
-        for filename in glob.glob(path + '/dool_*.py'):
+        # Plugins must be named dool_NAME.py
+        for filename in glob.glob(path + '/dool_[a-zA-Z0-9]*.py'):
             plugin_name = name_regexp.match(filename).group(1)
             name        = plugin_name.replace('_', '-')
             basename    = os.path.basename(filename)
