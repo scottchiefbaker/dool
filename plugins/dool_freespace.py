@@ -42,7 +42,7 @@ class dool_plugin(dool):
             mp = []
 
         include_fs_types = (
-            'ext2', 'ext3', 'ext4', 'btrfs', 'xfs'
+            'ext2', 'ext3', 'ext4', 'btrfs', 'xfs', 'zfs'
         )
 
         for l in self.splitlines():
