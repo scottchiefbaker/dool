@@ -73,18 +73,21 @@ class dool_plugin(dool):
 			# Throw away the partial line
 			file.readline()
 
-			pattern = r'(\S+) (\S+) (\S+) \[([^\]]+)\] "([^"]+)" (\d+) (\S+) "([^"]*)" "([^"]*)"'
+			# Time is between [ ]
+			# HTTP status code is digits after "
+			# Bytes transferred is after HTTP status
+			pattern = r'\[(.+?)\].*" (\d+)\s+(\d+) "'
 			stats   = {}
 			count   = 0
 
 			# Read lines from that position
 			for line in file:
 				# print(line)
-				match = re.match(pattern, line)
+				match = re.search(pattern, line)
 
 				# If we match the regexp
 				if (match):
-					line_time = self.get_apache_unixtime(match.group(4))
+					line_time = self.get_apache_unixtime(match.group(1))
 					diff      = now - line_time
 
 					# If this line is within the last X seconds
@@ -92,7 +95,7 @@ class dool_plugin(dool):
 						count += 1
 
 						# Group the status codes by 2xx, 3xx, 4xx, 5xx
-						status_code = int(match.group(6))
+						status_code = int(match.group(2))
 						status_str  = str(int(round(status_code, -2) / 100)) + "xx"
 
 						# Increment the current number
