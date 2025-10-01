@@ -1,3 +1,62 @@
+* 1.3.8
+- Update the MySQL plugins to use the MySQLdb Python interface
+- MySQL plugins can now read credentials from ~/.my.cnf
+- Add a new --apache plugin to report 2xx, 3xx, 4xx, and 5xx errors
+- Better error logging when a plug-in fails to load
+- A new --skeleton plug-in was written with detailed documentation for potential plug-in authors
+- Update the internal devel_log() function to log milliseconds for more accuracy
+- Read plug-ins from $XDG_DATA_HOME (~/.local/share/dool/plugins)
+- We use GNU Geptopt now so we can use --parti words and the step and delay can be positioned anywhere in the param list
+- Start of some basic functionality for MacOS by @btriller in #106
+- Plug-ins can now specify DOOL_OPTS in the first 256 bytes of the plugin to indicate if a parameter is required
+- Added zfs as recognized partition types in --freespace
+
+# Breaking changes
+- The freespace plugin now requires a comma separated list of paths or the string "all"
+- Some of MySQL plugin files changed names. Please remove all old plug-in files and use the ones from this release instead
+- The --mysql-innodb plugin now takes an environment variable DOOL_INNODB_OPT of basic, extra, or full.
+
+* 1.3.6
+- Add plugin for LNET (Lustre Network) by @hv15 in #88
+- Fix readpipe function and update plugins for Python3 by @minghungchen in #90
+- Fix empty row for the first iteration of --top-io by @Lekensteyn in #96
+- Include plugin path and source code in error tracebacks by @Lekensteyn in #99
+
+* 1.3.4
+- Fix plugin loading for Python 3.13 by @wfraser in #83
+- Added rudimentary Debian packaging information. by @uroskn in #81
+- fix undefined variable 'mod' in plugin loading error reporting by @wfraser in #84
+- Tweaked the header lines to be + after an entire page has scrolled by
+- Added documentation on how to package Dool
+- Lots of work in packaging up RPM and Deb files
+- Fix the top-io (all IO) and top-bio (Block IO) plugins and clarify the source of data for each
+
+* 1.3.3
+- Package plugins in PIP by @raylu in #74
+- Add some emojis to README
+- Allow the --io plugin to read from symlinks like /dev/disk-by-uuid (#79)
+- Removed old examples directory that was not relevant anymore
+- Fix the --noupdate option and make dool work better for non-tty connections (#77)
+- General code clean-up and best practices
+- Comments added to code to make parsing simpler for future Scott
+- Add team members to README
+- More internal dstat -> dool name changes
+
+* 1.3.2
+- Publish on PyPI by @raylu in #68
+- Add a new --dstat option to emulate old functionality
+- Remove code paths for Python 2.x as we're 100% Python 3.x now (and have been for a long time)
+- Add documentation about bits vs bytes to refer tickets to when we get questions
+- Fixes for long names on --top-io-adv plugin
+- The --freespace plugin can now optionally take a comma separate list of mount points now
+
+* 1.3.1
+- Fix help of vmstat (as it includes sys instead of swap) - Fixes #54 by @F-S-T in #55
+- Fixes #60 - Multiple SWAP's breaks output by @Mai-Lapyst in #61
+- Better support for NVME drives
+- Support for Python v3.12
+- Shorter and more concise device names (info in #59)
+
 * 1.3.0
 - add support for terminals with only 16 colors by @leahneukirchen in #43
 - Correctly report disk stats for NVME drives by @scottchiefbaker in #49
