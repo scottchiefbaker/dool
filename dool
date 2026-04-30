@@ -3138,7 +3138,7 @@ def k(obj, prefix = "DEBUG", filename = "", line_num = 0):
 
     line_str = "#" + str(line_num)
 
-    sys.stdout.write("%s %s @ %s: " % (prefix, text_color(228, myfile), text_color(117,line_str)))
+    sys.stdout.write("%s %s @ %s: " % (text_color(15, prefix), text_color(228, myfile), text_color(117,line_str)))
     print(obj)
 
 # Krumo print and die
