@@ -6,13 +6,14 @@ architecture to allow monitoring other system metrics.
 
 Dool is a Python3 compatible fork of [Dstat](https://github.com/dagwieers/dstat).
 
-### 📦 Installation:
+### 📦 Installation
 
-1. Download the [latest release](https://github.com/scottchiefbaker/dool/releases) archive file or clone the Git repo
+1. Download the [latest release](https://github.com/scottchiefbaker/dool/releases)
+archive file or clone the Git repo
 2. Copy `dool` into your `$PATH`
 3. Copy `plugins/*` to `~/.dool/` (optional)
 
-### ✨ Usage:
+### ✨ Usage
 
 	dool [--preset] [--plugin] [delay]
 
@@ -24,7 +25,7 @@ which uses the `--more` preset and outputs data every 15 seconds. Available
 presets are `--defaults`, `--more`, or `--all`. If no **delay** is specified,
 Dool will default to outputting every second.
 
-### 🖼️ Screenshots:
+### 🖼️ Screenshots
 
 Dark mode (default)
 ![Dool Light](https://user-images.githubusercontent.com/3429760/192394845-bb4790b9-0a67-4137-90a2-87efcfc1014e.png)
@@ -42,24 +43,30 @@ Dool ships with many plug-ins to configure the output to your taste.
 
 A list of available plug-ins are available when you run `dool --version`
 
-### 🎨 Colors:
+### 🎨 Colors
 
 Dool expects a 256 color compatible terminal. Most modern terminal emulators
 support this automatically. A `--color16` option is available if you only have
 a 16 color terminal.
 
-### 📈 Bits vs Bytes:
+### 📈 Bits vs Bytes
 
 One of the changes in `dool` is measurement of network and disk bandwidth in
 *bits* instead of bytes. This can be confusing if you're used to seeing
 lower numbers in `dstat`. If you would rather see bandwidth reported in bytes
 you can use the `--bytes` option.
 
-### 🧰 Other tools similar to Dool:
+### 🧰 Other tools similar to Dool
 
 * [htop](https://htop.dev/)
 * [btop](https://github.com/aristocratos/btop)
 * [iotop](https://github.com/Tomas-M/iotop)
+
+### 🎁 Packaging Dool for your distro
+
+If you want to build a Dool package for your favorite distribution check out
+our simple [instructions](packaging/packaging.md). Currently we have scripts
+to build `rpm`, `deb`, and `.tar.gz` packages.
 
 ### 🌿 Pull Requests and Branches
 
