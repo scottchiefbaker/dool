@@ -1,2 +1,5 @@
-Dool  - Scott Baker <scott@perturb.org>
-Dstat - Dag Wieers <dag@wieers.com>
+| Username         | Role                    |
+| ---------------- | ----------------------- |
+| @scottchiefbaker | Primary author          |
+| @dagwieers       | Original `dstat` author |
+| @raylu           | Pip release manager     |
