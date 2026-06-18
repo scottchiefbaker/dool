@@ -2134,7 +2134,11 @@ def devel_log(msg):
     if not DEBUG_FH:
         log_file = "/tmp/dool-devel.log"
         print("Writing devel log: '%s'" % log_file)
-        DEBUG_FH = open(log_file, "w", 1)
+        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+        if hasattr(os, 'O_NOFOLLOW'):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(log_file, flags, 0o600)
+        DEBUG_FH = os.fdopen(fd, "w", 1)
 
         # Print out the header line for the devel log
         DEBUG_FH.write("|Time          |Since Prev |Description|\n");
