@@ -3032,7 +3032,10 @@ def perform(update):
 
             # Prep the line for the CSV file
             if op.output and step == op.delay:
-                oline = oline + o.showcsv() + o.showcsvend(totlist, vislist)
+                csv_cell = o.showcsv()
+                if o.type == 's' and len(o.vars) == 1:
+                    csv_cell = csv_quote_string_cell(csv_cell)
+                oline = oline + csv_cell + o.showcsvend(totlist, vislist)
 
         ### Put the output in the csv file
         if op.output and step == op.delay:
@@ -3171,6 +3174,12 @@ def file_slurp(filename, size = -1):
         fd.close()
 
     return ret
+
+def csv_quote_string_cell(text):
+    "Quote free-form CSV string cells and neutralize spreadsheet formulas"
+    if text and text[0] in ('=', '+', '-', '@'):
+        text = "'" + text
+    return '"' + text.replace('"', '""') + '"'
 
 # Make human readable device names that are shorter
 #
