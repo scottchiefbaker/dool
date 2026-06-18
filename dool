@@ -2928,7 +2928,6 @@ def main():
         # The time the next update will run
         update = update + interval
         linecache.clearcache()
-        devel_log("Loop #%d" % update)
 
     print()
 
@@ -2938,6 +2937,7 @@ def perform(update):
         global elapsed, totaltime, starttime
         global loop, step, missed
 
+        devel_log("Loop #%d" % update)
         starttime = time.time()
 
         # The number of the current loop (not counting subdates)
