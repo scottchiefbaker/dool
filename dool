@@ -2144,7 +2144,7 @@ def devel_log(msg):
         DEBUG_FH = os.fdopen(fd, "w", 1)
 
         # Print out the header line for the devel log
-        DEBUG_FH.write("|Time          |Since Prev |Description|\n");
+        DEBUG_FH.write("Time            Since Prev  Description\n");
         DEBUG_FH.write("========================================\n");
 
     time_fmt = os.getenv('DOOL_TIMEFMT') or '%b-%d %H:%M:%S'
@@ -2158,7 +2158,7 @@ def devel_log(msg):
        time_diff = 0
 
     # Print the formatted line to the log file
-    log_line = ("%s %7.2f ms: %s\n" % (time_str, time_diff, msg.strip()))
+    log_line = ("%s %7.2f ms  %s\n" % (time_str, time_diff, msg.strip()))
     DEBUG_FH.write(log_line);
 
     # Save the time of this call for the next call
