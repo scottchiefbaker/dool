@@ -36,6 +36,7 @@ import os
 import re
 import resource
 import sched
+import subprocess
 import sys
 import time
 import signal
@@ -1972,20 +1973,20 @@ def matchpipe(fileobj, string, tmout = 0.001):
 
 # Test if a command is capable of being run
 def cmd_test(cmd):
-    pipes = os.popen3(cmd, 't', 0)
-    for line in pipes[2].readlines():
-        raise Exception(line.strip())
+    p = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if p.stderr:
+        raise Exception(p.stderr.strip())
 
 # Read command output line by line
 def cmd_readlines(cmd):
-    pipes = os.popen3(cmd, 't', 0)
-    for line in pipes[1].readlines():
+    p = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    for line in p.stdout.splitlines(keepends=True):
        yield line
 
 # Read command output column by column
 def cmd_splitlines(cmd, sep=None):
-    pipes = os.popen3(cmd, 't', 0)
-    for line in pipes[1].readlines():
+    p = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    for line in p.stdout.splitlines():
        yield line.split(sep)
 
 def proc_readlines(filename):
