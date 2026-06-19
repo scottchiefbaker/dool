@@ -9,6 +9,7 @@
 
 import os
 import re
+import subprocess
 
 global condor_classad
 
@@ -105,8 +106,11 @@ class dool_plugin(dool):
             raise Exception('Needs %s in the path' % self.condor_status_cmd)
         else:
             try:
-                import subprocess
-                ret = subprocess.run([self.condor_status_cmd], stderr=subprocess.DEVNULL).returncode
+                ret = subprocess.run(
+                    [self.condor_status_cmd],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                ).returncode
                 if ret != 0:
                     raise Exception('Cannot interface with Condor - condor_q returned != 0?')
             except IOError:
@@ -118,7 +122,6 @@ class dool_plugin(dool):
 
         try:
             for repeats in range(3):
-                import subprocess
                 result = subprocess.run([self.condor_status_cmd], capture_output=True, text=True)
                 last_line = result.stdout.splitlines()[-1] if result.stdout.strip() else None
 
