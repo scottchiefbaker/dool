@@ -36,12 +36,11 @@ import os
 import re
 import resource
 import sched
+import signal
 import subprocess
 import sys
-import time
-import signal
 import sysconfig
-import subproces
+import time
 
 from collections.abc import Sequence
 
