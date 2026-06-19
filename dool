@@ -1980,13 +1980,13 @@ def cmd_test(cmd):
 def cmd_readlines(cmd):
     p = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     for line in p.stdout.splitlines(keepends=True):
-        yield line
+       yield line
 
 # Read command output column by column
 def cmd_splitlines(cmd, sep=None):
     p = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     for line in p.stdout.splitlines():
-        yield line.split(sep)
+       yield line.split(sep)
 
 def proc_readlines(filename):
     "Return the lines of a file, one by one"
