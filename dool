@@ -40,6 +40,7 @@ import sys
 import time
 import signal
 import sysconfig
+import subproces
 
 from collections.abc import Sequence
 
