@@ -9,6 +9,7 @@
 
 import os
 import re
+import subprocess
 
 global condor_classad
 
@@ -38,7 +39,8 @@ class condor_classad:
     def __getitem__(self, name):
         if name in self.attributes:
             self._expand(name)
-        return self.attributes[name]
+            return self.attributes[name]
+        return None
 
     def _expand(self, var):
         if not var in self.attributes:
@@ -89,13 +91,13 @@ class dool_plugin(dool):
         self.condor_config = None
 
     def check(self):
-        config_file = os.environ['CONDOR_CONFIG']
-        if config_file == None:
-            raise Exception('Environment varibale CONDOR_CONFIG is missing')
+        config_file = os.environ.get('CONDOR_CONFIG')
+        if config_file is None:
+            raise Exception('Environment variable CONDOR_CONFIG is missing')
         self.condor_config = condor_classad(config_file)
 
         bin_dir = self.condor_config['BIN']
-        if bin_dir == None:
+        if bin_dir is None:
             raise Exception('Unable to find BIN directory in condor config file %s' % config_file)
 
         self.condor_status_cmd = os.path.join(bin_dir, 'condor_q')
@@ -104,9 +106,12 @@ class dool_plugin(dool):
             raise Exception('Needs %s in the path' % self.condor_status_cmd)
         else:
             try:
-                p = os.popen(self.condor_status_cmd+' 2>&1 /dev/null')
-                ret = p.close()
-                if ret:
+                ret = subprocess.run(
+                    [self.condor_status_cmd],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                ).returncode
+                if ret != 0:
                     raise Exception('Cannot interface with Condor - condor_q returned != 0?')
             except IOError:
                 raise Exception('Unable to execute %s' % self.condor_status_cmd)
@@ -117,12 +122,12 @@ class dool_plugin(dool):
 
         try:
             for repeats in range(3):
-                for last_line in cmd_readlines(self.condor_status_cmd):
-                    pass
+                result = subprocess.run([self.condor_status_cmd], capture_output=True, text=True)
+                last_line = result.stdout.splitlines()[-1] if result.stdout.strip() else None
 
                 m = CONDOR_Q_STAT_PATTER.match(last_line)
                 if m == None:
-                    raise Exception('Invalid output from %s. Got: %s' % (cmd, last_line))
+                    raise Exception('Invalid output from %s. Got: %s' % (self.condor_status_cmd, last_line))
 
                 stats = [int(s.strip()) for s in m.groups()]
                 for i,j in enumerate(self.vars):
