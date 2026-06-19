@@ -1,7 +1,10 @@
+import shlex
+import subprocess
+
 ### Author: HIROSE Masaaki <hirose31 _at_ gmail.com>, Ming-Hung Chen <minghung.chen@gmail.com>
 
 global mysql_options
-mysql_options = os.getenv('DOOL_MYSQL', '')
+mysql_options = shlex.split(os.getenv('DOOL_MYSQL', ''))
 
 global target_status
 global _basic_status
@@ -82,7 +85,14 @@ class dool_plugin(dool):
 
         if mysql_cmd:
             try:
-                self.stdin, self.stdout, self.stderr = dpopen('%s -n %s' % (mysql_cmd, mysql_options))
+                p = subprocess.Popen(
+                    [mysql_cmd, '-n'] + mysql_options,
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    close_fds=True,
+                )
+                self.stdin, self.stdout, self.stderr = p.stdin, p.stdout, p.stderr
                 checkerrpipe(self.stderr, '.+')
             except IOError:
                 raise Exception('Cannot interface with MySQL binary')
@@ -119,4 +129,3 @@ class dool_plugin(dool):
         except Exception as e:
             if op.debug > 1: print('%s: exception' % (self.filename, e))
             for name in self.vars: self.val[name] = -1
-

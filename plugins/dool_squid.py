@@ -1,3 +1,6 @@
+import shlex
+import subprocess
+
 ### Authority: Jason Friedland <thesuperjason@gmail.com>
 
 # This plugin has been tested with:
@@ -7,7 +10,7 @@
 # - Squid 2.6 and 2.7
  
 global squidclient_options
-squidclient_options = os.getenv('DOOL_SQUID_OPTS') # -p 8080
+squidclient_options = shlex.split(os.getenv('DOOL_SQUID_OPTS') or '') # -p 8080
  
 class dool_plugin(dool):
     '''
@@ -32,12 +35,23 @@ class dool_plugin(dool):
     def check(self):
         if not os.access('/usr/sbin/squidclient', os.X_OK):
             raise Exception('Needs squidclient binary')
-        cmd_test('/usr/sbin/squidclient %s mgr:info' % squidclient_options)
+        r = subprocess.run(
+            ['/usr/sbin/squidclient'] + squidclient_options + ['mgr:info'],
+            capture_output=True,
+            text=True,
+        )
+        if r.returncode != 0 and r.stderr:
+            raise Exception(r.stderr.strip())
         return True
  
     def extract(self):
         try:
-            for l in cmd_splitlines('/usr/sbin/squidclient %s mgr:info' % squidclient_options, ':'):
+            r = subprocess.run(
+                ['/usr/sbin/squidclient'] + squidclient_options + ['mgr:info'],
+                capture_output=True,
+                text=True,
+            )
+            for l in [line.split(':') for line in r.stdout.splitlines()]:
                 if l[0].strip() in self.vars:
                     self.val[l[0].strip()] = l[1].strip()
                     break
