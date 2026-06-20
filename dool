@@ -100,7 +100,15 @@ class Options:
 
         ### Get all the plugins and their details
         self.plugin_details = get_plugin_details()
-        plugin_opt_list     = self.get_opt_list_from_details(self.plugin_details)
+
+        # Scanning plugin opts opens every plugin file. Skip it for early-exit
+        # commands (--version, --help, --list) that don't parse plugin options.
+        # --all-plugins needs the full opt list, so don't skip if it's present.
+        early_exit = {'--version', '-V', '--help', '-h', '--list'}
+        if early_exit & set(args) and '--all-plugins' not in args:
+            plugin_opt_list = []
+        else:
+            plugin_opt_list     = self.get_opt_list_from_details(self.plugin_details)
 
         ### List of plugins to show
         self.plugins = []
@@ -364,8 +372,13 @@ class Options:
 
         for name in plugin_names:
             path  = plugin_details[name]['file'] # Path to plugin file
-            opts  = plugin_details[name]['opts'] # Plugin needs CLI params
+            opts  = plugin_details[name]['opts'] # Plugin needs CLI params (None = not yet scanned)
             ptype = plugin_details[name]['type'] # builtin or exteral
+
+            # Lazily scan the plugin file for DOOL_OPTS on first access
+            if opts is None:
+                opts = get_plugin_file_opts(path)
+                plugin_details[name]['opts'] = opts
 
             param_req = "PARAM_REQUIRED" in opts
 
@@ -2675,8 +2688,8 @@ def get_plugin_details():
                 if has_debug:
                     k("Skipping adding %s: '%s' because it's a dupe name" % (name, filename))
             else:
-                # See if there are any special options specified in the plugin file
-                obj['opts'] = get_plugin_file_opts(filename)
+                # Opts are scanned lazily by get_opt_list_from_details()
+                obj['opts'] = None
                 ret[name]   = obj
 
     return ret
