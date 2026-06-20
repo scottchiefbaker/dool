@@ -17,6 +17,15 @@ class dool_plugin(dool):
         self.scale = 999
 
     def check(self):
+        port = os.environ.get('DOOL_MEMCACHE_PORT', 11211)
+        host = os.environ.get('DOOL_MEMCACHE_HOST', "127.0.0.1")
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(1)
+            s.connect((host, port))
+            s.close()
+        except Exception:
+            raise Exception('Cannot connect to memcached at %s:%d' % (host, port))
         return 1
 
     def extract(self):
@@ -38,8 +47,7 @@ class dool_plugin(dool):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         except socket.error as err:
-            print("socket creation failed with error %s" % (err))
-            sys.exit(2)
+            raise Exception("socket creation failed with error %s" % (err))
 
         # Check some ENV variables first, then fall back to the defaults
         port = os.environ.get('DOOL_MEMCACHE_PORT', 11211)
@@ -48,8 +56,7 @@ class dool_plugin(dool):
         try:
             s.connect((host, port))
         except:
-            print("Memcache: Error connecting to %s:%d" % (host, port))
-            sys.exit(1)
+            raise Exception("Memcache: Error connecting to %s:%d" % (host, port))
 
         # Send the stats command and then the quit command right after
         s.sendall(b"stats\n")
