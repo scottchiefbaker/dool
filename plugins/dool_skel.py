@@ -33,7 +33,7 @@ class dool_plugin(dool):
 		try:
 			list = os.listdir(self.file_source)
 		except:
-			raise Exception('Cannot read from %s' %s (self.file_source))
+			raise Exception('Cannot read from %s' % (self.file_source))
 
 	################################################################################
 	# Go out an discover what data is available and store it in the object
