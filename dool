@@ -239,7 +239,9 @@ class Options:
             elif opt in ['-f', '--full']:
                 self.full = True
             elif opt in ['--all-plugins']:
-                self.plugins += plugin_opt_list
+                # Strip the trailing '=' from PARAM_REQUIRED plugins, that
+                # suffix is only meaningful for getopt() parsing.
+                self.plugins += [p[:-1] if p.endswith('=') else p for p in plugin_opt_list]
             elif opt in ['--bytes']:
                 self.bits = False
             elif opt in ['--bits']:
