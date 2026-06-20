@@ -38,7 +38,7 @@ class dool_plugin(dool):
     opct = status['opcounters']
 
     for name in self.vars:
-      if name in opct.iterkeys():
+      if name in opct:
         if not name in self.lastVal:
           self.lastVal[name] = opct.get(name)
 
