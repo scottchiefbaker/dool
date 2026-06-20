@@ -2785,7 +2785,7 @@ def main():
 
     cpunr  = getcpunr()
     hz     = os.sysconf('SC_CLK_TCK')
-    maxint = float("inf")
+    maxint = 2**32 - 1
 
     ownpid   = str(os.getpid())
     pagesize = resource.getpagesize()
