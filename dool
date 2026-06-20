@@ -23,7 +23,6 @@ architecture to allow monitoring other system metrics.
 ### Forked by Scott Baker in 2019
 ### Copyright 2004-2019 Dag Wieers <dag@wieers.com>
 
-from __future__ import absolute_import, division, generators, print_function
 __metaclass__ = type
 
 import fnmatch
