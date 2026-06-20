@@ -58,7 +58,7 @@ class dool_plugin(dool):
                 )
 
         for line in self.splitlines():
-            fields = line.split()
+            fields = line
 
             if fields[0] == "proc4ops": # just grab NFSv4 stats
                 assert int(fields[1]) == len(fields[2:]), ("reported field count (%d) does not match actual field count (%d)" % (int(fields[1]), len(fields[2:])))
