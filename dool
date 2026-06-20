@@ -3039,7 +3039,13 @@ def perform(update):
         devel_log("Starting plugins")
         # Loop through each param section and build the output string
         for o in totlist:
-            o.extract()
+            try:
+                o.extract()
+            except Exception as err_str:
+                if op.debug >= 3:
+                    raise
+                print('%sPlugin %s failed during extract. (%s)' % (text_color(208, "Warning: "), text_color(15, plugin_obj_name(o)), err_str), file=sys.stderr)
+                continue
 
             devel_log("Plugin: '%s'" % (plugin_obj_name(o)))
 
