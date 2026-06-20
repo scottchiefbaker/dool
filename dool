@@ -2864,8 +2864,8 @@ def main():
         #for key in ansi:
             #ansi[key] = ''
 
-        theme['colors_hi'] = (ansi['default'],)
-        theme['colors_lo'] = (ansi['default'],)
+        theme['colors_hi'] = (ansi['default'],) * 8
+        theme['colors_lo'] = (ansi['default'],) * 8
 
     ### Disable line-wrapping (does not work ?)
     sys.stdout.write(ansi['nolinewrap'])
