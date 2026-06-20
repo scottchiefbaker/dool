@@ -253,7 +253,7 @@ class Options:
             elif opt in ['--integer']:
                 self.integer = True
             elif opt in ['--list']:
-                show_plugins()
+                show_plugins(self.plugin_details)
                 sys.exit(0)
             elif opt in ['--nocolor']:
                 self.color = False
@@ -419,7 +419,7 @@ class Options:
 
         global op
         op = self
-        show_plugins()
+        show_plugins(self.plugin_details)
 
     def usage(self):
         print('Usage: dool [options] [delay] [count]')
@@ -2696,8 +2696,9 @@ def get_plugin_file_opts(file):
     return opts
 
 # For the --help print out a list of all the plugins and what/where they are
-def show_plugins():
-    plugin_details = get_plugin_details()
+def show_plugins(plugin_details=None):
+    if plugin_details is None:
+        plugin_details = get_plugin_details()
     plugin_names   = list(plugin_details.keys())
     plugin_names.sort()
 
