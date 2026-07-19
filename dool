@@ -321,7 +321,7 @@ class Options:
         try:
             if len(args) > 0: self.delay = int(args[0])
             if len(args) > 1: self.count = int(args[1])
-        except:
+        except Exception:
             print('dool: incorrect argument, try dool -h for the correct syntax')
             sys.exit(1)
 
@@ -563,7 +563,7 @@ class dool:
                 if fd:
                     self.file.append(filename)
                     self.fd.append(fd)
-            except:
+            except Exception:
                 pass
         if not self.fd:
             raise Exception('Cannot open file %s' % filename)
@@ -1440,7 +1440,7 @@ class dool_swap(dool):
             try:
                 int(l[2])
                 int(l[3])
-            except:
+            except Exception:
                 continue
 #           ret.append(improve(l[0]))
             ret.append(l[0])
@@ -1883,7 +1883,7 @@ def ticks():
             l = line.split()
             if len(l) < 2: continue
             return float(l[0])
-    except:
+    except Exception:
         for line in dopen('/proc/stat').readlines():
             l = line.split()
             if len(l) < 2: continue
@@ -2374,11 +2374,11 @@ def init_term():
         global fcntl, struct, termios
         import fcntl, struct, termios
         termios.TIOCGWINSZ
-    except:
+    except Exception:
         try:
             curses.setupterm()
             curses.tigetnum('lines'), curses.tigetnum('cols')
-        except:
+        except Exception:
             pass
         else:
             termsize = None, 2
@@ -2401,7 +2401,7 @@ def get_term_size():
                 return curses.tigetnum('lines'), curses.tigetnum('cols')
             else:
                 termsize = (int(os.environ['LINES']), int(os.environ['COLUMNS']))
-        except:
+        except Exception:
             termsize = 25, 80
     return termsize
 
@@ -2417,7 +2417,7 @@ def get_term_color():
         except ImportError:
             print('Color support is disabled as python-curses is not installed.', file=sys.stderr)
             return False
-        except:
+        except Exception:
             print('Color support is disabled as curses does not find terminal "%s".' % os.getenv('TERM'), file=sys.stderr)
             return False
         if colors == 256:
@@ -2445,7 +2445,7 @@ def get_name_by_proc_cmdline(pid):
         first     = list_item_default(parts, 0, "")
         ret       = basename(first)
         # devel_log("CMDLINE/PID: %s => '%s'" % (pid, ret));
-    except:
+    except Exception:
         pass # Do nothing
 
     ret = ret.strip()
@@ -2462,7 +2462,7 @@ def get_name_by_proc_comm(pid):
         ret     = basename(first)
 
         # devel_log("COMM/PID: %s => '%s'" % (pid, ret));
-    except:
+    except Exception:
         pass # Do nothing
 
     ret = ret.strip()
@@ -2477,7 +2477,7 @@ def get_name_by_proc_stat(pid):
         stat_name = extract_between_parens(mystr)
 
         # devel_log("STAT/PID: %s => '%s'" % (pid, ret));
-    except:
+    except Exception:
         pass # Do nothing
 
     ret = ret.strip()
@@ -2573,7 +2573,7 @@ def getcpunr():
                 cpunr += 1
         if cpunr > 0:
             return cpunr
-    except:
+    except Exception:
         raise Exception("Problem finding number of CPUs in system.")
 
 # Find all the block devices in /sys/block
@@ -2907,7 +2907,7 @@ def main():
 
             continue
 
-        except:
+        except Exception:
             print('Module %s caused unknown exception' % pluginfile, file=sys.stderr)
 
         linewidth = linewidth + plug.statwidth() + 1
