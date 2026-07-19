@@ -52,7 +52,7 @@ class dool_plugin(dool):
     def extract(self):
         try:
             self.val['time'] = time.strftime(self.timefmt, time.localtime(self.gettime()))
-        except:
+        except Exception:
             self.val['time'] = theme['error'] + '-'.rjust(self.width-1) + ' '
 
     def showcsv(self):
