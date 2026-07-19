@@ -24,7 +24,7 @@ class dool_plugin(dool):
         ret = []
         try:
             list = os.listdir('/proc/vmware/scsi/')
-        except:
+        except Exception:
             raise Exception('Needs VMware ESX')
         for name in list:
             for line in dopen('/proc/vmware/scsi/%s/stats' % name).readlines():
@@ -53,7 +53,7 @@ class dool_plugin(dool):
     def check(self): 
         try:
             os.listdir('/proc/vmware')
-        except:
+        except Exception:
             raise Exception('Needs VMware ESX')
         info(1, 'The vmkhba module is an EXPERIMENTAL module.')
 
