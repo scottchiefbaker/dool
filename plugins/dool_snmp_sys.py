@@ -15,7 +15,7 @@ class dool_plugin(dool):
         try:
             global cmdgen
             from pysnmp.entity.rfc3413.oneliner import cmdgen
-        except:
+        except Exception:
             raise Exception('Needs pysnmp and pyasn1 modules')
 
     def extract(self):

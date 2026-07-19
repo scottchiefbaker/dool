@@ -35,12 +35,12 @@ class dool_plugin(dool):
                 pair = line.split(':', 2)
                 dict[pair[0]] = pair[1]
             return dict
-        except:
+        except Exception:
             return {}
         finally:
             try:
                 s.close()
-            except:
+            except Exception:
                 pass
 
     def extract(self):

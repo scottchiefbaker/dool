@@ -51,7 +51,7 @@ class dool_plugin(dool):
 
 			if (not is_readable):
 				raise(Expection("BEES?"))
-		except:
+		except Exception:
 			# If we end up with nothing in the variable we were unable to be
 			# "smart" and have to error out
 			if (self.log_file is None):

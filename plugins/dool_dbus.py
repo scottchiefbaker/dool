@@ -21,18 +21,18 @@ class dool_plugin(dool):
                 self.sysbus = dbus.Bus(dbus.Bus.TYPE_SYSTEM).get_service('org.freedesktop.DBus').get_object('/org/freedesktop/DBus', 'org.freedesktop.DBus')
                 try:
                     self.sesbus = dbus.Bus(dbus.Bus.TYPE_SESSION).get_service('org.freedesktop.DBus').get_object('/org/freedesktop/DBus', 'org.freedesktop.DBus')
-                except:
+                except Exception:
                     self.sesbus = None
-            except:
+            except Exception:
                 raise Exception('Unable to connect to dbus message bus')
-        except:
+        except Exception:
             raise Exception('Needs python-dbus module')
 
     def extract(self):
         self.val['system'] = len(self.sysbus.ListServices()) - 1
         try:
             self.val['session'] = len(self.sesbus.ListServices()) - 1
-        except:
+        except Exception:
             self.val['session'] = -1
 #       print(dir(b)); print(dir(s)); print(dir(d)); print(d.ListServices())
 #       print(dir(d))

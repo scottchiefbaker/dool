@@ -13,7 +13,7 @@ class dool_plugin(dool):
         try:
             global utmp
             import utmp
-        except:
+        except Exception:
             raise Exception('Needs python-utmp module')
 
     def extract(self):
