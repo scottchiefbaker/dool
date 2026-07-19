@@ -19,7 +19,7 @@ class dool_plugin(dool):
             import vmguestlib
 
             self.gl = vmguestlib.VMGuestLib()
-        except:
+        except Exception:
             raise Exception('Needs python-vmguestlib module')
 
     def extract(self):
