@@ -32,7 +32,7 @@ class dool_plugin(dool):
 	def check(self):
 		try:
 			list = os.listdir(self.file_source)
-		except:
+		except Exception:
 			raise Exception('Cannot read from %s' % (self.file_source))
 
 	################################################################################
