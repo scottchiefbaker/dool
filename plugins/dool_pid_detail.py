@@ -16,7 +16,7 @@ class dool_plugin(dool):
 		# Get the pid from the CLI options
 		try:
 			pid  = int(op.plugin_params['pid-detail'])
-		except:
+		except Exception:
 			msg = 'pid-detail: %s is not a number' % (op.plugin_params['pid-detail'])
 			raise Exception(msg)
 
