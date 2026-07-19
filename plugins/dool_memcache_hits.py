@@ -55,7 +55,7 @@ class dool_plugin(dool):
 
         try:
             s.connect((host, port))
-        except:
+        except Exception:
             raise Exception("Memcache: Error connecting to %s:%d" % (host, port))
 
         # Send the stats command and then the quit command right after
