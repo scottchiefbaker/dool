@@ -74,7 +74,7 @@ class dool_plugin(dool):
     def check(self): 
         try:
             os.listdir('/proc/vmware')
-        except:
+        except Exception:
             raise Exception('Needs VMware ESX')
         info(1, 'The vmkint module is an EXPERIMENTAL module.')
 
