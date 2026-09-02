@@ -3347,6 +3347,11 @@ def __main():
         # We use $DOOL_OPTS env variable and the CLI params to get all requested options
         env_opts = os.getenv('DOOL_OPTS','').split()
         cli_opts = sys.argv[1:]
+
+        # When invoked as `dstat` use dstat output format
+        if os.path.basename(sys.argv[0] or '') == 'dstat' and '--dstat' not in env_opts + cli_opts:
+            env_opts = ['--dstat'] + env_opts
+
         op       = Options(env_opts + cli_opts)
 
         # Pick color depth theme we're going to use
