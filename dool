@@ -3349,10 +3349,10 @@ def __main():
         cli_opts = sys.argv[1:]
 
         # When invoked as `dstat` use dstat output format
-        if os.path.basename(sys.argv[0] or '') == 'dstat' and '--dstat' not in env_opts + cli_opts:
+        if (os.path.basename(sys.argv[0] or '') == 'dstat') and ('--dstat' not in env_opts + cli_opts):
             env_opts = ['--dstat'] + env_opts
 
-        op       = Options(env_opts + cli_opts)
+        op = Options(env_opts + cli_opts)
 
         # Pick color depth theme we're going to use
         theme = set_theme()
