@@ -1,7 +1,7 @@
 # Information for packaging maintainers
 
 Packaging Dool for your platform should be very simple. Dool is a single
-Python script and some _optional_ plugins.
+Python script, a manpage, and some _optional_ plugins.
 
 ### Prerequisites
 
