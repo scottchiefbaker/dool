@@ -12,14 +12,18 @@ permissions:
 
 jobs:
   unit-test:
-    name: Lint and unit tests
+    name: Lint and unit tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
     steps:
     - uses: actions/checkout@v7
 
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: ${{ matrix.python-version }}
 
     - name: Lint
       run: make lint
