@@ -19,7 +19,7 @@ class dool_plugin(dool):
 	def __init__(self):
 		self.name  = 'Apache'
 		self.vars  = ( '2xx', '3xx', '4xx', '5xx' )
-		self.type  = 's'
+		self.type  = 'f'
 		self.width = 4   # Each column is X chars wide
 		self.scale = 100 # Change colors every 100x
 
@@ -36,21 +36,24 @@ class dool_plugin(dool):
 	def extract(self):
 		x = self.get_http_stats_for_last_x_seconds(self.log_file, 1)
 
-		# The first loop around sets everything to zero
+		# The first loop around resets the totals and sample count
 		if (step == 1):
-			for code in ["2xx", "3xx", "4xx", "5xx"]:
-				self.val[code] = 0
+			self.totals  = {"2xx": 0, "3xx": 0, "4xx": 0, "5xx": 0}
+			self.samples = 0
 
-		# Add the stats to what is already there
+		# Add this second's stats to the running totals
+		self.samples += 1
 		for code in ["2xx", "3xx", "4xx", "5xx"]:
-			self.val[code] += x.get(code, 0)
+			self.totals[code] += x.get(code, 0)
+			# Output the average requests per second over all samples so far
+			self.val[code] = self.totals[code] / float(self.samples)
 
 	def check(self):
 		try:
 			is_readable = os.access(self.log_file, os.R_OK)
 
 			if (not is_readable):
-				raise(Expection("BEES?"))
+				raise(Exception("BEES?"))
 		except:
 			# If we end up with nothing in the variable we were unable to be
 			# "smart" and have to error out
