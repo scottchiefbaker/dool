@@ -2517,7 +2517,7 @@ def get_name_by_pid(pid, debug=0):
     cmdline = cmd_raw.split('\0')
 
     # Strip off any scripting language name
-    if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'ruby', 'sh'):
+    if ret in ('bash', 'csh', 'ksh', 'perl', 'python', 'python3', 'ruby', 'sh'):
         ret = basename(list_item_default(cmdline, 1, ""))
     # I'm not sure what this does... needs more testing/documentation
     if ret.startswith('-'):
