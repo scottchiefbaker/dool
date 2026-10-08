@@ -10,6 +10,7 @@
 - Start of some basic functionality for MacOS by @btriller in #106
 - Plug-ins can now specify DOOL_OPTS in the first 256 bytes of the plugin to indicate if a parameter is required
 - Added zfs as recognized partition types in --freespace
+- Fix --apache counting requests twice when they fall in consecutive samples, and dropping the first line of logs shorter than 5 KB
 
 # Breaking changes
 - The freespace plugin now requires a comma separated list of paths or the string "all"

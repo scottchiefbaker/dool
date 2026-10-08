@@ -65,16 +65,20 @@ class dool_plugin(dool):
 	################################################################################
 	################################################################################
 
-	def get_http_stats_for_last_x_seconds(self, log_file, seconds = 1):
+	def get_http_stats_for_last_x_seconds(self, log_file, seconds = 1, now = None):
 		with open(log_file, 'r') as file:
-			now       = int(time.time())
+			if (now is None):
+				now = int(time.time())
 			file_size = os.path.getsize(log_file)
 
-			# Seek to byte offset at the end of the file
-			file.seek(file_size - 1024 * 5 * seconds)
+			# Seek to byte offset at the end of the file. For logs smaller than
+			# the window, start at the beginning of the file instead.
+			offset = file_size - 1024 * 5 * seconds
+			if (offset > 0):
+				file.seek(offset)
 
-			# Throw away the partial line
-			file.readline()
+				# Throw away the partial line
+				file.readline()
 
 			# Time is between [ ]
 			# HTTP status code is digits after "
@@ -93,8 +97,11 @@ class dool_plugin(dool):
 					line_time = self.get_apache_unixtime(match.group(1))
 					diff      = now - line_time
 
-					# If this line is within the last X seconds
-					if (diff <= seconds):
+					# If this line is within the last X seconds. The lower bound
+					# excludes lines stamped in the future; the upper bound
+					# excludes lines from the previous window, which were already
+					# counted in an earlier sample.
+					if (0 <= diff < seconds):
 						count += 1
 
 						# Group the status codes by 2xx, 3xx, 4xx, 5xx
