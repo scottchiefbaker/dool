@@ -42,19 +42,28 @@ class ColorTextTestResult(unittest.TextTestResult):
         unittest.TestResult.startTest(self, test)
 
     def _write_status(self, test, status):
+        # stock unittest passes skips as "skipped 'reason'"; keep the column to one word
+        reason = ''
+        if status.startswith('skipped'):
+            reason = status[len('skipped'):].strip()
+            if len(reason) >= 2 and reason[0] == reason[-1] and reason[0] in '\'"':
+                reason = reason[1:-1]
+            status = 'skipped'
+
         if status == 'ok':
             colored = paint(GREEN, status, self.color)
         elif status in ('FAIL', 'ERROR'):
             colored = paint(RED, status, self.color)
-        elif status.startswith('skipped'):
+        elif status == 'skipped':
             colored = paint(YELLOW, status, self.color)
         else:
             colored = status
 
         # Pad to a fixed width so the test names line up.
-        padding = ' ' * (len('skipped') - len(status)) if status.startswith('skipped') else ' ' * max(0, 7 - len(status))
+        padding = ' ' * (len('skipped') - len(status))
         indent = '  ' if isinstance(test, unittest.case._SubTest) else ''
-        self.stream.write(colored + padding + '  ' + indent + self.getDescription(test))
+        suffix = ': ' + reason if reason else ''
+        self.stream.write(colored + padding + '  ' + indent + self.getDescription(test) + suffix)
         self.stream.writeln()
         self.stream.flush()
         self._newline = True
