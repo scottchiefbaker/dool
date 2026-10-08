@@ -2191,8 +2191,9 @@ def cprint(var, ctype = 'f', width = 4, scale = 1000):
         base = 1024
 
     ### Use units when base is exact 1000 or 1024
+    # Strings and times have no scaled value, so they never take a unit letter
     unit = False
-    if scale in (1000, 1024) and width >= len(str(base)):
+    if scale in (1000, 1024) and width >= len(str(base)) and ctype not in ('s', 't'):
         unit = True
         width = width - 1
 

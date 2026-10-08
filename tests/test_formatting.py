@@ -93,6 +93,14 @@ class TestCprintLayout(FormatCase):
     def test_string_is_left_justified(self):
         self.assertEqual(dool.cprint('ab', 's', 4, 0), '<text_lo>ab  ')
 
+    def test_string_with_unit_scale_has_no_unit(self):
+        # Regression: used to raise TypeError indexing units[] with a color string
+        self.assertEqual(dool.cprint('ab', 's', 4, 1000), '<text_lo>ab  ')
+
+    def test_time_with_unit_scale_has_no_unit(self):
+        # Regression: used to raise TypeError indexing units[] with a color string
+        self.assertEqual(dool.cprint(90, 't', 4, 1000), '<text_lo>  1h')
+
     def test_unknown_type_raises(self):
         with self.assertRaises(Exception):
             dool.cprint(1, 'z', 4, 1000)
