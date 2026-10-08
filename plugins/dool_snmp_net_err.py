@@ -11,7 +11,7 @@ class dool_plugin(dool):
     def check(self):
         try:
             global cmdgen
-            from pysnmp.entity.rfc3413.oneliner import cmdgen
+            from pysnmp.entity.rfc3413.oneliner import cmdgen  # noqa: probes for pysnmp; name unused
         except:
             raise Exception('Needs pysnmp and pyasn1 modules')
 

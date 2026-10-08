@@ -10,8 +10,6 @@ tmpdir     = /var/tmp
 
 .PHONY: all install docs clean test smoketest unit-test lint
 
-LINT_FILES = dool install.py $(wildcard plugins/*.py tests/*.py packaging/*.py)
-
 all: docs
 	@echo "Nothing to be build."
 
@@ -42,11 +40,9 @@ smoketest:
 unit-test:
 	python3 tests/run_tests.py
 
-# Stdlib-only: compile every source file with warnings as errors. Catches syntax
-# errors, TabError (mixed tabs/spaces), and invalid escape sequences. Does not
-# check unused imports or style.
+# Stdlib-only checks (compile with warnings as errors, unused imports). See lint.py.
 lint:
-	python3 -W error -c 'import sys, pathlib; [compile(pathlib.Path(f).read_text(encoding="utf-8"), f, "exec") for f in sys.argv[1:]]; print(len(sys.argv) - 1, "files compile cleanly")' $(LINT_FILES)
+	python3 lint.py
 
 dist: clean
 	$(MAKE) -C docs dist
