@@ -1,0 +1,28 @@
+name: Tests
+
+on:
+  push:
+    branches: [master, next]
+  pull_request:
+    branches: [master, next]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-test:
+    name: Lint and unit tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Lint
+      run: make lint
+
+    - name: Unit tests
+      run: make test
