@@ -3188,15 +3188,8 @@ def kd(obj, prefix = "DIED"):
 
 # Read in a full file (or optional only X bytes)
 def file_slurp(filename, size = -1):
-    ret = ""
-
-    try:
-        fd  = open(filename)
-        ret = fd.read(size)
-    finally:
-        fd.close()
-
-    return ret
+    with open(filename) as fd:
+        return fd.read(size)
 
 def csv_quote_string_cell(text):
     "Quote free-form CSV string cells and neutralize spreadsheet formulas"

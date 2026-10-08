@@ -116,5 +116,27 @@ class TestProcHelpers(unittest.TestCase):
                          [['alpha', '1', '2'], ['beta', '3', '4']])
 
 
+class TestFileSlurp(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.path = os.path.join(self.tmp.name, 'data')
+        with open(self.path, 'w') as f:
+            f.write('hello world\n')
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_reads_whole_file(self):
+        self.assertEqual(dool.file_slurp(self.path), 'hello world\n')
+
+    def test_size_limits_bytes_read(self):
+        self.assertEqual(dool.file_slurp(self.path, 5), 'hello')
+
+    def test_missing_file_raises_file_not_found(self):
+        # Regression: used to raise UnboundLocalError from the finally block
+        with self.assertRaises(FileNotFoundError):
+            dool.file_slurp(os.path.join(self.tmp.name, 'nope'))
+
+
 if __name__ == '__main__':
     unittest.main()
