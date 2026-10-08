@@ -8,7 +8,7 @@ datadir    = $(prefix)/share
 mandir     = $(datadir)/man
 tmpdir     = /var/tmp
 
-.PHONY: all install docs clean
+.PHONY: all install docs clean test smoketest unit-test
 
 all: docs
 	@echo "Nothing to be build."
@@ -30,10 +30,15 @@ clean:
 	rm -f examples/*.pyc plugins/*.pyc
 	rm -f $(tmpdir)/dool-$(version)*.*
 
-test:
+test: unit-test
+
+smoketest:
 	./dool --version
 	./dool -taf 1 5
 	./dool -t --all-plugins 1 5
+
+unit-test:
+	python3 tests/run_tests.py
 
 dist: clean
 	$(MAKE) -C docs dist
