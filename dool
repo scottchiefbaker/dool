@@ -2475,7 +2475,12 @@ def get_name_by_proc_stat(pid):
 
     try:
         mystr     = proc_readline('/proc/%s/stat' % pid)
-        stat_name = extract_between_parens(mystr)
+        # The comm field can itself contain ')', so take everything between the
+        # first '(' and the last ')' rather than the first ')'.
+        start = mystr.find('(')
+        end   = mystr.rfind(')')
+        if start != -1 and end > start:
+            ret = mystr[start + 1:end]
 
         # devel_log("STAT/PID: %s => '%s'" % (pid, ret));
     except:

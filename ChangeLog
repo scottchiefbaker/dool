@@ -1,3 +1,6 @@
+* 1.3.9
+- Fix process names from /proc/<pid>/stat being returned as empty when cmdline and comm are both empty
+
 * 1.3.8
 - Update the MySQL plugins to use the MySQLdb Python interface
 - MySQL plugins can now read credentials from ~/.my.cnf
@@ -288,7 +291,7 @@
 - Added '-M list' to show the list of available modules per path
 - Fixed a bug in dpopen causing gpfs/gpfsop to fail after a while
 - Change terminal title (if terminal supports it)
-- Don't trim the cpulist to 2 items when -f (Sébastien Prud'homme)
+- Don't trim the cpulist to 2 items when -f (Sï¿½bastien Prud'homme)
 - Exclude md-devices from total (Dbt 318950, Peter Cordes)
 - Now accept 'total' keyword with -C (like -D and -N)
 - Rewrote the path-inserting code

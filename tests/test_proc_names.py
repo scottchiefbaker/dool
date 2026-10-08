@@ -95,12 +95,18 @@ class TestStatName(ProcCase):
     # Kernel-thread style stat line: the name is the text inside parentheses.
     STAT = '1234 (bash) S 1 1234 1234 0 -1 4194560\n'
 
-    @unittest.expectedFailure
     def test_stat_name_is_returned(self):
-        # Known bug: get_name_by_proc_stat() computes stat_name but returns
-        # ret, which is always ''. Remove expectedFailure once it is fixed.
         self.use_proc(stat=self.STAT)
         self.assertEqual(dool.get_name_by_proc_stat(self.PID), 'bash')
+
+    def test_name_containing_close_paren_is_kept_whole(self):
+        # The kernel does not escape ')' in comm, so the name runs to the last ')'.
+        self.use_proc(stat='1234 (foo) bar) S 1 1234 1234 0 -1 4194560\n')
+        self.assertEqual(dool.get_name_by_proc_stat(self.PID), 'foo) bar')
+
+    def test_missing_stat_is_empty(self):
+        self.use_proc()
+        self.assertEqual(dool.get_name_by_proc_stat(self.PID), '')
 
 
 if __name__ == '__main__':
