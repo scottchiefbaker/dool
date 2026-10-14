@@ -1,4 +1,12 @@
 ### Author: Scott Baker - 2025-08-20
+# Plugin skeleton. To try it, copy this file to ~/.dool/dool_<yourname>.py,
+# change the name() and vars() values as you like, and run: dool --<yourname>
+# (Use the same <yourname> as in the file name, without the dool_ prefix.)
+#
+# Rules:
+#   - File name must be dool_<name>.py and must define "class dool_plugin".
+#   - Plugins are searched in ~/.dool/ first, so a copy there overrides the
+#     copy in the dool plugins/ directory.
 
 class dool_plugin(dool):
 	'''
@@ -20,12 +28,14 @@ class dool_plugin(dool):
 		# Default: 5
 		self.width = 4
 
-		# Arbitrary data can be refernced in functions below
-		# Note: This is not usually needed
+		# Arbitrary data can be referenced in functions below.
+		# This is an example attribute, not a required one.
 		self.file_source = '/proc/net/'
 
 	################################################################################
-	# Make sure you can read the files you need, etc before starting the plugin
+	# Make sure you can read the files you need, etc before starting the plugin.
+	# Raise an Exception here if the plugin cannot run on this system. dool will
+	# then skip the plugin and report the message.
 	#
 	# REQUIRED
 	################################################################################
@@ -36,8 +46,10 @@ class dool_plugin(dool):
 			raise Exception('Cannot read from %s' % (self.file_source))
 
 	################################################################################
-	# Go out an discover what data is available and store it in the object
-	# for use later. Whatever data is found can be later accessed via self.discover
+	# Go out and discover what data is available and store it in the object
+	# for use later. Whatever data is found can be later accessed via self.discover.
+	# Return a truthy value when discovery succeeds. The base class default
+	# returns True, so this hook can be omitted if nothing needs discovering.
 	#
 	# OPTIONAL (can be omitted completely)
 	################################################################################
@@ -47,7 +59,7 @@ class dool_plugin(dool):
 		return list
 
 	################################################################################
-	# An array of the column headers
+	# A tuple of the column headers. extract() must return a key for each one.
 	#
 	# REQUIRED
 	################################################################################
@@ -55,7 +67,7 @@ class dool_plugin(dool):
 		return ('Rand', 'col2', 'Sum')
 
 	################################################################################
-	# A string for plugin heading
+	# A string for the plugin heading, shown above its columns.
 	#
 	# REQUIRED
 	################################################################################
@@ -63,23 +75,18 @@ class dool_plugin(dool):
 		return ("PluginName")
 
 	################################################################################
-	# If the raw column names are not correct we can remap the names here
-	# to something more readable
+	# Optional short column labels, same length as vars(). If this returns None,
+	# the names from vars() are used as-is.
 	#
 	# OPTIONAL (can be omitted completely)
 	################################################################################
 	def nick(self):
-		if (self.vars[0] == "HDD"):
-			new    = list(self.vars) # Tuple to list
-			new[0] = 'SSD'
-
-			return new
+		return ('Rnd', 'col2', 'Sum')
 
 	################################################################################
-	# Go out and get the actual data needed for the columns. Data must be returned
-	# as a dictionary with the keys that were used in vars(). Data must be stored
-	# in self.val and will be outputted automatically. Any keys in the dictionary
-	# that are NOT in vars() will be silently ignored.
+	# Get the actual data for the columns. Return it as a dictionary whose keys
+	# match vars(). Store it in self.val and it will be output automatically.
+	# Keys that are not in vars() are silently ignored.
 	#
 	# REQUIRED
 	################################################################################
@@ -93,21 +100,20 @@ class dool_plugin(dool):
 
 		data['Sum'] = data['Rand'] + data['col2']
 
-		self.val = data;
+		self.val = data
 
 	################################################################################
-	# Notes: Some plugins access object variables directly and do not use the
-	# functional interface to set names, variables etc. You *can* set some things
-	# directly in __init__
+	# Notes:
 	#
-	# self.vars = ('one', 'two')
-	# self.name = "MyPlugin"
+	# - The functional interface above (vars(), name(), nick(), etc.) is the
+	#   supported way to define a plugin. Some older plugins set attributes
+	#   directly in __init__ instead, for example:
+	#       self.vars = ('one', 'two')
+	#       self.name = 'MyPlugin'
+	#   This works but is not recommended.
 	#
-	# This does work, but is not recommened. The full functional interface is
-	# the preferred and supported method to set plugin parameters
-	#
-	# Options can be accessed via the `op` dictionary. This can be useful if you
-	# need access to --debug (op.debug) when testing
+	# - Command-line options are available through the global "op" object:
+	#       op.debug                 (set by --debug; useful when testing)
 	################################################################################
 
 # vim: tabstop=4 shiftwidth=4 noexpandtab autoindent softtabstop=4
