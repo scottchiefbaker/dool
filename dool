@@ -3140,19 +3140,19 @@ def text_wrap(text, delim, width=80):
     current_line = ""
 
     for part in parts:
-        # Add back the comma (except for the very last part)
-        segment = part + ","
+        # Add back the delimiter (except for the very last part)
+        segment = part + delim
 
         # Check if adding this part would exceed width
         if len(current_line) + len(segment) > width:
             # Commit current line and start a new one
-            lines.append(current_line.rstrip(","))
+            lines.append(current_line.rstrip(delim))
             current_line = segment
         else:
             current_line += segment
 
     if current_line:
-        lines.append(current_line.rstrip(","))
+        lines.append(current_line.rstrip(delim))
 
     return lines
 
