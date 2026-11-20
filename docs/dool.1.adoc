@@ -258,6 +258,9 @@ Here is an overview of the plugins dool ships with:
 --freespace::
     per filesystem disk usage
 
+--freespace-percent::
+    per filesystem disk usage as a percentage
+
 --gpfs::
     GPFS read/write I/O (needs mmpmon)
 
