@@ -1,8 +1,8 @@
 ## 🔍 What is Dool?
 
-Dool is a command line tool to monitor many aspects of your Linux system: CPU,
-Memory, Network, Load Average, etc.  It also includes a robust plug-in
-architecture to allow monitoring other system metrics.
+Dool is a command line tool that shows real-time Linux system stats, such as
+CPU, memory, network, and load average, in a single view. Plug-ins let you
+extend it to track any other metric you need.
 
 Dool is a Python3 compatible fork of [Dstat](https://github.com/dagwieers/dstat).
 
