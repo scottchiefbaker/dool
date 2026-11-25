@@ -7,15 +7,33 @@ class dool_plugin(dool):
         self.width = 3
         self.scale = 20
 
-        if os.path.exists('/sys/devices/virtual/thermal/'):
-            self.nick = []
-            self.vars = []
-            for zone in os.listdir('/sys/devices/virtual/thermal/'):
-                zone_split=zone.split("thermal_zone")
-                if len(zone_split) == 2:
-                    self.vars.append(zone)
-                    name="".join(["tz",zone_split[1]])
-                    self.nick.append(name)
+        selection = os.getenv('DOOL_THERMAL_ZONES')
+        thermal_dir = '/sys/devices/virtual/thermal/'
+        if os.path.exists(thermal_dir):
+            zones = {}
+            for zone in os.listdir(thermal_dir):
+                match = re.fullmatch(r'thermal_zone([0-9]+)', zone)
+                if match:
+                    zones[int(match.group(1))] = zone
+
+            selected_ids = set(zones)
+            if selection:
+                values = selection.split(',')
+                if any(not re.fullmatch(r'[0-9]+', value) for value in values):
+                    raise Exception('DOOL_THERMAL_ZONES needs comma-separated thermal zone IDs')
+                selected_ids = {int(value) for value in values}
+                missing_ids = selected_ids.difference(zones)
+                if missing_ids:
+                    missing = ', '.join(str(zone_id) for zone_id in sorted(missing_ids))
+                    raise Exception('unknown thermal zone: ' + missing)
+
+            zone_ids = sorted(selected_ids)
+            self.vars = [zones[zone_id] for zone_id in zone_ids]
+            self.nick = ['tz%d' % zone_id for zone_id in zone_ids]
+            self.width = max([self.width] + [len(label) for label in self.nick])
+
+        elif selection:
+            raise Exception('DOOL_THERMAL_ZONES requires Linux sysfs thermal zones')
 
         elif os.path.exists('/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/'):
             self.vars = os.listdir('/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/')
