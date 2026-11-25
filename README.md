@@ -41,6 +41,11 @@ Dool ships with many plug-ins to configure the output to your taste.
 	dool --disk -D total,sda,sdd   # Show the total disk IO, and /dev/sda and /dev/sdd
 	dool --net -N eth0,eth1        # Show the network traffic for eth0 and eth1
 
+On Linux with sysfs thermal zones, `dool --thermal` lists all zones in numeric
+order. Set `DOOL_THERMAL_ZONES` to a comma-separated list of zone IDs to show a
+subset. For example, `DOOL_THERMAL_ZONES=2,10 dool --thermal` displays `tz2`
+and `tz10` when those zones are present.
+
 A list of available plug-ins are available when you run `dool --version`
 
 ### 🎨 Colors
