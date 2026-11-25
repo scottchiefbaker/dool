@@ -6,10 +6,11 @@ import os
 import sys
 import unittest
 
-GREEN = '\033[32m'
-RED = '\033[31m'
-YELLOW = '\033[33m'
-RESET = '\033[0m'
+GREEN      = '\033[32m'
+RED        = '\033[31m'
+YELLOW     = '\033[33m'
+BOLD_WHITE = '\033[1;37m'
+RESET      = '\033[0m'
 
 
 def use_color(stream):
@@ -21,7 +22,7 @@ def paint(color_code, text, enabled):
 
 
 class ColorTextTestResult(unittest.TextTestResult):
-    """Prints the status first, e.g. 'ok    test_name ... '.
+    """Prints the status first, e.g. '[ PASS ]  test_name'.
 
     Also counts outcomes so main() can print a summary.
     Subtests: a passing subtest is not counted on its own, because its parent
@@ -32,9 +33,9 @@ class ColorTextTestResult(unittest.TextTestResult):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Not named 'errors'/'failures': TestResult already uses those as lists.
-        self.count_passed = 0
-        self.count_failed = 0
-        self.count_errors = 0
+        self.count_passed  = 0
+        self.count_failed  = 0
+        self.count_errors  = 0
         self.count_skipped = 0
 
     def startTest(self, test):
@@ -50,17 +51,21 @@ class ColorTextTestResult(unittest.TextTestResult):
                 reason = reason[1:-1]
             status = 'skipped'
 
-        if status == 'ok':
-            colored = paint(GREEN, status, self.color)
-        elif status in ('FAIL', 'ERROR'):
-            colored = paint(RED, status, self.color)
-        elif status == 'skipped':
-            colored = paint(YELLOW, status, self.color)
-        else:
-            colored = status
+        labels = {
+            'ok'     : ('PASS' , GREEN  ),
+            'FAIL'   : ('FAIL' , RED    ),
+            'ERROR'  : ('ERROR', RED    ),
+            'skipped': ('SKIP' , YELLOW ),
+        }
+        word, color = labels.get(status, (status, None))
 
         # Pad to a fixed width so the test names line up.
-        padding = ' ' * (len('skipped') - len(status))
+        padding = ' ' * (len('ERROR') - len(word))
+        if self.color:
+            word_colored = paint(color, word, True) if color else word
+            colored = paint(BOLD_WHITE, '[ ', True) + word_colored + paint(BOLD_WHITE, ' ]', True)
+        else:
+            colored = '[ ' + word + ' ]'
         indent = '  ' if isinstance(test, unittest.case._SubTest) else ''
         suffix = ': ' + reason if reason else ''
         self.stream.write(colored + padding + '  ' + indent + self.getDescription(test) + suffix)
@@ -95,10 +100,10 @@ class ColorTextTestResult(unittest.TextTestResult):
 
 def print_summary(result, stream, enabled):
     rows = [
-        ('Passed', result.count_passed, GREEN),
-        ('Failed', result.count_failed, RED),
-        ('Errors', result.count_errors, RED),
-        ('Skipped', result.count_skipped, YELLOW),
+        ('Passed' , result.count_passed , GREEN  ),
+        ('Failed' , result.count_failed , RED    ),
+        ('Errors' , result.count_errors , RED    ),
+        ('Skipped', result.count_skipped, YELLOW ),
     ]
     parts = []
     for label, count, color in rows:
